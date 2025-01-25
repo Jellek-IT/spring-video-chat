@@ -1,0 +1,6 @@
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    default-models-expand-depth: 0
+    docExpansion: tags

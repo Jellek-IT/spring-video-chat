@@ -1,0 +1,85 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.0'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'groovy'
+	id 'org.sonarqube' version '6.0.1.5171'
+}
+
+group = 'pl.bronikowski.springchat'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '21'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	springdocVersion = '2.7.0'
+	liquibaseVersion = '4.29.2'
+	keycloakVersion = '26.0.3'
+	mapstructVersion = '1.5.5.Final'
+	googleGuavaVersion = '33.3.1-jre'
+	jacksonJsr310Version = '2.18.2'
+	testContainersVersion = '1.20.4'
+	groovyVersion = '4.0.24'
+	spockVersion = '2.4-M4-groovy-4.0'
+	reactorNettyVersion = '1.2.0'
+	springSecurityVersion = '6.4.1'
+	awsS3Version = '2.29.31'
+	javaShedLockVersion = '6.2.0'
+}
+
+dependencies {
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation "org.springframework.security:spring-security-messaging:$springSecurityVersion"
+	implementation "io.projectreactor.netty:reactor-netty:$reactorNettyVersion"
+	implementation "org.liquibase:liquibase-core:$liquibaseVersion"
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion"
+	implementation "org.keycloak:keycloak-admin-client:$keycloakVersion"
+	implementation "com.google.guava:guava:$googleGuavaVersion"
+	implementation "net.javacrumbs.shedlock:shedlock-spring:$javaShedLockVersion"
+	implementation "net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$javaShedLockVersion"
+	annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+	implementation "org.mapstruct:mapstruct:$mapstructVersion"
+	annotationProcessor "org.hibernate.orm:hibernate-jpamodelgen"
+	developmentOnly "org.springframework.boot:spring-boot-devtools"
+	runtimeOnly "org.postgresql:postgresql"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonJsr310Version"
+	implementation "software.amazon.awssdk:s3:$awsS3Version"
+
+	testImplementation "org.testcontainers:testcontainers-bom:$testContainersVersion"
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation "org.apache.groovy:groovy:$groovyVersion"
+	testImplementation "org.spockframework:spock-core:$spockVersion"
+	testImplementation "org.spockframework:spock-spring:$spockVersion"
+	testImplementation "junit:junit"
+	testImplementation "org.testcontainers:postgresql"
+	testImplementation "org.testcontainers:spock"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

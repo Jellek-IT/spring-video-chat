@@ -1,0 +1,105 @@
+spring:
+  profiles:
+    group:
+      "local": "localsecrets,openapi,request-logging"
+    active: ${ACTIVE_PROFILES}
+  datasource:
+    url: jdbc:postgresql://${PG_HOST}:${PG_PORT}/${PG_DB}
+    username: ${PG_USERNAME}
+    password: ${PG_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+  application:
+    name: backendmain
+  jpa:
+    database: postgresql
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        temp.use_jdbc_metadata_defaults: false
+        globally_quoted_identifiers: true
+  liquibase:
+    change-log: db/main-changelog.xml
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}
+  mail:
+    sender: ${MAIL_SENDER}
+    host: ${MAIL_HOST}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    port: ${MAIL_PORT}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: ${MAIL_TLS}
+          ssl:
+            enable: ${MAIL_SSL}
+            trust: ${MAIL_HOST}
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  mvc:
+    format:
+      date: iso
+      date-time: iso
+      time: iso
+
+server:
+  servlet:
+    context-path: /api
+
+app:
+  id: ${APP_ID}
+  client:
+    keycloak:
+      client-id: ${KEYCLOAK_CLIENT_ID}
+      client-secret: ${KEYCLOAK_CLIENT_SECRET}
+      server-url: ${KEYCLOAK_SERVER_URL}
+      realm: ${KEYCLOAK_REALM}
+    stomp-broker:
+      relay-host: ${STOMP_BROKER_RELAY_HOST}
+      relay-port: ${STOMP_BROKER_RELAY_PORT}
+      client-login: ${STOMP_BROKER_CLIENT_LOGIN}
+      client-passcode: ${STOMP_BROKER_CLIENT_PASSCODE}
+    s3:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+      endpoint: ${S3_ENDPOINT}
+      bucket: ${S3_BUCKET}
+      region: ${S3_REGION}
+    janus:
+      ws-host: ${JANUS_WS_HOST}
+      token-auth-secret: ${JANUS_TOKEN_AUTH_SECRET}
+      video-room-admin-key: ${JANUS_VIDEO_ROOM_ADMIN_KEY}
+      publishers: 6
+      app-auth-token-lifetime: 1d
+      client-auth-token-lifetime: 1h
+  scheduling:
+    enabled: true
+    thread-pool-size: 12
+    cron:
+      video-room-clear-expired: "0 */30 * * * *"
+  async:
+    core-pool-size: 12
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    displayOperationId: true
+    tagsSorter: alpha
+
+logging:
+  level:
+    pl.bronikowski.springchat.backendmain: DEBUG
+    org.hibernate.orm.query: ERROR
