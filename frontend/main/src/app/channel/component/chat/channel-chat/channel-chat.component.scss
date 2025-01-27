@@ -1,0 +1,38 @@
+@use "variable" as *;
+@use "mixin" as *;
+.content {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: end;
+  overflow: hidden;
+}
+
+.content-scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem 0.5rem;
+  @include scrollbar;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.content-loader {
+  display: flex;
+  justify-content: center;
+}
+
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--p-card-body-padding) var(--p-card-body-padding)
+    var(--p-card-body-padding);
+  @include scroll-shadow();
+}

@@ -1,0 +1,68 @@
+@use "variable" as *;
+
+.message {
+  display: flex;
+  padding: 0.3rem 0;
+  gap: 0.5rem;
+  &--right {
+    text-align: right;
+    flex-direction: row-reverse;
+    .content-bubble {
+      background-color: var(--p-secondary-900);
+      text-align: left;
+    }
+    .message-info {
+      flex-direction: row-reverse;
+    }
+    .message-nickname {
+      flex: 0 1 auto;
+    }
+    .content-loader {
+      left: auto;
+      left: -1.5rem;
+    }
+    .message-date {
+      flex: 1;
+    }
+  }
+}
+.message-details {
+  overflow: hidden;
+  flex: 1;
+}
+.content-bubble {
+  display: inline-block;
+  max-width: calc(90% - 1.5rem);
+  word-break: break-word;
+  background-color: $chat-message-color;
+  border-radius: 1rem;
+  padding: 0.5rem 0.7rem;
+  position: relative;
+}
+.content-loader {
+  position: absolute;
+  right: -1.5rem;
+  color: var(--p-primary-color);
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+}
+.message-info {
+  display: flex;
+  align-items: end;
+  gap: 0.3rem;
+  overflow: hidden;
+}
+.message-nickname {
+  overflow: hidden;
+}
+.message-date {
+  flex: 1;
+  font-size: 0.75rem;
+  color: $font-color-secondary;
+  white-space: nowrap;
+}
+.message-send-response {
+  font-size: 0.75rem;
+}

@@ -1,0 +1,24 @@
+<p-avatar
+  *ngIf="name !== undefined && id !== undefined && !isInteractive()"
+  class="avatar"
+  size="large"
+  [label]="name.at(0)"
+  shape="circle"
+  [routerLinkActive]="'avatar--active'"
+/>
+<p-avatar
+  *ngIf="name !== undefined && id !== undefined && isInteractive()"
+  pRipple
+  class="avatar avatar--interactive"
+  size="large"
+  [label]="name.at(0)"
+  shape="circle"
+  (click)="avatarClick.emit($event)"
+  [routerLink]="routerLink"
+  [routerLinkActive]="'avatar--active'"
+/>
+<p-skeleton
+  shape="circle"
+  size="3rem"
+  *ngIf="name === undefined || id === undefined"
+/>

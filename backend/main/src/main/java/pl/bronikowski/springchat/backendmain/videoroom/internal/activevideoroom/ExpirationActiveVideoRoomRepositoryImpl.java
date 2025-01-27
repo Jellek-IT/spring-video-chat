@@ -7,6 +7,7 @@ import pl.bronikowski.springchat.backendmain.videoroom.internal.activevideoroomp
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ExpirationActiveVideoRoomRepositoryImpl implements ExpirationActiveVideoRoomRepository {
@@ -32,10 +33,10 @@ public class ExpirationActiveVideoRoomRepositoryImpl implements ExpirationActive
     @Override
     public Iterable<ActiveVideoRoom> findExpired(Instant before) {
         var ids = redisTemplate.opsForZSet()
-                .rangeWithScores(RedisZSets.ACTIVE_VIDEO_ROOM_EXPIRE_AT, Long.MIN_VALUE, before.toEpochMilli())
+                .rangeByScore(RedisZSets.ACTIVE_VIDEO_ROOM_EXPIRE_AT, Long.MIN_VALUE, before.toEpochMilli())
                 .stream()
-                .map(result -> UUID.fromString(result.getValue()))
-                .toList();
+                .map(UUID::fromString)
+                .collect(Collectors.toSet());
         return basicActiveVideoRoomRepository.findAllById(ids);
     }
 }

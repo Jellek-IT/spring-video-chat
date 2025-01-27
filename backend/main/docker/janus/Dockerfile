@@ -110,11 +110,7 @@ COPY --from=0 /usr/local/lib/janus /usr/local/lib/janus
 COPY --from=0 /usr/local/share/janus /usr/local/share/janus
 
 EXPOSE 8188
-EXPOSE 8089
-EXPOSE 8889
-EXPOSE 8000
 EXPOSE 7088
-EXPOSE 7089
 EXPOSE 10000-10200/udp
 
 # Modified by Maciej Bronikowski
@@ -129,5 +125,5 @@ RUN bash -c 'sed -i "s/\${TOKEN_AUTH_SECRET}/${TOKEN_AUTH_SECRET}/g" /opt/app/co
 RUN bash -c 'sed -i "s/\${ADMIN_SECRET}/${ADMIN_SECRET}/g" /opt/app/config/janus.jcfg'
 RUN bash -c 'sed -i "s/\${VIDEOROOM_ADMIN_KEY}/${VIDEOROOM_ADMIN_KEY}/g" /opt/app/config/janus.plugin.videoroom.jcfg'
 
-CMD ["/usr/local/bin/janus", "-F", "/opt/app/config"]
+CMD /usr/local/bin/janus -F /opt/app/config --nat-1-1=$NAT_1_1
 # End

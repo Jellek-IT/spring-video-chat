@@ -1,0 +1,47 @@
+<section>
+  <app-container>
+    <p-card class="header">
+      <div class="header__content">
+        <app-typography
+          *ngIf="channel === null"
+          class="header__title"
+          type="subtitle"
+          [skeleton]="true"
+        />
+        <app-typography
+          *ngIf="channel !== null"
+          class="header__title"
+          type="subtitle"
+          >{{ channel.name }}</app-typography
+        >
+        <div class="header__actions" *ngIf="channel !== null">
+          <button
+            pButton
+            icon="pi pi-phone"
+            [ngClass]="showVideoRoom ? 'p-button-danger' : 'p-button-success'"
+            [pTooltip]="
+              (showVideoRoom
+                ? 'channel.videoRoom.leave'
+                : 'channel.videoRoom.join'
+              ) | translate
+            "
+            tooltipPosition="bottom"
+            (click)="toggleShowVideoRoom()"
+          ></button>
+        </div>
+      </div>
+    </p-card>
+  </app-container>
+</section>
+<section class="chat">
+  <app-container>
+    <p-card>
+      <app-channel-chat *ngIf="channel !== null" [channel]="channel" />
+    </p-card>
+  </app-container>
+</section>
+<app-video-room-overlay
+  *ngIf="showVideoRoom && channel !== null"
+  [channel]="channel"
+  (videoRoomClosed)="closeVideoRoom()"
+/>

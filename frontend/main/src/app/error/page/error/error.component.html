@@ -1,0 +1,14 @@
+<section>
+	<app-container>
+		<div class="content">
+			<app-typography type="subtitle" *ngIf="titleKey !== undefined">{{ titleKey | translate }}</app-typography>
+		</div>
+	</app-container>
+</section>
+<section>
+	<app-container>
+		<div class="actions">
+			<p-button icon="pi pi-angle-left" (click)="goBack()" label="{{ 'common.back' | translate }}" />
+		</div>
+	</app-container>
+</section>

@@ -1,0 +1,12 @@
+<ng-container *ngIf="isTextNode()">{{ nodeAsTextNode().text }}</ng-container>
+<br *ngIf="isTagNode(nodeTagTypes.NEW_LINE)" />
+<ng-container *ngIf="isTagNode(nodeTagTypes.SQUARE_BRACKET)">[</ng-container>
+<ng-container *ngIf="isTagNode(nodeTagTypes.SQUARE_BRACKET_END)"
+  >]</ng-container
+>
+<ng-container *ngIf="isTagNode(nodeTagTypes.LINE)">
+  <app-message-text-node
+    *ngFor="let node of nodeAsTagNode().children"
+    [node]="node"
+  />
+</ng-container>

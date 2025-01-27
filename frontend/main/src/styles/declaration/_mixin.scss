@@ -1,0 +1,45 @@
+@use "variable" as *;
+
+@mixin full-height {
+  height: calc(100vh - 4.125rem);
+}
+
+@mixin scroll-shadow($top: true) {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    @if $top {
+      top: 0;
+      box-shadow: inset 0 16px 11px -7px var(--p-card-background);
+    } @else {
+      bottom: 0;
+      box-shadow: inset 0 -16px 11px -7px var(--p-card-background);
+    }
+    left: 0;
+    width: 100%;
+    height: 1rem;
+    z-index: 200;
+    pointer-events: none;
+  }
+}
+
+@mixin scrollbar {
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-color: var(--p-primary-color) $background;
+    scrollbar-width: thin;
+  }
+  @supports selector(::-webkit-scrollbar) {
+    &::-webkit-scrollbar {
+      width: 0.3rem;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 0.3rem;
+      background-color: $background;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 0.3rem;
+      background-color: var(--p-primary-color);
+    }
+  }
+}

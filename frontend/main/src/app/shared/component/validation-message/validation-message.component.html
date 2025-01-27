@@ -1,0 +1,36 @@
+<div class="validation-error">
+  <div
+    class="validation-error-container"
+    *ngIf="control && control.touched && !control.valid && control.errors"
+  >
+    <span class="error" *ngIf="control.hasError('required')">{{
+      "error.validation.required" | translate
+    }}</span>
+    <span class="error" *ngIf="control.hasError('minlength')">
+      {{
+        "error.validation.minLength" | translate : control.errors["minlength"]
+      }}</span
+    >
+    <span class="error" *ngIf="control.hasError('maxlength')">{{
+      "error.validation.maxLength" | translate : control.errors["maxlength"]
+    }}</span>
+    <span class="error" *ngIf="control.hasError('email')">{{
+      "error.validation.email" | translate
+    }}</span>
+    <span class="error" *ngIf="control.hasError('notBlank')">{{
+      "error.validation.notBlank" | translate
+    }}</span>
+    <span class="error" *ngIf="control.hasError('userPassword')">{{
+      "error.validation.userPassword" | translate
+    }}</span>
+    <span class="error" *ngIf="control.hasError('userNickname')">{{
+      "error.validation.userNickname" | translate
+    }}</span>
+    <span class="error" *ngIf="control.hasError('channelName')">{{
+      "error.validation.channelName" | translate
+    }}</span>
+    <span class="error" *ngIf="control.hasError('channelMessageText')">{{
+      "error.validation.channelMessageText" | translate
+    }}</span>
+  </div>
+</div>

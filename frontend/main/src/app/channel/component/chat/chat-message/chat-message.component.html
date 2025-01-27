@@ -1,0 +1,30 @@
+<div
+  class="message"
+  [ngClass]="message.member.id === userProfile.id ? 'message--right' : ''"
+>
+  <app-avatar [name]="message.member.nickname" [id]="message.member.id" />
+  <div class="message-details">
+    <div class="message-info">
+      <app-typography type="subtitle2" class="message-nickname">
+        {{ message.member.nickname }}
+      </app-typography>
+      <div class="message-date">
+        {{ message.createdAt | zonedDate : "dd.MM.y HH:mm" }}
+      </div>
+    </div>
+    <div class="content">
+      <div class="content-bubble">
+        <div class="content-loader" *ngIf="isSending()">
+          <i class="pi pi-spin pi-spinner"></i>
+        </div>
+        <app-message-text-node
+          *ngFor="let node of message.textNodes"
+          [node]="node"
+        />
+      </div>
+    </div>
+    <div class="message-send-response error" *ngIf="isError()">
+      {{ "channel.chat.messageSendError" | translate }}
+    </div>
+  </div>
+</div>

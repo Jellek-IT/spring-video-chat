@@ -1,0 +1,6 @@
+export enum JanusStatus {
+  CONNECTING,
+  CONNECTED,
+  DISCONNECTING,
+  DISCONNECTED,
+}

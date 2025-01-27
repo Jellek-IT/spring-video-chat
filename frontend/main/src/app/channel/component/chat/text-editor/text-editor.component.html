@@ -1,0 +1,28 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="editor" [ngClass]="focused ? 'editor--focused' : ''">
+    <div
+      class="textarea"
+      contenteditable="true"
+      (input)="handleChange()"
+      (focus)="handleFocus()"
+      (focusout)="handleFocusOut()"
+      (keydown)="handleKeydown($event)"
+      #textarea
+    ></div>
+    <div class="placeholder" *ngIf="isEmpty()">
+      {{ "channel.chat.writeMessage" | translate }}
+    </div>
+    <div class="toolbar-bottom">
+      <div></div>
+      <button
+        class="toolbar-bottom__action"
+        pButton
+        pRipple
+        [label]="'common.send' | translate"
+        icon="pi pi-send"
+        iconPos="right"
+        [disabled]="!sendEnabled"
+      ></button>
+    </div>
+  </div>
+</form>

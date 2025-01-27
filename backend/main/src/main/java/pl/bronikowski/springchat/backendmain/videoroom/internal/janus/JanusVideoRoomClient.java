@@ -43,7 +43,6 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 @Slf4j
 public class JanusVideoRoomClient implements VideoRoomClient {
-    private static final Duration VIDEO_ROOM_LIFETIME = Duration.ofHours(1);
     private static final Duration EXPIRATION_THRESHOLD = Duration.ofMinutes(10);
     private static final String SESSION_SEPARATOR = ";";
     private static final String VIDEO_ROOM_USER_TOKEN_SEPARATOR = ";";
@@ -281,7 +280,7 @@ public class JanusVideoRoomClient implements VideoRoomClient {
     }
 
     private Instant getActiveVideoRoomExpireAt() {
-        return clock.instant().plus(VIDEO_ROOM_LIFETIME);
+        return clock.instant().plus(janusProperties.videoRoomLifeTime());
     }
 
     private static VideoRoomSuccessJanusResponsePluginDataDataPayload getVideoRoomResponseData(JanusResponsePayload response) {

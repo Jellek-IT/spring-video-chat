@@ -1,0 +1,39 @@
+<header class="header">
+  <p-menubar [model]="menuItems">
+    <ng-template #start>
+      <a routerLink="/" pRipple>
+        <i class="header__icon pi pi-comments"></i>
+      </a>
+    </ng-template>
+    <ng-template #end>
+      <app-avatar
+        [id]="userProfile.id"
+        [name]="userProfile.nickname"
+        (avatarClick)="menu.toggle($event)"
+      />
+    </ng-template>
+  </p-menubar>
+
+  <p-menu #menu [model]="userMenuItems" [popup]="true" />
+</header>
+<main class="main" [ngClass]="expandChannels ? 'main--expand-channels' : ''">
+  <app-channels-strip
+    #channelsStrip
+    (expandStateChange)="handleChannelExpandStateChange($event)"
+  />
+  <div class="main__content">
+    <router-outlet *ngIf="connected"></router-outlet>
+    <section *ngIf="!connected" class="connecting">
+      <app-container>
+        <p-card>
+          <div class="connecting__content">
+            <app-loader />
+            <app-typography type="subtitle2">
+              {{ "common.stompConnecting" | translate }}
+            </app-typography>
+          </div>
+        </p-card>
+      </app-container>
+    </section>
+  </div>
+</main>

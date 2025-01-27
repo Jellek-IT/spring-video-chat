@@ -1,0 +1,37 @@
+@use 'variable' as *;
+.register {
+	padding-top: 5rem;
+	&__tabs {
+		display: flex;
+	}
+	&__tab {
+		width: 50%;
+		text-align: center;
+		padding: 1rem;
+		font-weight: 700;
+		display: block;
+		border: none;
+		outline: none;
+		color: $font_color;
+		border-radius: 0;
+		&:not(.active) {
+			background-color: $background-secondary;
+			&:hover {
+				outline: none;
+				border: none;
+			}
+		}
+	}
+	&__registered-text {
+		padding-bottom: 1rem;
+	}
+	&__content {
+		&.center {
+			text-align: center;
+		}
+	}
+	&__icon {
+		font-size: 5rem;
+		padding-bottom: 1rem;
+	}
+}

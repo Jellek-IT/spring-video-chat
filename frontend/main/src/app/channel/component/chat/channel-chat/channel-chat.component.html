@@ -1,0 +1,25 @@
+<ng-container *ngIf="messageSubscriptionAccepted">
+  <div class="content">
+    <div
+      class="content-scrollable"
+      #scrollableContainer
+      (scroll)="handleScrollableContainerScroll()"
+    >
+      <div class="content-loader" *ngIf="hasPreviousMessages" #loaderContainer>
+        <app-loader />
+      </div>
+      <app-chat-message
+        *ngFor="let message of messages"
+        [message]="message"
+        [channel]="channel"
+      />
+    </div>
+  </div>
+  <app-text-editor
+    [channel]="channel"
+    (messageCreated)="handleMessageCreated($event)"
+  />
+</ng-container>
+<div *ngIf="!messageSubscriptionAccepted" class="loader-container">
+  <app-loader />
+</div>

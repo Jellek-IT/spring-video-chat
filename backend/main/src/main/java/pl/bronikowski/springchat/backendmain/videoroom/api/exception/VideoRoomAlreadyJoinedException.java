@@ -8,6 +8,6 @@ public class VideoRoomAlreadyJoinedException extends AppApplicationException {
     private static final HttpStatus HTTP_STATUS = HttpStatus.CONFLICT;
 
     public VideoRoomAlreadyJoinedException() {
-        super("User has already joined Video Room from another session", HTTP_STATUS, ErrorResponseType.VIDEO_ROOM_PARTICIPANT_NOT_PRESENT);
+        super("User has already joined Video Room from another session", HTTP_STATUS, ErrorResponseType.VIDEO_ROOM_ALREADY_JOINED);
     }
 }

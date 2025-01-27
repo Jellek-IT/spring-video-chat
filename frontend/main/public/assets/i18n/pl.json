@@ -1,0 +1,136 @@
+{
+  "primeng": {
+    "clear": "Wyczyść",
+    "dateFormat": "dd/mm/yy",
+    "dayNamesMin": ["N", "P", "W", "Ś", "Cz", "P", "S"],
+    "dayNamesShort": ["Nie", "Pon", "Wt", "Śr", "Czw", "Pt", "So"],
+    "dayNames": [
+      "Niedziela",
+      "Poniedziałek",
+      "Wtorek",
+      "Środa",
+      "Czwartek",
+      "Piątek",
+      "Sobota"
+    ],
+    "firstDayOfWeek": 1,
+    "monthNamesShort": [
+      "Sty",
+      "Lut",
+      "Mar",
+      "Kwi",
+      "Maj",
+      "Cze",
+      "Lip",
+      "Sie",
+      "Wrz",
+      "Paź",
+      "Lis",
+      "Gru"
+    ],
+    "monthNames": [
+      "Styczeń",
+      "Luty",
+      "Marzec",
+      "Kwiecień",
+      "Maj",
+      "Czerwiec",
+      "Lipiec",
+      "Sierpień",
+      "Wrzesień",
+      "Październik",
+      "Listopad",
+      "Grudzień"
+    ],
+    "today": "Dzisiaj",
+    "weekHeader": "Tdz"
+  },
+  "common": {
+    "yes": "Tak",
+    "no": "Nie",
+    "cancel": "Anuluj",
+    "back": "Powrót",
+    "search": "Szukaj",
+    "send": "Wyślij",
+    "stompConnecting": "Trwa łączenie z serwerem..."
+  },
+  "menu": {
+    "logout": "Wyloguj",
+    "addChannel": "Dodaj kanał"
+  },
+  "channel": {
+    "addTitle": "Dodaj kanał",
+    "createSuccess": "Pomyślnie utworzono nowy kanał \"{{name}}\"",
+    "name": "Nazwa",
+    "add": "Dodaj",
+    "chat": {
+      "writeMessage": "Napisz wiadomość...",
+      "stompMessageSubscribeError": "Nie udało się połączyć z kanałem {{name}}",
+      "messageSendError": "Wystąpił błąd podczas wysyłania wiadomości"
+    },
+    "videoRoom": {
+      "join": "Dołącz do rozmowy",
+      "leave": "Opuść rozmowę",
+      "maximize": "Powiększ",
+      "minimize": "Pomniejsz",
+      "joinError": "Wystąpił błąd podczas dołączania do rozmowy",
+      "enableCamera": "Włącz kamerę",
+      "disableCamera": "Wyłącz kamerę",
+      "enableMicrophone": "Włącz mikrofon",
+      "disableMicrophone": "Wyłącz mikrofon"
+    }
+  },
+  "videoRoom": {
+    "destroyedError": "Rozmowa została niespodziewanie zakończona",
+    "detachError": "Twoje dane nie są przesyłane, więc rozmowa została zakończona",
+    "noSuchRoomError": "Wybrana rozmowa nie istnieje",
+    "publishFeedError": "Wystąpił błąd podczas próby przesyłania danych rozmowy",
+    "joinError": "Nie udało się dołączyć do rozmowy"
+  },
+  "register": {
+    "title": "Zarejestruj się",
+    "email": "Adres email",
+    "password": "Hasło",
+    "nickname": "Nazwa użytkownika",
+    "register": "Zarejestruj",
+    "registerButton": "Zarejestruj się",
+    "loginButton": "Zaloguj się",
+    "success": "Dziękujemy za rejestrację <b>{{nickname}}</b>. Możesz się teraz zalogować.",
+    "error": {}
+  },
+  "error": {
+    "formInvalid": "Formularz wypełniony nieprawidłowo",
+    "processingError": "Wystąpił błąd podczas przetwarzania. Spróbuj ponownie później",
+    "responseType": {
+      "UNIQUE_EMAIL": "Na podany adres email zostało już założone konto",
+      "UNIQUE_NICKNAME": "Istnieje już konto o podanej nazwie użytkownika",
+      "CHANNEL_OPERATION_NOT_ENOUGH_RIGHTS": "Nie masz wystarczających uprawnień do wykonania tej operacji",
+      "CHANNEL_MEMBER_ALREADY_ADDED": "Wybrany użytkownik jest już na kanale"
+    },
+    "page": {
+      "notFound": {
+        "title": "404: Nie znaleziono"
+      },
+      "badGateway": {
+        "title": "502: Błąd bramy"
+      },
+      "serviceUnavailable": {
+        "title": "503: Usługa niedostępna"
+      },
+      "timeout": {
+        "title": "408: Koniec czasu oczekiwania na żądanie"
+      }
+    },
+    "validation": {
+      "required": "Pole jest wymagane",
+      "minLength": "Minimalna dopuszczalna liczba znaków to {{ requiredLength }}",
+      "maxLength": "Maksymalna dopuszczalna liczba znaków to {{ requiredLength }}",
+      "email": "Podano nieprawidłowy adres email",
+      "notBlank": "Pole nie może być puste",
+      "userPassword": "Hasło powinno zawierać przynajmniej jedną małą literę, dużą literę, cyfrę i znak specjalny",
+      "userNickname": "Nazwa użytkownika może zawierać tylko znaki a-zA-Z0-9 _-",
+      "channelName": "Nazwa kanału może zawierać tylko znaki a-zA-Z0-9 _-",
+      "channelMessageText": "Treść zawiera niedozwolone znaki"
+    }
+  }
+}

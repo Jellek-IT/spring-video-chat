@@ -1,0 +1,50 @@
+.overlay {
+  display: block;
+  position: fixed;
+  z-index: 300;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+.actions {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+.box {
+  position: absolute;
+  z-index: 300;
+  max-width: 20rem;
+  max-height: 12rem;
+  width: 100%;
+  height: 100%;
+  pointer-events: all;
+  background-color: black;
+  border-radius: 1rem;
+  box-shadow: var(--p-card-shadow);
+  user-select: none;
+  left: 6rem;
+  bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &--positioned {
+    bottom: auto;
+  }
+  &:hover {
+    .actions {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}

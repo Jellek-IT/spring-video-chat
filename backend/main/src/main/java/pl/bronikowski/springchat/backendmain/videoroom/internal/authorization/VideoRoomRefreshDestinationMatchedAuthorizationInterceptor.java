@@ -10,7 +10,7 @@ import java.util.Map;
 public class VideoRoomRefreshDestinationMatchedAuthorizationInterceptor extends DestinationMatchedAuthorizationInterceptor {
     @Override
     protected String getTemplate() {
-        return "/app/video-room.refresh";
+        return "/app/video-rooms.active.refresh";
     }
 
     @Override

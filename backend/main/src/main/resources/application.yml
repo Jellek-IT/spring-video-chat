@@ -84,7 +84,8 @@ app:
       video-room-admin-key: ${JANUS_VIDEO_ROOM_ADMIN_KEY}
       publishers: 6
       app-auth-token-lifetime: 1d
-      client-auth-token-lifetime: 1h
+      client-auth-token-lifetime: 10m
+      video-room-life-time: 1h
   scheduling:
     enabled: true
     thread-pool-size: 12

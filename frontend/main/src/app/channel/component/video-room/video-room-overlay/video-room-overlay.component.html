@@ -1,0 +1,74 @@
+<div class="overlay" #overlay>
+  <audio
+    *ngFor="let stream of getAudios()"
+    class="hide"
+    [srcObject]="stream.media!.media"
+    autoplay
+    playsinline
+  ></audio>
+  <div
+    class="box"
+    [ngClass]="boxStyle !== undefined ? 'box--positioned' : ''"
+    #box
+    (pointerdown)="onBoxGrab($event)"
+    [ngStyle]="boxStyle"
+  >
+    <app-loader *ngIf="connecting" />
+    <div *ngIf="!connecting" class="">
+      <div class="" *ngFor="let user of users">
+        <ng-container *ngFor="let stream of user.streams">
+          <app-video-view
+            *ngIf="stream.media !== null && stream.type === streamTypes.VIDEO"
+            [mediaStream]="stream.media.media"
+          />
+        </ng-container>
+      </div>
+    </div>
+    <div class="actions">
+      <button
+        pButton
+        class="drag-disabled"
+        [ngClass]="this.cameraEnabled ? '' : 'p-button--crossed'"
+        icon="pi pi-camera"
+        [pTooltip]="
+          (this.cameraEnabled
+            ? 'channel.videoRoom.disableCamera'
+            : 'channel.videoRoom.enableCamera'
+          ) | translate
+        "
+        tooltipPosition="bottom"
+        (click)="toggleCamera()"
+      ></button>
+      <button
+        pButton
+        class="drag-disabled"
+        [ngClass]="this.microphoneEnabled ? '' : 'p-button--crossed'"
+        icon="pi pi-microphone"
+        [pTooltip]="
+          (this.microphoneEnabled
+            ? 'channel.videoRoom.disableMicrophone'
+            : 'channel.videoRoom.enableMicrophone'
+          ) | translate
+        "
+        tooltipPosition="bottom"
+        (click)="toggleMicrophone()"
+      ></button>
+      <button
+        pButton
+        class="drag-disabled"
+        icon="pi pi-window-maximize"
+        [pTooltip]="'channel.videoRoom.maximize' | translate"
+        tooltipPosition="bottom"
+      ></button>
+      <button
+        pButton
+        class="drag-disabled"
+        icon="pi pi-phone"
+        severity="danger"
+        [pTooltip]="'channel.videoRoom.leave' | translate"
+        tooltipPosition="bottom"
+        (click)="videoRoomClosed.emit()"
+      ></button>
+    </div>
+  </div>
+</div>

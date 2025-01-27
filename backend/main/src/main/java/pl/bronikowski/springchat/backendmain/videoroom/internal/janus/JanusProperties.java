@@ -11,6 +11,7 @@ public record JanusProperties(
         String videoRoomAdminKey,
         Integer publishers,
         Duration appAuthTokenLifetime,
-        Duration clientAuthTokenLifetime
+        Duration clientAuthTokenLifetime,
+        Duration videoRoomLifeTime
 ) {
 }

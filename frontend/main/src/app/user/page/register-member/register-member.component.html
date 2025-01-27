@@ -1,0 +1,89 @@
+<section class="register">
+  <app-container type="small">
+    <p-card>
+      <ng-template #header>
+        <div class="register__tabs">
+          <div class="register__tab active">
+            {{ "register.registerButton" | translate }}
+          </div>
+          <button pButton class="register__tab" (click)="login()">
+            {{ "register.loginButton" | translate }}
+          </button>
+        </div>
+      </ng-template>
+      <div class="register__content" *ngIf="resultNickname === null">
+        <app-typography type="title">{{
+          "register.title" | translate
+        }}</app-typography>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-group form-group--full-width">
+            <label for="input-email">{{ "register.email" | translate }}:</label>
+            <input
+              type="text"
+              id="input-email"
+              placeholder="{{ 'register.email' | translate }}"
+              pInputText
+              formControlName="email"
+            />
+            <app-validation-message [control]="form.controls.email" />
+          </div>
+          <div class="form-group form-group--full-width">
+            <label for="input-nickname"
+              >{{ "register.nickname" | translate }}:</label
+            >
+            <input
+              type="text"
+              id="input-nickname"
+              placeholder="{{ 'register.nickname' | translate }}"
+              pInputText
+              formControlName="nickname"
+            />
+            <app-validation-message [control]="form.controls.nickname" />
+          </div>
+          <div class="form-group form-group--full-width">
+            <label for="input-password"
+              >{{ "register.password" | translate }}:</label
+            >
+            <p-password
+              inputId="input-password"
+              placeholder="{{ 'register.password' | translate }}"
+              [toggleMask]="true"
+              [feedback]="false"
+              formControlName="password"
+            />
+            <app-validation-message [control]="form.controls.password" />
+          </div>
+          <button
+            pButton
+            type="submit"
+            label="{{ 'register.register' | translate }}"
+            [disabled]="loading"
+            [icon]="loading ? 'pi pi-spin pi-spinner' : ''"
+            iconPos="right"
+            class="p-button--full-width"
+          ></button>
+          <span
+            class="error"
+            *ngIf="resultError !== null"
+            [innerHtml]="resultError"
+          ></span>
+        </form>
+      </div>
+      <div class="register__content center" *ngIf="resultNickname !== null">
+        <i class="pi pi-check-circle register__icon"></i>
+        <div
+          class="register__registered-text"
+          [innerHTML]="
+            'register.success' | translate : { nickname: resultNickname }
+          "
+        ></div>
+        <button
+          pButton
+          [style]="{ width: '100%' }"
+          label="{{ 'register.loginButton' | translate }}"
+          (click)="login()"
+        ></button>
+      </div>
+    </p-card>
+  </app-container>
+</section>

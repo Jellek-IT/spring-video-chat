@@ -14,14 +14,14 @@ import pl.bronikowski.springchat.backendmain.websocket.api.UserConnectionDetails
 
 @Validated
 @Controller
-@MessageMapping("video-room")
+@MessageMapping("video-rooms")
 @RequiredArgsConstructor
 public class StompVideoRoomController {
     private final VideoRoomService videoRoomService;
     private final StompMessagingTemplate template;
 
-    @MessageMapping(".refresh")
-    public void handleChannelCreateMessage(Message<?> message) {
+    @MessageMapping(".active.refresh")
+    public void handleRefresh(Message<?> message) {
         var authResourceId = UserContextProvider.getAuthResourceId();
         var connectionDetails = UserConnectionDetails.fromMessage(message, authResourceId);
         var body = videoRoomService.extendUserSession(connectionDetails);

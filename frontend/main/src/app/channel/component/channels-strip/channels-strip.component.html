@@ -1,0 +1,45 @@
+<p-card class="channels__card">
+  <ng-template #header>
+    <div class="channels__search">
+      <p-iconfield>
+        <label>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            type="text"
+            pInputText
+            [placeholder]="'common.search' | translate"
+            (focus)="handleChannelSearchFocus()"
+            (focusout)="handleChannelSearchFucusOut()"
+            [(ngModel)]="channelNameSearch"
+          />
+        </label>
+      </p-iconfield>
+    </div>
+  </ng-template>
+  <div class="channels__loader" *ngIf="channelsLoading">
+    <app-loader />
+  </div>
+  <div
+    class="channels__scrolable-container"
+    *ngIf="!channelsLoading"
+    #channelsScrollableContainer
+    (scroll)="onChannelsContainerScroll()"
+  >
+    <div class="channel" *ngFor="let channel of channels" #channelElements>
+      <ng-container *ngIf="channel.data !== null">
+        <app-avatar
+          [id]="channel.data.id"
+          [name]="channel.data.name"
+          [routerLink]="'/channels/' + channel.data.id + '/details'"
+        />
+        <app-typography class="channel__title" type="subtitle2">
+          {{ channel.data.name }}
+        </app-typography>
+      </ng-container>
+      <ng-container *ngIf="channel.data === null">
+        <app-avatar />
+        <app-typography type="subtitle2" [skeleton]="true" />
+      </ng-container>
+    </div>
+  </div>
+</p-card>

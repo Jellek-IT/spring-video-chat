@@ -1,0 +1,37 @@
+@use "declaration" as *;
+@use "component";
+@import "primeicons/primeicons.css";
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+html,
+body {
+  font-family: $font;
+  min-height: 100%;
+  color: $font-color;
+  background-color: $background;
+  font-size: 16px;
+}
+
+section {
+  padding-top: 1rem;
+}
+
+.error {
+  display: block;
+  padding-top: 0.35rem;
+  color: $message-error;
+}
+
+.container,
+.p-card,
+.p-card-body,
+.p-card-content {
+  height: 100%;
+}
+
+.hide {
+  display: none;
+}

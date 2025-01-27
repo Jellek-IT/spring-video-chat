@@ -1,0 +1,28 @@
+.chat {
+  flex: 1;
+  overflow: hidden;
+}
+.header {
+  &__content {
+    display: flex;
+    align-items: center;
+  }
+  &__title {
+    display: block;
+    flex: 1;
+  }
+}
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-bottom: 1rem;
+  ::ng-deep {
+    .chat {
+      .p-card-body {
+        padding: 0;
+      }
+    }
+  }
+}

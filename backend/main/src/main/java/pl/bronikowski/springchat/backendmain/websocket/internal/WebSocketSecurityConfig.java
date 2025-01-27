@@ -19,6 +19,7 @@ public class WebSocketSecurityConfig {
                 .nullDestMatcher().authenticated()
                 .simpSubscribeDestMatchers("user.queue.errors").permitAll()
                 .simpMessageDestMatchers("/app/channels.**").hasRole(Roles.MEMBER)
+                .simpMessageDestMatchers("/app/video-rooms.**").hasRole(Roles.MEMBER)
                 .simpSubscribeDestMatchers("/user/queue/errors").hasRole(Roles.MEMBER)
                 .simpSubscribeDestMatchers("/user/queue/channels.**").hasRole(Roles.MEMBER)
                 .simpSubscribeDestMatchers("/topic/channels.**").hasRole(Roles.MEMBER)
