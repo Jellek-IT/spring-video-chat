@@ -19,7 +19,7 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pl.bronikowski.springchat.backendmain.channel.api.ChannelMemberRight;
-import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelMemberRequest;
+import pl.bronikowski.springchat.backendmain.channel.api.dto.member.UpdateChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.exception.ChannelMemberAlreadyAddedException;
 import pl.bronikowski.springchat.backendmain.channel.internal.Channel;
 import pl.bronikowski.springchat.backendmain.member.internal.Member;

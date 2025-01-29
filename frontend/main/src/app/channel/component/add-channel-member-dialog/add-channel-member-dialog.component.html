@@ -1,0 +1,33 @@
+<form [formGroup]="form" (ngSubmit)="onCreateSubmit()">
+  <div class="form-group form-group--full-width">
+    <label for="input-member-id">{{ "channel.memberId" | translate }}:</label>
+    <input
+      type="text"
+      id="input-member-id"
+      placeholder="{{ 'channel.memberId' | translate }}"
+      pInputText
+      formControlName="memberId"
+    />
+    <app-validation-message [control]="form.controls.memberId" />
+  </div>
+  <div class="form-group form-group--full-width">
+    <label>
+      {{ "channel.rights" | translate }}
+    </label>
+    <div *ngFor="let right of availableRights">
+      <label class="checkbox-label">
+        <p-checkbox formControlName="rights" [value]="right" size="large" />
+        {{ right | channelMemberRight }}
+      </label>
+    </div>
+  </div>
+  <button
+    pButton
+    type="submit"
+    label="{{ 'channel.addMember' | translate }}"
+    [disabled]="loading"
+    [icon]="loading ? 'pi pi-spin pi-spinner' : ''"
+    iconPos="right"
+    class="p-button--full-width"
+  ></button>
+</form>

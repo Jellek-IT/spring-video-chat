@@ -59,7 +59,7 @@ export class RegisterMemberComponent implements OnInit {
   protected resultNickname: string | null = null;
   protected resultError: string | null = null;
 
-  protected form: FormGroup<RegisterForm> = this.formBuilder.group({
+  protected readonly form: FormGroup<RegisterForm> = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     nickname: ['', validation.userNickname],
     password: ['', validation.userPassword],

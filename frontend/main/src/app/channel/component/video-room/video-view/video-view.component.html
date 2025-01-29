@@ -1,1 +1,12 @@
-<video #video width="100%" playsinline autoplay muted="muted"></video>
+<div class="container" #videoContainer>
+  <video
+    #video
+    [ngStyle]="videoStyle"
+    [srcObject]="mediaStream"
+    class="video"
+    playsinline
+    autoplay
+    muted="muted"
+    (loadedmetadata)="handleVideoLoadedMetadata()"
+  ></video>
+</div>

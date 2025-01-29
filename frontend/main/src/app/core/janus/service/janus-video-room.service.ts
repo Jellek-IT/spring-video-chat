@@ -20,10 +20,17 @@ import { JanusVideoRoomStreamType } from '../enum/janus-video-room-stream-type.e
 import janusTrackTypeEnum, {
   JanusTrackType,
 } from '../enum/janus-track-type.enum';
-import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  interval,
+  Observable,
+  Subject,
+} from 'rxjs';
 import { JanusStatus } from '../enum/jansu-status.enum';
 import { VideoRoomUser } from '../model/video-room-user.model';
 import { LocalTrackType } from '../enum/local-track-type.enum';
+import { VideoRoomDeletedTrack } from '../model/internal/video-room-deleted-track.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +38,9 @@ import { LocalTrackType } from '../enum/local-track-type.enum';
 export class JanusVideoRoomService {
   private readonly videoRoomPluginName = 'janus.plugin.videoroom';
   private readonly janusVideoRoomErrorNoSuchRoom = '426';
-  private readonly debug = false;
+  private readonly deleteTrackInterval = 1000; // 1 seconds
+  private readonly deletedTrackLifeTime = 2 * 1000; // 2 seconds
+  private readonly debug = true;
 
   private readonly toastService = inject(ToastService);
   private sessionDetails: VideoRoomSessionDetailsDto | null = null;
@@ -43,19 +52,30 @@ export class JanusVideoRoomService {
   private currentUserId: string | null = null;
   private userIdToPublisher: Map<string, VideoRoomPublisher> = new Map();
   private midToStream: Map<string, VideoRoomStream> = new Map();
+  private trackIdToDeletedTrack: Map<string, VideoRoomDeletedTrack> = new Map();
+  private activeLocalTracks: Map<LocalTrackType, JanusJS.TrackOption> =
+    new Map();
+  private enabledLocalTracks: Set<LocalTrackType> = new Set();
   private firstFeedPublished = false;
-  private cameraEnabled = true;
-  private microphoneEnabled = false;
   private readonly users$ = new Subject<VideoRoomUser[]>();
   private readonly status$ = new BehaviorSubject<JanusStatus>(
     JanusStatus.DISCONNECTED
   );
+
+  constructor() {
+    interval(this.deleteTrackInterval).subscribe(() =>
+      this.clearExpiredDeletedTracks()
+    );
+  }
 
   public updateSession(sessionDetails: VideoRoomSessionDetailsDto): void {
     if (
       this.sessionDetails?.videoRoomAccessToken !==
       sessionDetails.videoRoomAccessToken
     ) {
+      if (this.status$.value !== JanusStatus.DISCONNECTED) {
+        this.detach();
+      }
       this.sessionDetails = sessionDetails;
       this.attach();
     } else {
@@ -64,31 +84,45 @@ export class JanusVideoRoomService {
   }
 
   public changeCameraState(enabled: boolean): void {
-    if (this.cameraEnabled === enabled) {
-      return;
+    if (enabled) {
+      this.enabledLocalTracks.add(LocalTrackType.VIDEO);
+    } else {
+      this.enabledLocalTracks.delete(LocalTrackType.VIDEO);
     }
-    this.cameraEnabled = enabled;
     if (this.firstFeedPublished) {
-      this.updateFeed([LocalTrackType.VIDEO]);
+      this.updateFeed();
     }
   }
 
   public changeMicrophoneState(enabled: boolean): void {
-    if (this.microphoneEnabled === enabled) {
-      return;
+    if (enabled) {
+      this.enabledLocalTracks.add(LocalTrackType.MICROPHONE);
+    } else {
+      this.enabledLocalTracks.delete(LocalTrackType.MICROPHONE);
     }
-    this.microphoneEnabled = enabled;
     if (this.firstFeedPublished) {
-      this.updateFeed([LocalTrackType.AUDIO]);
+      this.updateFeed();
     }
   }
 
-  private attach(): void {
+  private async attach(): Promise<void> {
+    await this.waitForDisconnected();
+    this.videoRoomPublisherHandle = null;
+    this.videoRoomSubscriberHandlePromise = null;
+    this.privateId = null;
+    Array.from(this.midToStream.values())
+      .filter((stream) => stream.media !== null)
+      .forEach((stream) =>
+        stream.media!.media.getTracks().forEach((track) => track.stop())
+      );
+    this.userIdToPublisher.clear();
+    this.midToStream.clear();
+    this.trackIdToDeletedTrack.clear();
+    this.activeLocalTracks.clear();
+    this.enabledLocalTracks.clear();
+    this.janus = null;
     this.firstFeedPublished = false;
     this.status$.next(JanusStatus.CONNECTING);
-    if (this.janus !== null) {
-      this.janus.destroy({});
-    }
     // initialized library will call callback immediately
     Janus.init({
       debug: this.debug ? 'all' : false,
@@ -102,29 +136,30 @@ export class JanusVideoRoomService {
             this.logError(error);
           },
           destroyed: () => {
-            if (this.status$.value !== JanusStatus.DISCONNECTING) {
-              return;
-            }
-            this.videoRoomPublisherHandle = null;
-            this.videoRoomSubscriberHandlePromise = null;
-            this.privateId = null;
-            Array.from(this.midToStream.values())
-              .filter((stream) => stream.media !== null)
-              .forEach((stream) =>
-                stream.media!.media.getTracks().forEach((track) => track.stop())
-              );
-            this.userIdToPublisher.clear();
-            this.midToStream.clear();
-            this.janus = null;
             this.status$.next(JanusStatus.DISCONNECTED);
-            this.emitPublishersChanges();
           },
         });
       },
     });
   }
 
-  public async detach() {
+  private async waitForDisconnected(): Promise<void> {
+    return new Promise((resolve) => {
+      if (this.status$.value === JanusStatus.DISCONNECTED) {
+        resolve();
+      }
+      const subscription = this.getStatusAsObservable().subscribe((status) => {
+        if (status === JanusStatus.DISCONNECTED) {
+          setTimeout(() => {
+            subscription.unsubscribe();
+            resolve();
+          });
+        }
+      });
+    });
+  }
+
+  public async detach(): Promise<void> {
     if (this.janus === null || !this.janus.isConnected()) {
       this.janus = null;
       this.status$.next(JanusStatus.DISCONNECTED);
@@ -188,7 +223,12 @@ export class JanusVideoRoomService {
           this.userIdToPublisher.clear();
           this.privateId = msg['private_id'];
           this.currentUserId = msg['id'];
+          const localPublisher: JanusVideoRoomPublisher = {
+            id: this.currentUserId!,
+            streams: [],
+          };
           const publishers: JanusVideoRoomPublisher[] = msg['publishers'] || [];
+          publishers.push(localPublisher);
           const streams: PublisherJanusVideoRoomStreamWithUserId[] =
             publishers.flatMap(
               (publisher) =>
@@ -197,7 +237,7 @@ export class JanusVideoRoomService {
                   user_id: publisher.id,
                 })) ?? []
             );
-          this.publishFeed();
+          this.updateFeed();
           this.addPublishers(publishers);
           this.attachStreams(streams);
           this.status$.next(JanusStatus.CONNECTED);
@@ -223,7 +263,7 @@ export class JanusVideoRoomService {
     }
   }
 
-  private handlePublisherEvent(msg: JanusJS.Message) {
+  private handlePublisherEvent(msg: JanusJS.Message): void {
     if (msg['streams'] !== undefined) {
       // current user streams are hear and it's not usable info - sent after onlocaltrack
     } else if (msg['publishers'] !== undefined) {
@@ -286,7 +326,7 @@ export class JanusVideoRoomService {
     this.userIdToPublisher.set(userId, publisher);
   }
 
-  private saveStreams(janusStreams: SubscriberJanusVideoRoomStream[]) {
+  private saveStreams(janusStreams: SubscriberJanusVideoRoomStream[]): void {
     const streams = janusStreams.map((janusStream) => ({
       userId: janusStream.feed_id,
       mid: janusStream.mid,
@@ -309,83 +349,110 @@ export class JanusVideoRoomService {
     });
   }
 
-  private getMidKey(mid: string, { remote }: { remote: boolean }) {
+  private getMidKey(mid: string, { remote }: { remote: boolean }): string {
     const prefix = remote ? 'remote' : 'local';
     return `${prefix}--${mid}`;
   }
 
-  private isRemote(userId: string) {
+  private isRemote(userId: string): boolean {
     return userId !== this.currentUserId;
   }
 
-  private getTracksConfig(): JanusJS.TrackOption[] {
-    return [
-      { type: 'audio', mid: '0', capture: this.microphoneEnabled, recv: false },
-      {
-        type: 'video',
-        mid: '1',
-        capture: this.cameraEnabled,
-        recv: false,
-        simulcast: false,
-      },
-    ];
+  private getTrackConfig(trackType: LocalTrackType): JanusJS.TrackOption {
+    switch (trackType) {
+      case LocalTrackType.MICROPHONE:
+        return { type: 'audio', capture: true, recv: false };
+      case LocalTrackType.VIDEO:
+        return {
+          type: 'video',
+          capture: true,
+          recv: false,
+          simulcast: false,
+        };
+    }
   }
 
-  private updateFeed(trackChanged: LocalTrackType[]) {
+  private updateFeed(): void {
     if (this.videoRoomPublisherHandle === null) {
       return;
     }
-    const tracks = this.getTracksConfig().filter(
-      (track) =>
-        !this.firstFeedPublished ||
-        trackChanged?.includes(track.mid as LocalTrackType)
-    );
-    this.videoRoomPublisherHandle.replaceTracks({
-      tracks: tracks,
-      error: (err) => {
-        this.logError(err);
-        this.toastService.displayErrorMessage('videoRoom.publishFeedError');
-      },
-    });
-  }
-
-  private publishFeed() {
-    if (this.videoRoomPublisherHandle === null) {
-      return;
-    }
-    const tracks = this.getTracksConfig();
     this.firstFeedPublished = true;
-    const streams: SubscriberJanusVideoRoomStream[] = tracks.map((track) => ({
-      type: janusTrackTypeEnum.toJanusStreamType(track.type as JanusTrackType),
-      mid: track.mid!,
-      feed_mid: track.mid!,
-      feed_id: this.currentUserId!,
-    }));
-    const publisher: JanusVideoRoomPublisher = {
-      id: this.currentUserId!,
-      streams,
-    };
-    this.savePublisher(publisher);
-    this.saveStreams(streams);
-    this.emitPublishersChanges();
-    this.videoRoomPublisherHandle.createOffer({
-      tracks,
-      success: (jsep) => {
-        if (this.videoRoomPublisherHandle === null) {
-          return;
+    let nextCreateMid = this.activeLocalTracks.size;
+    const toCreate: [LocalTrackType, JanusJS.TrackOption][] = Array.from(
+      this.enabledLocalTracks
+    )
+      .filter((trackType) => !this.activeLocalTracks.has(trackType))
+      .map((trackType) => [
+        trackType,
+        {
+          ...this.getTrackConfig(trackType),
+          mid: `${nextCreateMid++}`,
+        },
+      ]);
+    toCreate.forEach(([trackType, trackConfig]) =>
+      // so janus library will not set add: true to saved trackConfig
+      this.activeLocalTracks.set(trackType, { ...trackConfig })
+    );
+    const toUpdate: JanusJS.TrackOption[] = [];
+    Array.from(this.activeLocalTracks.entries()).forEach(
+      ([trackType, trackConfig]) => {
+        if (
+          !this.enabledLocalTracks.has(trackType) &&
+          trackConfig.capture !== false
+        ) {
+          trackConfig.capture = false;
+          toUpdate.push({ ...trackConfig, remove: true });
         }
-        const publish = { request: 'configure', audio: true, video: true };
-        this.videoRoomPublisherHandle.send({ message: publish, jsep });
-      },
-      error: (error) => {
-        this.logError(error.message);
-        this.toastService.displayErrorMessage('videoRoom.publishFeedError');
-        this.detach();
-      },
-    });
+        if (
+          this.enabledLocalTracks.has(trackType) &&
+          trackConfig.capture === false
+        ) {
+          trackConfig.capture = true;
+          toUpdate.push({ ...trackConfig, replace: true });
+        }
+      }
+    );
+    if (toCreate.length > 0) {
+      const streams = toCreate.map(([_, trackConfig]) => ({
+        type: janusTrackTypeEnum.toJanusStreamType(
+          trackConfig.type as JanusTrackType
+        ),
+        mid: trackConfig.mid!,
+        feed_mid: trackConfig.mid!,
+        feed_id: this.currentUserId!,
+      }));
+      const tracks = toCreate.map(([_, trackConfig]) => trackConfig);
+      this.saveStreams(streams);
+      this.videoRoomPublisherHandle.createOffer({
+        tracks,
+        success: (jsep) => {
+          if (this.videoRoomPublisherHandle === null) {
+            return;
+          }
+          const publish = { request: 'configure', audio: true, video: true };
+          this.videoRoomPublisherHandle.send({ message: publish, jsep });
+        },
+        error: (error) => {
+          this.logError(error.message);
+          this.toastService.displayErrorMessage('videoRoom.publishFeedError');
+          this.detach();
+        },
+      });
+      this.emitPublishersChanges();
+    }
+    if (toUpdate.length > 0) {
+      this.videoRoomPublisherHandle.replaceTracks({
+        tracks: toUpdate,
+        error: (err) => {
+          this.logError(err);
+          this.toastService.displayErrorMessage('videoRoom.publishFeedError');
+          this.detach();
+        },
+      });
+    }
   }
 
-  private deletePublisher(userId: string) {
+  private deletePublisher(userId: string): void {
     const publisher = this.userIdToPublisher.get(userId);
     if (publisher === undefined) {
       return;
@@ -396,7 +463,7 @@ export class JanusVideoRoomService {
     this.userIdToPublisher.delete(userId);
   }
 
-  private deleteStream(mid: string, { remote }: { remote: boolean }) {
+  private deleteStream(mid: string, { remote }: { remote: boolean }): void {
     const midKey = this.getMidKey(mid, { remote });
     const stream = this.midToStream.get(midKey);
     if (stream === undefined) {
@@ -415,12 +482,6 @@ export class JanusVideoRoomService {
     if (track.kind === 'audio') {
       return;
     }
-    if (mid === undefined) {
-      return;
-    }
-    if (!on) {
-      track.stop();
-    }
     this.handleTrack(mid, track, on, { remote: false });
   }
 
@@ -429,40 +490,75 @@ export class JanusVideoRoomService {
     track: MediaStreamTrack,
     on: boolean,
     { remote }: { remote: boolean }
-  ) {
+  ): void {
     const midKey = this.getMidKey(mid, { remote });
     const stream = this.midToStream.get(midKey);
     if (stream === undefined) {
       return;
     }
     if (on) {
-      if (stream.media === null) {
-        stream.media = {
-          trackIds: [track.id],
-          media: new MediaStream([track]),
-        };
-        this.emitPublishersChanges();
-      } else if (stream.media.media.getTrackById(track.id) === null) {
-        stream.media.media.addTrack(track);
-        stream.media.trackIds.push(track.id);
-        this.emitPublishersChanges();
+      if (this.trackIdToDeletedTrack.has(track.id)) {
+        this.trackIdToDeletedTrack.delete(track.id);
+      } else {
+        if (stream.media === null) {
+          stream.media = {
+            trackIds: [track.id],
+            media: new MediaStream([track]),
+          };
+          this.emitPublishersChanges();
+        } else if (stream.media.media.getTrackById(track.id) === null) {
+          stream.media.media.addTrack(track);
+          stream.media.trackIds.push(track.id);
+          this.emitPublishersChanges();
+        }
       }
     } else {
       if (stream.media === null || !stream.media.trackIds.includes(track.id)) {
         return;
       }
-      stream.media.media.removeTrack(track);
+      const expireAt = new Date();
+      expireAt.setMilliseconds(
+        expireAt.getMilliseconds() + this.deletedTrackLifeTime
+      );
+      this.trackIdToDeletedTrack.set(track.id, {
+        mid,
+        remote,
+        track,
+        expireAt,
+      });
+    }
+  }
+
+  /**
+   * debouncing for removing tracks so for small disconnects it will not create new media;
+   */
+  private clearExpiredDeletedTracks(): void {
+    const deletedTracks = Array.from(
+      this.trackIdToDeletedTrack.values()
+    ).filter((deletedTrack) => deletedTrack.expireAt < new Date());
+    deletedTracks.forEach((deletedTrack) => {
+      const midKey = this.getMidKey(deletedTrack.mid, {
+        remote: deletedTrack.remote,
+      });
+      const stream = this.midToStream.get(midKey);
+      if (stream === undefined || stream?.media === null) {
+        this.trackIdToDeletedTrack.delete(deletedTrack.track.id);
+        return;
+      }
+
+      stream.media.media.removeTrack(deletedTrack.track);
       stream.media!.trackIds = stream.media!.trackIds.filter(
-        (el) => el != track.id
+        (el) => el != deletedTrack.track.id
       );
       if (stream.media.media.getTracks().length === 0) {
         stream.media = null;
       }
       this.emitPublishersChanges();
-    }
+      this.trackIdToDeletedTrack.delete(deletedTrack.track.id);
+    });
   }
 
-  private emitPublishersChanges() {
+  private emitPublishersChanges(): void {
     const users: VideoRoomUser[] = Array.from(
       this.userIdToPublisher.values()
     ).map((publisher) => {
@@ -543,7 +639,7 @@ export class JanusVideoRoomService {
     handle: JanusJS.PluginHandle,
     msg: JanusJS.Message,
     jsep: JanusJS.JSEP | undefined
-  ) {
+  ): void {
     if (msg['videoroom'] === JanusVideoRoomEvent.EVENT) {
       // simulcast/temporal settings can be included hear (like quality switch buttons)
     }
@@ -631,13 +727,13 @@ export class JanusVideoRoomService {
     );
   }
 
-  private logError(error: string) {
+  private logError(error: string): void {
     if (this.debug) {
       console.error(`Janus video room error: ${error}`);
     }
   }
 
-  private logWarn(text: string) {
+  private logWarn(text: string): void {
     if (this.debug) {
       console.warn(`Janus video room warn: ${text}`);
     }

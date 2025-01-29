@@ -40,7 +40,7 @@ export class MessageDomTagProcessorService {
     /(?<startGroup>\[\/?)\s*(?<nameGroup>[a-zA-Z0-9_-]+)\s*(?<contentGroup>.*?)(?<endGroup>\/?\])/g;
   private readonly tagAttributeRegex =
     /(?<nameGroup>[a-zA-Z0-9]+)\s*=\s*"(?<contentGroup>.*?)"/g;
-  private document: Document = inject(DOCUMENT);
+  private readonly document = inject(DOCUMENT);
 
   public toTextNodes(input: string) {
     const root: TagMessageNode = new TagMessageNode(NodeTagType.LINE, {}, []);

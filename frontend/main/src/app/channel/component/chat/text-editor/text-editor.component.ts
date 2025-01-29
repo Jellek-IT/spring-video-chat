@@ -71,7 +71,7 @@ export class TextEditorComponent implements OnInit, OnDestroy {
 
   private _textarea?: ElementRef<HTMLElement>;
   private userProfileSubscription!: Subscription;
-  protected form: FormGroup<MessageForm> = this.formBuilder.group({
+  protected readonly form: FormGroup<MessageForm> = this.formBuilder.group({
     text: ['', validation.channelMessageText],
   });
   protected focused = false;

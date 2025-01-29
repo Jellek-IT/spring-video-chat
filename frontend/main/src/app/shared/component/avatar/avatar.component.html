@@ -1,7 +1,7 @@
 <p-avatar
   *ngIf="name !== undefined && id !== undefined && !isInteractive()"
   class="avatar"
-  size="large"
+  [size]="size"
   [label]="name.at(0)"
   shape="circle"
   [routerLinkActive]="'avatar--active'"
@@ -10,7 +10,7 @@
   *ngIf="name !== undefined && id !== undefined && isInteractive()"
   pRipple
   class="avatar avatar--interactive"
-  size="large"
+  [size]="size"
   [label]="name.at(0)"
   shape="circle"
   (click)="avatarClick.emit($event)"
@@ -19,6 +19,6 @@
 />
 <p-skeleton
   shape="circle"
-  size="3rem"
+  [size]="getSkeletonSize()"
   *ngIf="name === undefined || id === undefined"
 />

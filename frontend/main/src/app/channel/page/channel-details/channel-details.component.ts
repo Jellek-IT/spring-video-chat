@@ -11,7 +11,16 @@ import { MemberChannelService } from '../../service/api/member-channel.service';
 import { ButtonModule } from 'primeng/button';
 import { VideoRoomOverlayComponent } from '../../component/video-room/video-room-overlay/video-room-overlay.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MemberProfileDto } from '../../../user/model/member-profile-dto.model';
+import { CurrentUserService } from '../../../user/service/current-user.service';
+import { ChannelMemberDto } from '../../model/member/channel-member-dto.model';
+import { ChannelMemberRights } from '../../enum/channel-member-rights.enum';
+import {
+  AddChannelMemberDialogComponent,
+  AddChannelMemberDialogConfig,
+} from '../../component/add-channel-member-dialog/add-channel-member-dialog.component';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-channel-details',
@@ -29,18 +38,32 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './channel-details.component.html',
   styleUrl: './channel-details.component.scss',
 })
-export class ChannelDetailsComponent implements OnInit {
+export class ChannelDetailsComponent implements OnInit, OnDestroy {
   private readonly memberChannelService = inject(MemberChannelService);
+  private readonly currentUserService = inject(CurrentUserService);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly dialogService = inject(DialogService);
+  private readonly translateService = inject(TranslateService);
 
   private loadChannelSubscription: Subscription | null = null;
+  private userProfileSubscription!: Subscription;
   protected channel: ChannelDetailsDto | null = null;
+  protected userProfile!: MemberProfileDto;
+  protected currentUserChannelMember?: ChannelMemberDto;
   protected showVideoRoom = false;
+  protected channelMemberRights = ChannelMemberRights;
 
   public ngOnInit(): void {
+    this.userProfileSubscription = this.currentUserService
+      .getMemberProfileAsObservable()
+      .subscribe((userProfile) => (this.userProfile = userProfile));
     this.activatedRoute.params.subscribe((params: Params) => {
       this.loadChannel(params['id']);
     });
+  }
+
+  public ngOnDestroy(): void {
+    this.userProfileSubscription.unsubscribe();
   }
 
   private loadChannel(id: string): void {
@@ -52,6 +75,9 @@ export class ChannelDetailsComponent implements OnInit {
       .getById(id)
       .subscribe((res) => {
         this.channel = res;
+        this.currentUserChannelMember = res.members.find(
+          (member) => member.member.id === this.userProfile.id
+        );
       });
   }
 
@@ -61,5 +87,29 @@ export class ChannelDetailsComponent implements OnInit {
 
   protected closeVideoRoom() {
     this.showVideoRoom = false;
+  }
+
+  protected currentUserHasRight(right: ChannelMemberRights) {
+    return (
+      this.currentUserChannelMember !== undefined &&
+      this.currentUserChannelMember.rights.includes(right)
+    );
+  }
+
+  protected openAddChannelMemberDialog() {
+    if (this.channel === null || this.currentUserChannelMember === undefined) {
+      return;
+    }
+    const data: AddChannelMemberDialogConfig = {
+      availableRights: this.currentUserChannelMember.rights,
+      channel: this.channel,
+    };
+    this.dialogService.open(AddChannelMemberDialogComponent, {
+      closable: true,
+      modal: true,
+      header: this.translateService.instant('channel.addMember'),
+      dismissableMask: true,
+      data,
+    });
   }
 }

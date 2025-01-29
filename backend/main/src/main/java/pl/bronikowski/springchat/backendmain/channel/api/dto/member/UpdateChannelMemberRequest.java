@@ -1,4 +1,4 @@
-package pl.bronikowski.springchat.backendmain.channel.api.dto;
+package pl.bronikowski.springchat.backendmain.channel.api.dto.member;
 
 import jakarta.validation.constraints.NotNull;
 import pl.bronikowski.springchat.backendmain.channel.api.ChannelMemberRight;

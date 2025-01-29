@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { RouterModule } from '@angular/router';
 import { MenuModule } from 'primeng/menu';
@@ -30,6 +30,8 @@ import { TypographyComponent } from '../../component/typography/typography.compo
 import { Subscription } from 'rxjs';
 import { StompService } from '../../../core/stomp/service/stomp.service';
 import { StompConnectionState } from '../../../core/stomp/enum/internal/stomp-state.enum';
+import { NAVIGATOR } from '../../../core/token/navigator.token';
+import { ToastService } from '../../service/toast.service';
 
 @Component({
   selector: 'app-user-layout',
@@ -59,6 +61,8 @@ export class UserLayoutComponent implements OnInit, OnDestroy {
   private readonly keycloak = inject(Keycloak);
   private readonly dialogService = inject(DialogService);
   private readonly stompService = inject(StompService);
+  private readonly toastService = inject(ToastService);
+  private readonly navigator = inject(NAVIGATOR);
 
   private userProfileSubscription!: Subscription;
   @ViewChild('channelsStrip')
@@ -93,6 +97,10 @@ export class UserLayoutComponent implements OnInit, OnDestroy {
   private initUserMenuItems(): void {
     this.userMenuItems = [
       {
+        label: this.translateService.instant('menu.copyId'),
+        command: () => this.copyIdToClipboard(),
+      },
+      {
         label: this.translateService.instant('menu.logout'),
         command: () => {
           this.keycloak.logout({ redirectUri: environment.url });
@@ -101,17 +109,30 @@ export class UserLayoutComponent implements OnInit, OnDestroy {
     ];
   }
 
+  private async copyIdToClipboard(): Promise<void> {
+    if (this.navigator === undefined) {
+      this.toastService.displayErrorMessage('menu.copyIdError');
+      return;
+    }
+    try {
+      await this.navigator.clipboard.writeText(this.userProfile.id);
+      this.toastService.displaySuccessMessage('menu.copyIdSuccess');
+    } catch (_) {
+      this.toastService.displayErrorMessage('menu.copyIdError');
+    }
+  }
+
   private initMenuItems(): void {
     this.menuItems = [
       {
         label: this.translateService.instant('menu.addChannel'),
         icon: 'pi pi-plus',
-        command: () => this.openAddChannelPopup(),
+        command: () => this.openAddChannelDialog(),
       },
     ];
   }
 
-  private openAddChannelPopup(): void {
+  private openAddChannelDialog(): void {
     const data: AddChannelDialogConfig = {
       onCreateEnd: () => this.channelsStripComponent?.reloadChannels(),
     };

@@ -1,20 +1,27 @@
-@use 'variable' as *;
+@use "variable" as *;
 
 .form-group {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 1.5rem;
-
-	label {
-		font-weight: bold;
-		font-size: 1rem;
-		margin-bottom: 0.5rem;
-	}
-	&--full-width {
-		input.p-inputtext,
-		.p-password,
-		textarea.p-inputtextarea {
-			width: 100%;
-		}
-	}
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  .checkbox-label {
+    padding-bottom: 0.25rem;
+    font-weight: normal;
+  }
+  .p-checkbox {
+    margin-right: 0.5rem;
+  }
+  label {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+  &--full-width {
+    input.p-inputtext,
+    .p-password,
+    textarea.p-inputtextarea {
+      width: 100%;
+    }
+  }
 }

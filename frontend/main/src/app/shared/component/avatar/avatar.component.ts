@@ -30,6 +30,7 @@ export class AvatarComponent implements OnInit {
   @Input() public name?: string;
   @Input() public id?: string;
   @Input() public routerLink?: string | any[] | UrlTree;
+  @Input() public size: 'normal' | 'large' | 'xlarge' = 'large';
   @Output() public avatarClick = new EventEmitter<MouseEvent>();
   @HostBinding('style.--app-avatar-color') defaultColor = '';
   @HostBinding('style.--app-avatar-hover-color') hoverColor = '';
@@ -44,5 +45,16 @@ export class AvatarComponent implements OnInit {
 
   protected isInteractive(): boolean {
     return this.routerLink !== undefined || this.avatarClick.observed;
+  }
+
+  protected getSkeletonSize(): string {
+    switch (this.size) {
+      case 'normal':
+        return '2rem';
+      case 'large':
+        return '3rem';
+      case 'xlarge':
+        return '4rem';
+    }
   }
 }

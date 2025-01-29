@@ -26,7 +26,7 @@ public class StompVideoRoomController {
         var connectionDetails = UserConnectionDetails.fromMessage(message, authResourceId);
         var body = videoRoomService.extendUserSession(connectionDetails);
         var payload = StompResponse.message(body, message);
-        var destination = VideoRoomDestinations.getTokenUserQueueDestination(body.videoRoomId().toString());
+        var destination = VideoRoomDestinations.getTokenUserQueueDestination(body.channelId().toString());
         template.convertAndSendToCurrentUser(authResourceId, destination, payload, message);
     }
 }

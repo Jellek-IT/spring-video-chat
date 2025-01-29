@@ -1,3 +1,48 @@
+@use "variable" as *;
+
+:host ::ng-deep {
+  .users {
+    .p-carousel-next-button,
+    .p-carousel-prev-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 400;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--p-transition-duration),
+        visibility var(--p-transition-duration);
+      .p-button {
+        width: 2rem;
+      }
+    }
+    .p-carousel-next-button {
+      right: 0.5rem;
+    }
+    .p-carousel-prev-button {
+      left: 0.5rem;
+    }
+    .p-carousel,
+    .p-carousel-content-container,
+    .p-carousel-content,
+    .p-carousel-item-list {
+      height: 100%;
+    }
+    .p-carousel-viewport {
+      position: relative;
+      z-index: 350;
+    }
+  }
+  .box:hover {
+    .users {
+      .p-carousel-next-button,
+      .p-carousel-prev-button {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+}
 .overlay {
   display: block;
   position: fixed;
@@ -19,7 +64,50 @@
   padding-bottom: 1rem;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s, visibility 0.2s;
+  z-index: 400;
+  transition: opacity var(--p-transition-duration),
+    visibility var(--p-transition-duration);
+}
+.users {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.user {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  &__avatar {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+    z-index: 400;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--p-transition-duration),
+      visibility var(--p-transition-duration);
+  }
+  &--no-streams {
+    .user {
+      &__avatar {
+        right: auto;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    background-color: var(--p-surface-950);
+  }
+  &:hover {
+    .user {
+      &__avatar {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
 }
 .box {
   position: absolute;
@@ -38,8 +126,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  outline: 2px solid var(--p-secondary-900);
   &--positioned {
     bottom: auto;
+  }
+  &--fullscreen {
+    max-width: auto;
+    max-height: auto;
+    border-radius: 0;
+    outline: none;
   }
   &:hover {
     .actions {

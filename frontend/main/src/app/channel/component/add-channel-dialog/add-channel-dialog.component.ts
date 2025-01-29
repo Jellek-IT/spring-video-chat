@@ -42,11 +42,13 @@ export class AddChannelDialogComponent {
   private readonly toastService = inject(ToastService);
   private readonly memberChannelService = inject(MemberChannelService);
   private readonly endpointErrorService = inject(EndpointErrorService);
-  private readonly config = inject(DynamicDialogConfig<AddChannelDialogConfig>);
+  private readonly config: DynamicDialogConfig<AddChannelDialogConfig> = inject(
+    DynamicDialogConfig<AddChannelDialogConfig>
+  );
   private readonly ref = inject(DynamicDialogRef);
-  protected loading: boolean = false;
 
-  protected form: FormGroup<AddChannelForm> = this.formBuilder.group({
+  protected loading: boolean = false;
+  protected readonly form: FormGroup<AddChannelForm> = this.formBuilder.group({
     name: ['', validation.channelName],
   });
 
@@ -67,7 +69,7 @@ export class AddChannelDialogComponent {
           name: res.name,
         });
         this.loading = false;
-        this.config.data?.onCreateEnd();
+        this.config.data?.onCreateEnd?.();
         this.ref.close();
       },
       error: (e) => {

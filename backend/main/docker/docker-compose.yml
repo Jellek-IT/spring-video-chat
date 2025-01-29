@@ -36,12 +36,6 @@ services:
     ports:
       - "8090:8080"
       - "8443:8443"
-  mailcatcher:
-    restart: on-failure
-    image: dockage/mailcatcher:0.9.0
-    ports:
-      - "1080:1080"
-      - "1025:1025"
   rabbitmq:
     build: ./rabbitmq
     ports:

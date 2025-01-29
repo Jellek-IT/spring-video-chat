@@ -9,9 +9,8 @@ import pl.bronikowski.springchat.backendmain.channel.api.dto.ChannelBasicsDto;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.ChannelDetailsDto;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.CreateChannelRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.KickChannelMemberRequest;
-import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelMemberRequest;
+import pl.bronikowski.springchat.backendmain.channel.api.dto.member.UpdateChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelRequest;
-import pl.bronikowski.springchat.backendmain.channel.api.exception.ChannelOperationNotEnoughRightsException;
 import pl.bronikowski.springchat.backendmain.exception.AppNotFoundException;
 import pl.bronikowski.springchat.backendmain.member.internal.MemberRepository;
 

@@ -8,23 +8,50 @@
   ></audio>
   <div
     class="box"
-    [ngClass]="boxStyle !== undefined ? 'box--positioned' : ''"
+    [ngClass]="this.getBoxClass()"
     #box
     (pointerdown)="onBoxGrab($event)"
     [ngStyle]="boxStyle"
   >
     <app-loader *ngIf="connecting" />
-    <div *ngIf="!connecting" class="">
-      <div class="" *ngFor="let user of users">
-        <ng-container *ngFor="let stream of user.streams">
-          <app-video-view
-            *ngIf="stream.media !== null && stream.type === streamTypes.VIDEO"
-            [mediaStream]="stream.media.media"
-          />
+    <p-carousel
+      class="users"
+      *ngIf="!connecting"
+      [value]="videRoomUsers"
+      [numVisible]="1"
+      [responsiveOptions]="undefined"
+      [numScroll]="1"
+      [showIndicators]="false"
+      [prevButtonProps]="{ styleClass: 'drag-disabled' }"
+      [nextButtonProps]="{ styleClass: 'drag-disabled' }"
+      [verticalViewPortHeight]="'100%'"
+    >
+      <ng-template let-user #item>
+        <ng-container
+          *appLet="getVideoRoomUserVideoStreams(user) as videoStreams"
+        >
+          <div
+            class="user"
+            [ngClass]="videoStreams.length === 0 ? 'user--no-streams' : ''"
+            *appLet="getVideoRoomUserMember(user) as member"
+          >
+            <app-avatar
+              class="user__avatar"
+              [name]="member.nickname"
+              [id]="member.id"
+              [size]="videoStreams.length === 0 ? 'xlarge' : 'normal'"
+              tooltipPosition="bottom"
+              [pTooltip]="member.nickname"
+            />
+            <!--if there will be more then one stream (eg. screen sharing) it could become tabs-->
+            <ng-container *ngFor="let stream of videoStreams">
+              <app-video-view [mediaStream]="stream.media!.media" />
+            </ng-container>
+          </div>
         </ng-container>
-      </div>
-    </div>
-    <div class="actions">
+      </ng-template>
+    </p-carousel>
+    <div class="actions" *ngIf="!connecting">
       <button
         pButton
         class="drag-disabled"
@@ -56,8 +83,17 @@
       <button
         pButton
         class="drag-disabled"
-        icon="pi pi-window-maximize"
-        [pTooltip]="'channel.videoRoom.maximize' | translate"
+        [icon]="
+          'pi ' +
+          (this.fullscreen ? 'pi-window-minimize' : 'pi-window-maximize')
+        "
+        [pTooltip]="
+          (this.fullscreen
+            ? 'channel.videoRoom.minimize'
+            : 'channel.videoRoom.maximize'
+          ) | translate
+        "
+        (click)="toggleFullScreen()"
         tooltipPosition="bottom"
       ></button>
       <button

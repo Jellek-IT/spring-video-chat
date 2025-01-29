@@ -12,9 +12,9 @@
         </div>
       </ng-template>
       <div class="register__content" *ngIf="resultNickname === null">
-        <app-typography type="title">{{
-          "register.title" | translate
-        }}</app-typography>
+        <app-typography class="register__title" type="title">
+          {{ "register.title" | translate }}
+        </app-typography>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="form-group form-group--full-width">
             <label for="input-email">{{ "register.email" | translate }}:</label>

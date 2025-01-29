@@ -1,22 +1,22 @@
-<form class="add-channel" [formGroup]="form" (ngSubmit)="onCreateSubmit()">
-	<div class="form-group form-group--full-width">
-		<label for="input-name">{{ 'channel.name' | translate }}:</label>
-		<input
-			type="text"
-			id="input-name"
-			placeholder="{{ 'channel.name' | translate }}"
-			pInputText
-			formControlName="name"
-		/>
-		<app-validation-message [control]="form.controls.name" />
-	</div>
-	<button
-		pButton
-		type="submit"
-		label="{{ 'channel.add' | translate }}"
-		[disabled]="loading"
-		[icon]="loading ? 'pi pi-spin pi-spinner' : ''"
-		iconPos="right"
-		class="p-button--full-width"
-	></button>
+<form [formGroup]="form" (ngSubmit)="onCreateSubmit()">
+  <div class="form-group form-group--full-width">
+    <label for="input-name">{{ "channel.name" | translate }}:</label>
+    <input
+      type="text"
+      id="input-name"
+      placeholder="{{ 'channel.name' | translate }}"
+      pInputText
+      formControlName="name"
+    />
+    <app-validation-message [control]="form.controls.name" />
+  </div>
+  <button
+    pButton
+    type="submit"
+    label="{{ 'channel.add' | translate }}"
+    [disabled]="loading"
+    [icon]="loading ? 'pi pi-spin pi-spinner' : ''"
+    iconPos="right"
+    class="p-button--full-width"
+  ></button>
 </form>

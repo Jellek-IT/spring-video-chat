@@ -21,7 +21,7 @@ import pl.bronikowski.springchat.backendmain.channel.api.dto.ChannelBasicsDto;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.ChannelDetailsDto;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.CreateChannelRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.MemberChannelQueryParams;
-import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelMemberRequest;
+import pl.bronikowski.springchat.backendmain.channel.api.dto.member.UpdateChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.AddChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.KickChannelMemberRequest;

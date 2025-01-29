@@ -16,6 +16,16 @@
         >
         <div class="header__actions" *ngIf="channel !== null">
           <button
+            *ngIf="currentUserHasRight(channelMemberRights.INVITE)"
+            pButton
+            icon="pi pi-user-plus"
+            [pTooltip]="'channel.addMember' | translate"
+            severity="success"
+            tooltipPosition="bottom"
+            (click)="openAddChannelMemberDialog()"
+          ></button>
+          <button
+            *ngIf="currentUserHasRight(channelMemberRights.TALK)"
             pButton
             icon="pi pi-phone"
             [ngClass]="showVideoRoom ? 'p-button-danger' : 'p-button-success'"

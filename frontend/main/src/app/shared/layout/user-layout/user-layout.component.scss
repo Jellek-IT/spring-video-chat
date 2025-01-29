@@ -11,7 +11,7 @@
   display: grid;
   grid-template-columns: calc(5rem + 2px) minmax(0, 1fr);
   flex: 1;
-  transition: grid-template-columns 0.2s;
+  transition: grid-template-columns var(--p-transition-duration);
   &--expand-channels {
     grid-template-columns: $expanded-channels-width minmax(0, 1fr);
   }

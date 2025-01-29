@@ -1,50 +1,4 @@
 {
-  "primeng": {
-    "clear": "Wyczyść",
-    "dateFormat": "dd/mm/yy",
-    "dayNamesMin": ["N", "P", "W", "Ś", "Cz", "P", "S"],
-    "dayNamesShort": ["Nie", "Pon", "Wt", "Śr", "Czw", "Pt", "So"],
-    "dayNames": [
-      "Niedziela",
-      "Poniedziałek",
-      "Wtorek",
-      "Środa",
-      "Czwartek",
-      "Piątek",
-      "Sobota"
-    ],
-    "firstDayOfWeek": 1,
-    "monthNamesShort": [
-      "Sty",
-      "Lut",
-      "Mar",
-      "Kwi",
-      "Maj",
-      "Cze",
-      "Lip",
-      "Sie",
-      "Wrz",
-      "Paź",
-      "Lis",
-      "Gru"
-    ],
-    "monthNames": [
-      "Styczeń",
-      "Luty",
-      "Marzec",
-      "Kwiecień",
-      "Maj",
-      "Czerwiec",
-      "Lipiec",
-      "Sierpień",
-      "Wrzesień",
-      "Październik",
-      "Listopad",
-      "Grudzień"
-    ],
-    "today": "Dzisiaj",
-    "weekHeader": "Tdz"
-  },
   "common": {
     "yes": "Tak",
     "no": "Nie",
@@ -52,17 +6,25 @@
     "back": "Powrót",
     "search": "Szukaj",
     "send": "Wyślij",
-    "stompConnecting": "Trwa łączenie z serwerem..."
+    "stompConnecting": "Trwa łączenie z serwerem...",
+    "unknown": "Brak tłumaczenia"
   },
   "menu": {
     "logout": "Wyloguj",
-    "addChannel": "Dodaj kanał"
+    "addChannel": "Dodaj kanał",
+    "copyId": "Kopiuj id",
+    "copyIdSuccess": "Skopiowano id użytkownika do schowka",
+    "copyIdError": "Nie udało się kopiowania id użytkownika do schowka"
   },
   "channel": {
     "addTitle": "Dodaj kanał",
     "createSuccess": "Pomyślnie utworzono nowy kanał \"{{name}}\"",
+    "addMemberSuccess": "Pomyślnie dodano nowego użytkownika",
     "name": "Nazwa",
     "add": "Dodaj",
+    "addMember": "Zaproś użytkownika",
+    "memberId": "Identyfikator użytkownika",
+    "rights": "Prawa użytkownika",
     "chat": {
       "writeMessage": "Napisz wiadomość...",
       "stompMessageSubscribeError": "Nie udało się połączyć z kanałem {{name}}",
@@ -77,7 +39,18 @@
       "enableCamera": "Włącz kamerę",
       "disableCamera": "Wyłącz kamerę",
       "enableMicrophone": "Włącz mikrofon",
-      "disableMicrophone": "Wyłącz mikrofon"
+      "disableMicrophone": "Wyłącz mikrofon",
+      "alreadyJoined": "Jedno konto nie może uczestniczyć w więcej niż jednej rozmowie"
+    },
+    "enum": {
+      "right": {
+        "MANAGE": "Zarządzanie kanałem",
+        "INVITE": "Zapraszanie użytkowników",
+        "KICK": "Wyrzucanie użytkowników",
+        "TALK": "Czat głosowy",
+        "WRITE": "Pisanie w czacie tekstowym",
+        "READ": "Odczytywanie wiadomości czatu tekstowego"
+      }
     }
   },
   "videoRoom": {
@@ -130,7 +103,8 @@
       "userPassword": "Hasło powinno zawierać przynajmniej jedną małą literę, dużą literę, cyfrę i znak specjalny",
       "userNickname": "Nazwa użytkownika może zawierać tylko znaki a-zA-Z0-9 _-",
       "channelName": "Nazwa kanału może zawierać tylko znaki a-zA-Z0-9 _-",
-      "channelMessageText": "Treść zawiera niedozwolone znaki"
+      "channelMessageText": "Treść zawiera niedozwolone znaki",
+      "uuidV4": "Podany Identyfikator ma niepoprawny format"
     }
   }
 }

@@ -11,6 +11,10 @@
     display: block;
     flex: 1;
   }
+  &__actions {
+    display: flex;
+    gap: 1rem;
+  }
 }
 :host {
   height: 100%;
