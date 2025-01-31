@@ -8,4 +8,5 @@ import java.util.UUID;
 public class ChannelBasicsDto {
     private UUID id;
     private String name;
+    private Boolean hasThumbnail;
 }

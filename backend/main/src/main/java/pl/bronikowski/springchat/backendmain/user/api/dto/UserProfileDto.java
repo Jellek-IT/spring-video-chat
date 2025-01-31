@@ -11,4 +11,5 @@ public class UserProfileDto {
     private String email;
     private UserType type;
     private Boolean emailVerified;
+    private Boolean hasProfilePicture;
 }

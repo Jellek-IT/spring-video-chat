@@ -1,4 +1,5 @@
 export interface ChannelBasicsDto {
-	id: string;
-	name: string;
+  id: string;
+  name: string;
+  hasThumbnail: boolean;
 }

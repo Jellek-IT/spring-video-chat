@@ -1,6 +1,7 @@
 package pl.bronikowski.springchat.backendmain.channel.api;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,10 +22,11 @@ import pl.bronikowski.springchat.backendmain.channel.api.dto.ChannelBasicsDto;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.ChannelDetailsDto;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.CreateChannelRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.MemberChannelQueryParams;
-import pl.bronikowski.springchat.backendmain.channel.api.dto.member.UpdateChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelRequest;
+import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelThumbnailRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.AddChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.KickChannelMemberRequest;
+import pl.bronikowski.springchat.backendmain.channel.api.dto.member.UpdateChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.message.ChannelMessageBasicsDto;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.message.MemberChannelMessageQueryParams;
 import pl.bronikowski.springchat.backendmain.channel.api.validation.ExistingMemberChannelWithRights;
@@ -103,6 +105,19 @@ public class MemberChannelController {
     public void kickMember(@PathVariable @ExistingMemberChannelWithRights(ChannelMemberRight.KICK) UUID id,
                            KickChannelMemberRequest request) {
         channelService.kickMember(id, request);
+    }
+
+    @PostMapping("/{id}/thumbnail")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateThumbnail(@PathVariable @ExistingMemberChannelWithRights(ChannelMemberRight.MANAGE) UUID id,
+                                @Valid UpdateChannelThumbnailRequest request) {
+        channelService.updateThumbnail(id, request);
+    }
+
+    @GetMapping("/{id}/thumbnail")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void getThumbnail(@PathVariable @ExistingMemberChannelWithRights UUID id, HttpServletResponse response) {
+        channelService.getThumbnail(id, response);
     }
 
     @DeleteMapping("/{id}")

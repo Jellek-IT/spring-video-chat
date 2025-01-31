@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public record MemberBasicsDto(
         UUID id,
-        String nickname
+        String nickname,
+        Boolean hasProfilePicture
 ) {
 }

@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   Input,
   OnInit,
   ViewChild,
@@ -56,5 +57,12 @@ export class VideoViewComponent implements AfterViewInit {
         height: `${videoContainerRect.height}px`,
       };
     }
+  }
+
+  @HostListener('document:fullscreenchange')
+  protected onFullScreenChange() {
+    setTimeout(() => {
+      this.updateDimensions();
+    });
   }
 }

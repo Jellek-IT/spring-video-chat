@@ -27,9 +27,8 @@
   >
     <div class="channel" *ngFor="let channel of channels" #channelElements>
       <ng-container *ngIf="channel.data !== null">
-        <app-avatar
-          [id]="channel.data.id"
-          [name]="channel.data.name"
+        <app-channel-thumbnail
+          [channel]="channel.data"
           [routerLink]="'/channels/' + channel.data.id + '/details'"
         />
         <app-typography class="channel__title" type="subtitle2">
@@ -37,7 +36,7 @@
         </app-typography>
       </ng-container>
       <ng-container *ngIf="channel.data === null">
-        <app-avatar />
+        <app-channel-thumbnail />
         <app-typography type="subtitle2" [skeleton]="true" />
       </ng-container>
     </div>

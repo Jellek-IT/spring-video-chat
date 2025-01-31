@@ -2,7 +2,11 @@
   class="message"
   [ngClass]="message.member.id === userProfile.id ? 'message--right' : ''"
 >
-  <app-avatar [name]="message.member.nickname" [id]="message.member.id" />
+  <app-channel-member-profile-picture
+    [member]="message.member"
+    [channel]="channel"
+    [contextMenu]="true"
+  />
   <div class="message-details">
     <div class="message-info">
       <app-typography type="subtitle2" class="message-nickname">

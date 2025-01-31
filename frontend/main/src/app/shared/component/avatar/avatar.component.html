@@ -1,24 +1,26 @@
 <p-avatar
-  *ngIf="name !== undefined && id !== undefined && !isInteractive()"
+  *ngIf="!isSkeleton() && !isInteractive()"
   class="avatar"
   [size]="size"
-  [label]="name.at(0)"
+  [label]="getLabel()"
   shape="circle"
   [routerLinkActive]="'avatar--active'"
+  [image]="iconUrl ?? undefined"
+  [pTooltip]="name ?? undefined"
+  tooltipPosition="bottom"
 />
 <p-avatar
-  *ngIf="name !== undefined && id !== undefined && isInteractive()"
+  *ngIf="!isSkeleton() && isInteractive()"
   pRipple
   class="avatar avatar--interactive"
   [size]="size"
-  [label]="name.at(0)"
+  [label]="getLabel()"
   shape="circle"
   (click)="avatarClick.emit($event)"
   [routerLink]="routerLink"
+  [image]="iconUrl ?? undefined"
   [routerLinkActive]="'avatar--active'"
+  [pTooltip]="name ?? undefined"
+  tooltipPosition="bottom"
 />
-<p-skeleton
-  shape="circle"
-  [size]="getSkeletonSize()"
-  *ngIf="name === undefined || id === undefined"
-/>
+<p-skeleton shape="circle" [size]="getSkeletonSize()" *ngIf="isSkeleton()" />

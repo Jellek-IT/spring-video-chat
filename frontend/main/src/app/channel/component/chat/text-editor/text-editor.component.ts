@@ -53,7 +53,8 @@ interface MessageForm {
 })
 export class TextEditorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) public channel!: ChannelDetailsDto;
-  @Output() public messageCreated =
+  @Output()
+  public onMessageCreated =
     new EventEmitter<UnprocessedChannelMessageBasicsDto>();
   @ViewChild('textarea')
   protected set textarea(element: ElementRef<HTMLElement>) {
@@ -147,9 +148,10 @@ export class TextEditorComponent implements OnInit, OnDestroy {
       member: {
         id: this.userProfile.id,
         nickname: this.userProfile.nickname,
+        hasProfilePicture: this.userProfile.hasProfilePicture,
       },
     };
-    this.messageCreated.emit(message);
+    this.onMessageCreated.emit(message);
     this.previousHtmlValue = '';
     if (textareaElement !== undefined) {
       textareaElement.innerHTML = '';

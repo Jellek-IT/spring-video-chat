@@ -11,4 +11,7 @@ public interface ChannelRepository extends JpaRepository<Channel, UUID>, JpaSpec
 
     @EntityGraph(Channel_.GRAPH_CHANNEL_WITH_MEMBERS)
     Optional<Channel> findWithMembersById(UUID id);
+
+    @EntityGraph(Channel_.GRAPH_CHANNEL_WITH_THUMBNAIL)
+    Optional<Channel> findWithThumbnailById(UUID id);
 }

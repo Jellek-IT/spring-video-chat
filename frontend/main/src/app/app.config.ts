@@ -36,6 +36,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { errorInterceptor } from './core/interceptor/error.interceptor';
 import localePl from '@angular/common/locales/pl';
 import { ProjectConstants } from './shared/constants/project-constants';
+import { cacheInterceptor } from './core/interceptor/cache.interceptor';
 (window as any).global = window;
 
 registerLocaleData(localePl, 'pl');
@@ -155,6 +156,7 @@ export const appConfig: ApplicationConfig = {
         dateInterceptor,
         authTokenInterceptor,
         errorInterceptor,
+        cacheInterceptor,
       ])
     ),
     { provide: LOCALE_ID, useValue: ProjectConstants.DEFAULT_LANGUAGE },

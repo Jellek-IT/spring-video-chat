@@ -21,7 +21,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/{id}/profile-picture")
-    public void getMemberProfilePicture(@PathVariable UUID id, HttpServletResponse response) {
+    public void getProfilePicture(@PathVariable UUID id, HttpServletResponse response) {
         memberService.getProfilePicture(id, response);
     }
 }

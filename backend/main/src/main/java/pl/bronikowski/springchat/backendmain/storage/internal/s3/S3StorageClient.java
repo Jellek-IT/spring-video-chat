@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import pl.bronikowski.springchat.backendmain.channel.internal.Channel;
 import pl.bronikowski.springchat.backendmain.shared.utils.FileUtils;
 import pl.bronikowski.springchat.backendmain.storage.api.StorageClient;
 import pl.bronikowski.springchat.backendmain.storage.api.StorageException;
@@ -29,6 +30,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3StorageClient implements StorageClient {
     private static final String USER_FOLDER = "user/%s";
+    private static final String CHANNEL_FOLDER = "channel/%s";
 
     private final S3StorageProperties s3StorageProperties;
     private final S3Client s3Client;
@@ -36,6 +38,12 @@ public class S3StorageClient implements StorageClient {
 
     @Override
     public StorageFile uploadUserImage(MultipartFile multipartFile, User user, String name) {
+        var folder = String.format(USER_FOLDER, user.getId());
+        return uploadFile(multipartFile, folder, name);
+    }
+
+    @Override
+    public StorageFile uploadChannelImage(MultipartFile multipartFile, Channel user, String name) {
         var folder = String.format(USER_FOLDER, user.getId());
         return uploadFile(multipartFile, folder, name);
     }
@@ -85,7 +93,7 @@ public class S3StorageClient implements StorageClient {
         try {
             var result = s3Client.putObject(request, RequestBody.fromInputStream(multipartFile.getInputStream(),
                     multipartFile.getSize()));
-            var storageFile = new StorageFile(id, folder, name, result.versionId());
+            var storageFile = new StorageFile(id, folder, name);
             return storageFileRepository.save(storageFile);
         } catch (SdkException | IOException e) {
             throw new StorageException("Failed to upload file", e);

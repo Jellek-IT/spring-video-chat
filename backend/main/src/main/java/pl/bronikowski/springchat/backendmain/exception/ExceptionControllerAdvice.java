@@ -20,7 +20,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RequiredArgsConstructor
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionControllerAdvice {
     private final ExceptionMapper exceptionMapper;
 

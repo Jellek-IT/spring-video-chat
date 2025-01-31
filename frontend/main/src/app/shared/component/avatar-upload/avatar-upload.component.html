@@ -1,0 +1,76 @@
+<p-fileupload
+  [accept]="accept"
+  [maxFileSize]="maximumSize"
+  [disabled]="loading"
+  (onSelect)="handleFileSelected($event)"
+  #fileupload
+>
+  <ng-template
+    #header
+    let-files
+    let-chooseCallback="chooseCallback"
+    let-clearCallback="clearCallback"
+    let-uploadCallback="uploadCallback"
+  >
+    <div class="header__actions">
+      <p-button
+        (onClick)="chooseCallback($event)"
+        icon="pi pi-images"
+        [rounded]="true"
+        [disabled]="loading"
+        [pTooltip]="'avatarUpload.chooseFile' | translate"
+        tooltipPosition="bottom"
+      />
+      <button
+        pButton
+        (click)="handleUpload(uploadCallback)"
+        [rounded]="true"
+        severity="success"
+        [disabled]="croppedImage === null || loading"
+        [pTooltip]="'avatarUpload.upload' | translate"
+        tooltipPosition="bottom"
+      >
+        <i
+          class="pi"
+          [ngClass]="loading ? 'pi-spin pi-spinner' : 'pi-cloud-upload'"
+        ></i>
+      </button>
+      <p-button
+        (onClick)="handleClear(clearCallback)"
+        icon="pi pi-times"
+        [rounded]="true"
+        severity="danger"
+        [disabled]="selectedFile === null || loading"
+        [pTooltip]="'avatarUpload.cancel' | translate"
+        tooltipPosition="bottom"
+      />
+    </div>
+  </ng-template>
+  <ng-template #file>
+    <div class="content" #content>
+      <app-loader *ngIf="this.selectedFile === null" />
+      <div
+        class="content__cropper"
+        *ngIf="this.selectedFile !== null"
+        [ngStyle]="{ width: cropperWidth }"
+      >
+        <image-cropper
+          [imageFile]="selectedFile"
+          [maintainAspectRatio]="true"
+          [disabled]="loading"
+          [aspectRatio]="1 / 1"
+          [format]="getCropperOutputFormat()"
+          (imageCropped)="handleImageCropped($event)"
+        />
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #empty>
+    <div class="content content--empty">
+      <i class="pi pi-cloud-upload content__icon"></i>
+      <app-typography type="subtitle2">{{
+        "avatarUpload.uploadInstruction" | translate
+      }}</app-typography>
+    </div>
+  </ng-template>
+</p-fileupload>

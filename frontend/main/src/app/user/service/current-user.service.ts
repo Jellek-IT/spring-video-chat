@@ -68,4 +68,28 @@ export class CurrentUserService {
       })
     );
   }
+
+  public updateProfilePicture(file: Blob | null): Observable<void> {
+    const formData = new FormData();
+    if (file !== null) {
+      formData.append('file', file);
+    }
+
+    return this.httpClient
+      .post<void>(`${this.endpointUrl}/profile-picture`, formData)
+      .pipe(
+        tap(() => {
+          this.updateUserProfile({
+            ...this.userProfileSubject$.value,
+            hasProfilePicture: file !== null,
+          });
+        })
+      );
+  }
+
+  public getProfilePicture(): Observable<Blob> {
+    return this.httpClient.get(`${this.endpointUrl}/profile-picture`, {
+      responseType: 'blob',
+    });
+  }
 }

@@ -12,19 +12,33 @@
   "menu": {
     "logout": "Wyloguj",
     "addChannel": "Dodaj kanał",
-    "copyId": "Kopiuj id",
+    "copyId": "Kopiuj identyfikator",
     "copyIdSuccess": "Skopiowano id użytkownika do schowka",
-    "copyIdError": "Nie udało się kopiowania id użytkownika do schowka"
+    "copyIdError": "Nie udało się kopiowania id użytkownika do schowka",
+    "settings": "Ustawienia"
+  },
+  "user": {
+    "settings": "Ustawienia użytkownika",
+    "updateProfilePictureSuccess": "Pomyślnie zaktualizowano zdjęcie profilowe",
+    "profilePicture": "Zdjęcie profilowe",
+    "removeProfilePicture": "Usuń aktualne zdjęcie profilowe"
   },
   "channel": {
     "addTitle": "Dodaj kanał",
     "createSuccess": "Pomyślnie utworzono nowy kanał \"{{name}}\"",
+    "updateSuccess": "Pomyślnie zaktualizowano kanał",
+    "updateThumbnailSuccess": "Pomyślnie zaktualizowano miniaturkę kanału",
     "addMemberSuccess": "Pomyślnie dodano nowego użytkownika",
     "name": "Nazwa",
     "add": "Dodaj",
+    "update": "Aktualizuj",
     "addMember": "Zaproś użytkownika",
     "memberId": "Identyfikator użytkownika",
     "rights": "Prawa użytkownika",
+    "settings": "Ustawienia kanału",
+    "thumbnail": "Miniaturka",
+    "otherSettings": "Pozostałe ustawienia",
+    "removeThumbnail": "Usuń miniaturkę",
     "chat": {
       "writeMessage": "Napisz wiadomość...",
       "stompMessageSubscribeError": "Nie udało się połączyć z kanałem {{name}}",
@@ -71,6 +85,12 @@
     "success": "Dziękujemy za rejestrację <b>{{nickname}}</b>. Możesz się teraz zalogować.",
     "error": {}
   },
+  "avatarUpload": {
+    "chooseFile": "Wybierz plik",
+    "upload": "Wgraj",
+    "cancel": "Anuluj",
+    "uploadInstruction": "Przeciągnij i upuść zdjęcie"
+  },
   "error": {
     "formInvalid": "Formularz wypełniony nieprawidłowo",
     "processingError": "Wystąpił błąd podczas przetwarzania. Spróbuj ponownie później",
@@ -78,7 +98,8 @@
       "UNIQUE_EMAIL": "Na podany adres email zostało już założone konto",
       "UNIQUE_NICKNAME": "Istnieje już konto o podanej nazwie użytkownika",
       "CHANNEL_OPERATION_NOT_ENOUGH_RIGHTS": "Nie masz wystarczających uprawnień do wykonania tej operacji",
-      "CHANNEL_MEMBER_ALREADY_ADDED": "Wybrany użytkownik jest już na kanale"
+      "CHANNEL_MEMBER_ALREADY_ADDED": "Wybrany użytkownik jest już na kanale",
+      "EXISTING_MEMBER": "Wybrany użytkownik nie istnieje"
     },
     "page": {
       "notFound": {

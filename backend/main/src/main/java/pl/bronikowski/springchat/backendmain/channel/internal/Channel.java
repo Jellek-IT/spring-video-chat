@@ -42,6 +42,9 @@ import java.util.UUID;
         subgraphs = {
                 @NamedSubgraph(name = "members", type = ChannelMember.class,
                         attributeNodes = @NamedAttributeNode("member"))})
+@NamedEntityGraph(name = "Channel.withThumbnail",
+        attributeNodes = {
+                @NamedAttributeNode("thumbnail")})
 public class Channel {
     @Id
     @GeneratedValue
@@ -91,6 +94,10 @@ public class Channel {
 
     public void delete(Clock clock) {
         this.deletedAt = clock.instant();
+    }
+
+    public Boolean getHasThumbnail() {
+        return this.thumbnail != null;
     }
 
 }

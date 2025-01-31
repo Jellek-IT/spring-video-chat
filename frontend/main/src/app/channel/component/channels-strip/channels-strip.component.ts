@@ -24,6 +24,8 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoaderComponent } from '../../../shared/component/loader/loader.component';
 import { MemberChannelService } from '../../service/api/member-channel.service';
+import { ChannelThumbnailComponent } from '../channel-thumbnail/channel-thumbnail.component';
+import { ChannelChatComponent } from '../chat/channel-chat/channel-chat.component';
 
 interface ChannelData {
   data: ChannelBasicsDto | null;
@@ -49,7 +51,7 @@ export interface ExpandEvent {
   imports: [
     CommonModule,
     CardModule,
-    AvatarComponent,
+    ChannelThumbnailComponent,
     IconFieldModule,
     InputIconModule,
     InputTextModule,

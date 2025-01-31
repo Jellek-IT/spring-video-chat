@@ -17,6 +17,4 @@ public @interface ExistingMember {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
-    String[] value();
 }

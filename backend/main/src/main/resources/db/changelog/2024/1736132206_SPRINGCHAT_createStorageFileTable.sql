@@ -5,6 +5,5 @@ create table storage_file(
     id               uuid primary key,
     created_at       timestamp not null,
     folder           text      not null,
-    name             text      not null,
-    version          text      not null
+    name             text      not null
 );

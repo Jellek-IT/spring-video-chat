@@ -1,3 +1,5 @@
+@use "mixin" as *;
+
 .chat {
   flex: 1;
   overflow: hidden;
@@ -6,6 +8,7 @@
   &__content {
     display: flex;
     align-items: center;
+    padding-bottom: 1rem;
   }
   &__title {
     display: block;
@@ -14,6 +17,14 @@
   &__actions {
     display: flex;
     gap: 1rem;
+  }
+  &__users {
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    @include scrollbar;
   }
 }
 :host {

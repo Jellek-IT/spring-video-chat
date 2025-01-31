@@ -32,6 +32,11 @@ import { StompService } from '../../../core/stomp/service/stomp.service';
 import { StompConnectionState } from '../../../core/stomp/enum/internal/stomp-state.enum';
 import { NAVIGATOR } from '../../../core/token/navigator.token';
 import { ToastService } from '../../service/toast.service';
+import {
+  UserSettingsDialogComponent,
+  UserSettingsDialogConfig,
+} from '../../../user/component/user-settings-dialog/user-settings-dialog.component';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-layout',
@@ -72,11 +77,14 @@ export class UserLayoutComponent implements OnInit, OnDestroy {
   protected menuItems: MenuItem[] | undefined;
   protected expandChannels = false;
   protected connected = false;
+  protected profilePictureUrl: string | null = null;
+  private getProfilePictureSubscription?: Subscription;
 
   public ngOnInit(): void {
     this.userProfileSubscription = this.currentUserService
       .getMemberProfileAsObservable()
       .subscribe((userProfile) => (this.userProfile = userProfile));
+    this.loadProfilePiture();
     this.initUserMenuItems();
     this.initMenuItems();
     this.stompService.getConnectionStateAsObservable().subscribe((state) => {
@@ -92,6 +100,7 @@ export class UserLayoutComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.stompService.disconnect();
     this.userProfileSubscription.unsubscribe();
+    this.getProfilePictureSubscription?.unsubscribe();
   }
 
   private initUserMenuItems(): void {
@@ -99,6 +108,10 @@ export class UserLayoutComponent implements OnInit, OnDestroy {
       {
         label: this.translateService.instant('menu.copyId'),
         command: () => this.copyIdToClipboard(),
+      },
+      {
+        label: this.translateService.instant('menu.settings'),
+        command: () => this.openSettingsDialog(),
       },
       {
         label: this.translateService.instant('menu.logout'),
@@ -145,7 +158,47 @@ export class UserLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
+  private openSettingsDialog(): void {
+    const data: UserSettingsDialogConfig = {
+      onUpdateProfilePictureEnd: (image) => this.setProfilePictureUrl(image),
+    };
+    this.dialogService.open(UserSettingsDialogComponent, {
+      closable: true,
+      modal: true,
+      header: this.translateService.instant('user.settings'),
+      dismissableMask: true,
+      data,
+    });
+  }
+
   protected handleChannelExpandStateChange({ expanded }: ExpandEvent): void {
     this.expandChannels = expanded;
+  }
+
+  private loadProfilePiture() {
+    this.getProfilePictureSubscription?.unsubscribe();
+    this.getProfilePictureSubscription = this.currentUserService
+      .getProfilePicture()
+      .subscribe({
+        next: (res) => this.setProfilePictureUrl(res),
+        error: (e: HttpErrorResponse) => {
+          if (e.status === HttpStatusCode.NotFound) {
+            this.profilePictureUrl = null;
+          }
+        },
+      });
+  }
+
+  private setProfilePictureUrl(image: Blob | null) {
+    this.getProfilePictureSubscription?.unsubscribe();
+    if (image === null) {
+      this.profilePictureUrl = null;
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (): void => {
+      this.profilePictureUrl = reader.result as string;
+    };
+    reader.readAsDataURL(image);
   }
 }

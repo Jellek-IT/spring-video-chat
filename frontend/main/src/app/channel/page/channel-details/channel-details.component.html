@@ -18,6 +18,15 @@
           <button
             *ngIf="currentUserHasRight(channelMemberRights.INVITE)"
             pButton
+            icon="pi pi-cog"
+            [pTooltip]="'channel.settings' | translate"
+            severity="info"
+            tooltipPosition="bottom"
+            (click)="openSettingsDialog()"
+          ></button>
+          <button
+            *ngIf="currentUserHasRight(channelMemberRights.INVITE)"
+            pButton
             icon="pi pi-user-plus"
             [pTooltip]="'channel.addMember' | translate"
             severity="success"
@@ -39,6 +48,17 @@
             (click)="toggleShowVideoRoom()"
           ></button>
         </div>
+      </div>
+      <div class="header__users" *ngIf="channel === null">
+        <app-channel-member-profile-picture [channel]="channel" />
+      </div>
+      <div class="header__users" *ngIf="channel !== null">
+        <app-channel-member-profile-picture
+          *ngFor="let member of channel.members"
+          [member]="member.member"
+          [contextMenu]="true"
+          [channel]="channel"
+        />
       </div>
     </p-card>
   </app-container>

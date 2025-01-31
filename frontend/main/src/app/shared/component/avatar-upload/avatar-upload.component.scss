@@ -1,0 +1,56 @@
+@use "variable" as *;
+:host ::ng-deep {
+  .ngx-ic-square {
+    border-radius: 50%;
+  }
+  .ngx-ic-source-image {
+    display: block;
+  }
+  .p-fileupload-advanced {
+    border: none;
+  }
+  .p-fileupload-header,
+  .p-fileupload-content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .p-fileupload-header {
+    padding-bottom: 0.5rem;
+    padding-top: 0rem;
+  }
+  .p-fileupload-content {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-radius: 1rem;
+  }
+  p-progressbar {
+    display: none;
+  }
+}
+image-cropper {
+  padding: 0;
+}
+.header {
+  &__actions {
+    display: flex;
+    gap: 1rem;
+  }
+}
+.content {
+  --cropper-outline-color: rgb(0 0 0 / 50%);
+  --cropper-resize-square-bg: black;
+  --cropper-border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &--empty {
+    gap: 2rem;
+  }
+
+  &__icon {
+    font-size: 2.5rem;
+    border: 3px solid $font-color;
+    padding: 0.75rem;
+    border-radius: 50%;
+  }
+}

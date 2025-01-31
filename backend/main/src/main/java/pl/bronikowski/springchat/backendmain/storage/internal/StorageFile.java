@@ -30,13 +30,9 @@ public class StorageFile {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String version;
-
-    public StorageFile(UUID id, String folder, String name, String version) {
+    public StorageFile(UUID id, String folder, String name) {
         this.id = id;
         this.folder = folder;
         this.name = name;
-        this.version = version;
     }
 }

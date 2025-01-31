@@ -41,6 +41,7 @@ import { MemberBasicsDto } from '../../../../user/model/member-basics-dto.model'
 import { ErrorResponseType } from '../../../../error/enum/error-response-type.enum';
 import { LetDirective } from '../../../../shared/directive/let.directive';
 import { AvatarComponent } from '../../../../shared/component/avatar/avatar.component';
+import { ChannelMemberProfilePictureComponent } from '../../channel-member-profile-picture/channel-member-profile-picture.component';
 
 interface DragBoxDetails {
   deltaX: number;
@@ -59,7 +60,7 @@ interface DragBoxDetails {
     VideoViewComponent,
     CarouselModule,
     LetDirective,
-    AvatarComponent,
+    ChannelMemberProfilePictureComponent,
   ],
   templateUrl: './video-room-overlay.component.html',
   styleUrl: './video-room-overlay.component.scss',
@@ -93,7 +94,7 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
   protected boxStyle?: { [key: string]: any };
   protected connecting = true;
   protected videRoomUsers: VideoRoomUser[] = [];
-  protected microphoneEnabled = false;
+  protected microphoneEnabled = true;
   protected cameraEnabled = false;
   protected userProfile!: MemberProfileDto;
   protected idToMember: Map<string, MemberBasicsDto> = new Map();

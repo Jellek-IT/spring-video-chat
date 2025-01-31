@@ -1,0 +1,47 @@
+<div class="dialog-section">
+  <app-typography type="subtitle2"
+    >{{ "channel.thumbnail" | translate }}:</app-typography
+  >
+  <app-avatar-upload
+    #thumbnailUpload
+    (onImageUpload)="handleThumbnailUpload($event)"
+  />
+  <button
+    *ngIf="channel.hasThumbnail"
+    pButton
+    label="{{ 'channel.removeThumbnail' | translate }}"
+    [disabled]="removeThumbnailLoading"
+    [icon]="removeThumbnailLoading ? 'pi pi-spin pi-spinner' : ''"
+    iconPos="right"
+    severity="danger"
+    class="p-button--full-width"
+    (click)="removeThumbnail()"
+  ></button>
+</div>
+<div class="dialog-section">
+  <app-typography type="subtitle2"
+    >{{ "channel.otherSettings" | translate }}:</app-typography
+  >
+  <form [formGroup]="form" (ngSubmit)="onUpdateSubmit()">
+    <div class="form-group form-group--full-width">
+      <label for="input-name">{{ "channel.name" | translate }}:</label>
+      <input
+        type="text"
+        id="input-name"
+        placeholder="{{ 'channel.name' | translate }}"
+        pInputText
+        formControlName="name"
+      />
+      <app-validation-message [control]="form.controls.name" />
+    </div>
+    <button
+      pButton
+      type="submit"
+      label="{{ 'channel.update' | translate }}"
+      [disabled]="formLoading"
+      [icon]="formLoading ? 'pi pi-spin pi-spinner' : ''"
+      iconPos="right"
+      class="p-button--full-width"
+    ></button>
+  </form>
+</div>

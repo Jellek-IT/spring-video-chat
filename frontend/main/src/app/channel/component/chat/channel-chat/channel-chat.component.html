@@ -17,7 +17,7 @@
   </div>
   <app-text-editor
     [channel]="channel"
-    (messageCreated)="handleMessageCreated($event)"
+    (onMessageCreated)="handleMessageCreated($event)"
   />
 </ng-container>
 <div *ngIf="!messageSubscriptionAccepted" class="loader-container">

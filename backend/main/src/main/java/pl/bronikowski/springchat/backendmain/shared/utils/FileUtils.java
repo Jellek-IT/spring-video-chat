@@ -7,6 +7,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
 
@@ -28,7 +29,7 @@ public final class FileUtils {
     }
 
     private static String guessMediaType(MultipartFile file) throws IOException {
-        var mediaType = URLConnection.guessContentTypeFromStream(file.getInputStream());
+        var mediaType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(file.getInputStream()));
         return mediaType == null
                 ? URLConnection.guessContentTypeFromName(file.getOriginalFilename())
                 : mediaType;

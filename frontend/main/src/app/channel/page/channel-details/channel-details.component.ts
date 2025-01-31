@@ -21,6 +21,12 @@ import {
   AddChannelMemberDialogConfig,
 } from '../../component/add-channel-member-dialog/add-channel-member-dialog.component';
 import { DialogService } from 'primeng/dynamicdialog';
+import { AvatarComponent } from '../../../shared/component/avatar/avatar.component';
+import {
+  ChannelSettingsConfig,
+  ChannelSettingsDialogComponent,
+} from '../../component/channel-settings-dialog/channel-settings-dialog.component';
+import { ChannelMemberProfilePictureComponent } from '../../component/channel-member-profile-picture/channel-member-profile-picture.component';
 
 @Component({
   selector: 'app-channel-details',
@@ -34,6 +40,7 @@ import { DialogService } from 'primeng/dynamicdialog';
     VideoRoomOverlayComponent,
     TooltipModule,
     TranslateModule,
+    ChannelMemberProfilePictureComponent,
   ],
   templateUrl: './channel-details.component.html',
   styleUrl: './channel-details.component.scss',
@@ -58,6 +65,7 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
       .getMemberProfileAsObservable()
       .subscribe((userProfile) => (this.userProfile = userProfile));
     this.activatedRoute.params.subscribe((params: Params) => {
+      this.channel = null;
       this.loadChannel(params['id']);
     });
   }
@@ -67,9 +75,6 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
   }
 
   private loadChannel(id: string): void {
-    this.channel = null;
-    //todo: change to false
-    this.showVideoRoom = true;
     this.loadChannelSubscription && this.loadChannelSubscription.unsubscribe();
     this.loadChannelSubscription = this.memberChannelService
       .getById(id)
@@ -81,11 +86,11 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  protected toggleShowVideoRoom() {
+  protected toggleShowVideoRoom(): void {
     this.showVideoRoom = !this.showVideoRoom;
   }
 
-  protected closeVideoRoom() {
+  protected closeVideoRoom(): void {
     this.showVideoRoom = false;
   }
 
@@ -96,7 +101,7 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  protected openAddChannelMemberDialog() {
+  protected openAddChannelMemberDialog(): void {
     if (this.channel === null || this.currentUserChannelMember === undefined) {
       return;
     }
@@ -108,6 +113,34 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
       closable: true,
       modal: true,
       header: this.translateService.instant('channel.addMember'),
+      dismissableMask: true,
+      data,
+    });
+  }
+
+  protected openSettingsDialog(): void {
+    if (this.channel === null) {
+      return;
+    }
+    const data: ChannelSettingsConfig = {
+      channel: this.channel,
+      onUpdateEnd: (value) => {
+        this.channel = {
+          ...this.channel,
+          name: value.name,
+        } as ChannelDetailsDto;
+      },
+      onUpdateThumbnailEnd: (image) => {
+        this.channel = {
+          ...this.channel,
+          hasThumbnail: image !== null,
+        } as ChannelDetailsDto;
+      },
+    };
+    this.dialogService.open(ChannelSettingsDialogComponent, {
+      closable: true,
+      modal: true,
+      header: this.translateService.instant('channel.settings'),
       dismissableMask: true,
       data,
     });

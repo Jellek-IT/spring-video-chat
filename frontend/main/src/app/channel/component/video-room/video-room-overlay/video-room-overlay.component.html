@@ -35,13 +35,11 @@
             [ngClass]="videoStreams.length === 0 ? 'user--no-streams' : ''"
             *appLet="getVideoRoomUserMember(user) as member"
           >
-            <app-avatar
+            <app-channel-member-profile-picture
               class="user__avatar"
-              [name]="member.nickname"
-              [id]="member.id"
+              [member]="member"
+              [channel]="channel"
               [size]="videoStreams.length === 0 ? 'xlarge' : 'normal'"
-              tooltipPosition="bottom"
-              [pTooltip]="member.nickname"
             />
             <!--if there will be more then one stream (eg. screen sharing) it could become tabs-->
             <ng-container *ngFor="let stream of videoStreams">

@@ -7,7 +7,7 @@ import {
 import { environment } from '../../../environments/environment';
 import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
-import { catchError, EMPTY, from, mergeMap, of } from 'rxjs';
+import { catchError, EMPTY, from, map, mergeMap, of, throwError } from 'rxjs';
 import { addAuthorizationHeader } from 'keycloak-angular';
 
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
@@ -23,7 +23,7 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
     ) {
       keycloak.logout();
     }
-    return next(req);
+    return throwError(() => error);
   };
 
   return from(keycloak.updateToken())

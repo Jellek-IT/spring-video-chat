@@ -24,4 +24,8 @@ public class Member extends User {
         super(UserType.MEMBER, request.email(), true);
         this.nickname = request.nickname();
     }
+
+    public Boolean getHasProfilePicture() {
+        return this.getProfilePicture() != null;
+    }
 }

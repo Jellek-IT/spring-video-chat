@@ -16,12 +16,13 @@ import { ZonedDatePipe } from '../../../../shared/pipe/zoned-date.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { InternalMessageStatus } from '../../../enum/internal/internal-message-status.enum';
 import { UnprocessedChannelMessageBasicsDto } from '../../../model/internal/message/unprocessed-channel-message-basics-dto';
+import { ChannelMemberProfilePictureComponent } from '../../channel-member-profile-picture/channel-member-profile-picture.component';
 
 @Component({
   selector: 'app-chat-message',
   imports: [
     CommonModule,
-    AvatarComponent,
+    ChannelMemberProfilePictureComponent,
     MessageTextNodeComponent,
     TypographyComponent,
     ZonedDatePipe,

@@ -84,6 +84,24 @@ export class MemberChannelService {
     );
   }
 
+  public updateThumbnail(id: string, file: Blob | null): Observable<void> {
+    const formData = new FormData();
+    if (file !== null) {
+      formData.append('file', file);
+    }
+
+    return this.httpClient.post<void>(
+      `${this.endpointUrl}/${id}/thumbnail`,
+      formData
+    );
+  }
+
+  public getThumbnail(id: string): Observable<Blob> {
+    return this.httpClient.get(`${this.endpointUrl}/${id}/thumbnail`, {
+      responseType: 'blob',
+    });
+  }
+
   public updateMember(
     id: string,
     request: UpdateChannelMemberRequest

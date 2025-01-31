@@ -1,0 +1,19 @@
+<div class="dialog-section">
+  <app-typography type="subtitle2"
+    >{{ "user.profilePicture" | translate }}:</app-typography
+  >
+  <app-avatar-upload
+    #profilePictureUpload
+    (onImageUpload)="handleProfilePictureUpload($event)"
+  />
+  <button
+    pButton
+    label="{{ 'user.removeProfilePicture' | translate }}"
+    [disabled]="removeProfilePictureLoading"
+    [icon]="removeProfilePictureLoading ? 'pi pi-spin pi-spinner' : ''"
+    iconPos="right"
+    severity="danger"
+    class="p-button--full-width"
+    (click)="removeProfilePicture()"
+  ></button>
+</div>

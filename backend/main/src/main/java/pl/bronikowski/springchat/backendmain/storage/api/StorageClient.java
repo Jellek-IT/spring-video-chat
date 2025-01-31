@@ -2,11 +2,13 @@ package pl.bronikowski.springchat.backendmain.storage.api;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
+import pl.bronikowski.springchat.backendmain.channel.internal.Channel;
 import pl.bronikowski.springchat.backendmain.storage.internal.StorageFile;
 import pl.bronikowski.springchat.backendmain.user.internal.User;
 
 public interface StorageClient {
     StorageFile uploadUserImage(MultipartFile multipartFile, User user, String name);
+    StorageFile uploadChannelImage(MultipartFile multipartFile, Channel user, String name);
 
     void download(StorageFile storageFile, String range, HttpServletResponse httpResponse);
 

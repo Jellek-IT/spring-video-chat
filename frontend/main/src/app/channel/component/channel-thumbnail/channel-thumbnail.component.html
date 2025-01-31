@@ -1,0 +1,8 @@
+<app-avatar
+  [name]="channel?.name"
+  [id]="channel?.id"
+  [routerLink]="routerLink"
+  [size]="size"
+  [iconUrl]="thumbnailUrl"
+  (avatarClick)="avatarClick.emit($event)"
+></app-avatar>
