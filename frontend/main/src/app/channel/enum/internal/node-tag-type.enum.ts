@@ -1,6 +1,6 @@
 export enum NodeTagType {
-  LINE = 'line',
-  NEW_LINE = 'newLine',
-  SQUARE_BRACKET = 'squareBracket',
-  SQUARE_BRACKET_END = 'squareBracketEnd',
+  LINE = 'l',
+  NEW_LINE = 'nl',
+  SQUARE_BRACKET = 'sb',
+  SQUARE_BRACKET_END = 'sbe',
 }

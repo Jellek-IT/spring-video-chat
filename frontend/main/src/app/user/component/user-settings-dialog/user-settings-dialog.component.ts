@@ -30,7 +30,7 @@ export class UserSettingsDialogComponent implements OnInit, OnDestroy {
   private readonly currentUserService = inject(CurrentUserService);
   private readonly endpointErrorService = inject(EndpointErrorService);
   private readonly config: DynamicDialogConfig<UserSettingsDialogConfig> =
-    inject(DynamicDialogConfig<UserSettingsDialogConfig>);
+    inject(DynamicDialogConfig);
 
   @ViewChild('profilePictureUpload')
   protected thumbnailUploadComponent?: AvatarUploadComponent;

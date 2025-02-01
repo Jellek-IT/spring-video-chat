@@ -1,4 +1,5 @@
 @use "variable" as *;
+@use "mixin" as *;
 
 :host ::ng-deep {
   .users {
@@ -10,8 +11,7 @@
       z-index: 400;
       opacity: 0;
       visibility: hidden;
-      transition: opacity var(--p-transition-duration),
-        visibility var(--p-transition-duration);
+      @include animated-hidden-show;
       .p-button {
         width: 2rem;
       }
@@ -62,11 +62,8 @@
   justify-content: center;
   gap: 1rem;
   padding-bottom: 1rem;
-  opacity: 0;
-  visibility: hidden;
   z-index: 400;
-  transition: opacity var(--p-transition-duration),
-    visibility var(--p-transition-duration);
+  @include animated-hidden-hide;
 }
 .users {
   display: block;
@@ -82,20 +79,15 @@
     right: 0.5rem;
     top: 0.5rem;
     z-index: 400;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--p-transition-duration),
-      visibility var(--p-transition-duration);
+    @include animated-hidden-hide;
   }
   &--no-streams {
     .user {
       &__avatar {
         right: auto;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
         opacity: 1;
         visibility: visible;
+        @include absolute-center;
       }
     }
     background-color: var(--p-surface-950);
@@ -139,8 +131,7 @@
   }
   &:hover {
     .actions {
-      opacity: 1;
-      visibility: visible;
+      @include animated-hidden-show;
     }
   }
 }

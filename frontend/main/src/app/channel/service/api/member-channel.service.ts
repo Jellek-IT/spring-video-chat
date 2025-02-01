@@ -13,6 +13,7 @@ import { MemberChannelQueryParamsPageable } from '../../model/member-channel-que
 import { environment } from '../../../../environments/environment';
 import { MemberChannelMessageQueryParamsPageable } from '../../model/message/member-channel-message-query-params-pageable.model';
 import { ChannelMessageBasicsDto } from '../../model/message/channel-message-basics-dto.model';
+import { ChannelFileDto } from '../../model/file/channel-file-dto.model';
 
 @Injectable({
   providedIn: 'root',
@@ -98,6 +99,21 @@ export class MemberChannelService {
 
   public getThumbnail(id: string): Observable<Blob> {
     return this.httpClient.get(`${this.endpointUrl}/${id}/thumbnail`, {
+      responseType: 'blob',
+    });
+  }
+
+  public uploadFile(id: string, file: Blob): Observable<ChannelFileDto> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.httpClient.post<ChannelFileDto>(
+      `${this.endpointUrl}/${id}/file`,
+      formData
+    );
+  }
+
+  public downloadFie(id: string, fileId: string): Observable<Blob> {
+    return this.httpClient.get(`${this.endpointUrl}/${id}/file/${fileId}`, {
       responseType: 'blob',
     });
   }

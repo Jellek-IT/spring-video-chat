@@ -43,8 +43,8 @@ public class S3StorageClient implements StorageClient {
     }
 
     @Override
-    public StorageFile uploadChannelImage(MultipartFile multipartFile, Channel user, String name) {
-        var folder = String.format(USER_FOLDER, user.getId());
+    public StorageFile uploadChannelImage(MultipartFile multipartFile, Channel channel, String name) {
+        var folder = String.format(USER_FOLDER, channel.getId());
         return uploadFile(multipartFile, folder, name);
     }
 

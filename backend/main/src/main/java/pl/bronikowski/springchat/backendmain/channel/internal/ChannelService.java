@@ -10,9 +10,14 @@ import pl.bronikowski.springchat.backendmain.channel.api.dto.ChannelDetailsDto;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.CreateChannelRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelThumbnailRequest;
+import pl.bronikowski.springchat.backendmain.channel.api.dto.file.ChannelFileDto;
+import pl.bronikowski.springchat.backendmain.channel.api.dto.file.UploadChannelFileRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.AddChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.KickChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.UpdateChannelMemberRequest;
+import pl.bronikowski.springchat.backendmain.channel.internal.file.ChannelFile;
+import pl.bronikowski.springchat.backendmain.channel.internal.file.ChannelFileMapper;
+import pl.bronikowski.springchat.backendmain.channel.internal.file.ChannelFileRepository;
 import pl.bronikowski.springchat.backendmain.exception.AppNotFoundException;
 import pl.bronikowski.springchat.backendmain.member.internal.MemberRepository;
 import pl.bronikowski.springchat.backendmain.shared.utils.FileUtils;
@@ -28,6 +33,8 @@ public class ChannelService {
     private final ChannelMapper channelMapper;
     private final MemberRepository memberRepository;
     private final StorageClient storageClient;
+    private final ChannelFileRepository channelFileRepository;
+    private final ChannelFileMapper channelFileMapper;
     private final Clock clock;
 
     @Transactional(readOnly = true)
@@ -129,6 +136,24 @@ public class ChannelService {
             throw new AppNotFoundException();
         }
         storageClient.download(channel.getThumbnail(), response);
+    }
+
+    @Transactional
+    public ChannelFileDto uploadFile(UUID id, UploadChannelFileRequest request, String authResourceId) {
+        var channel = channelRepository.getReferenceById(id);
+        var member = memberRepository.findByAuthResourceId(authResourceId).orElseThrow(AppNotFoundException::new);
+        var filename = FileUtils.replaceFilename(request.getFile(), "file_" + UUID.randomUUID());
+        var file = storageClient.uploadChannelImage(request.getFile(), channel, filename);
+        var channelFile = new ChannelFile(member, channel, file, clock);
+        channelFileRepository.save(channelFile);
+        return channelFileMapper.mapToChannelFileDto(channelFile);
+    }
+
+    @Transactional
+    public void downloadFile(UUID id, UUID fileId, HttpServletResponse response) {
+        var channelFile = channelFileRepository.findWithFileByIdAndChannelId(fileId, id)
+                .orElseThrow(AppNotFoundException::new);
+        storageClient.download(channelFile.getFile(), response);
     }
 
     @Transactional

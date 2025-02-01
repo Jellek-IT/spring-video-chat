@@ -25,6 +25,16 @@
           *ngFor="let node of message.textNodes"
           [node]="node"
         />
+        <div class="content-images">
+          <div
+            class="content-images__image"
+            *ngFor="let imageDetails of imagesDetails; index as i"
+            (click)="openImagePreview(i)"
+          >
+            <img *ngIf="imageDetails.src !== null" [src]="imageDetails.src" />
+            <app-loader *ngIf="imageDetails.src === null" />
+          </div>
+        </div>
       </div>
     </div>
     <div class="message-send-response error" *ngIf="isError()">

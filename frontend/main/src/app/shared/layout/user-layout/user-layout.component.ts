@@ -154,6 +154,7 @@ export class UserLayoutComponent implements OnInit, OnDestroy {
       modal: true,
       header: this.translateService.instant('channel.addTitle'),
       dismissableMask: true,
+      width: '30rem',
       data,
     });
   }
@@ -167,6 +168,7 @@ export class UserLayoutComponent implements OnInit, OnDestroy {
       modal: true,
       header: this.translateService.instant('user.settings'),
       dismissableMask: true,
+      width: '30rem',
       data,
     });
   }

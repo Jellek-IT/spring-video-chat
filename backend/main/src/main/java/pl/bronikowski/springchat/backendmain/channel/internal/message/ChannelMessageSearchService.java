@@ -24,7 +24,7 @@ public class ChannelMessageSearchService {
                                                                    Pageable pageable) {
         var specification = new MemberChannelMessageQueryParamsSpecification(queryParams, channelId);
         return channelMessageRepository.findAll(specification, pageable, EntityGraph.EntityGraphType.LOAD,
-                        ChannelMessage_.GRAPH_CHANNEL_MESSAGE_WITH_MEMBER)
+                        ChannelMessage_.GRAPH_CHANNEL_MESSAGE_WITH_MEMBER_WITH_FILES)
                 .map(channelMessageMapper::mapToMessageBasicsDto);
     }
 }

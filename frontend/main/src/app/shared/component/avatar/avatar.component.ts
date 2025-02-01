@@ -37,8 +37,10 @@ export class AvatarComponent implements OnChanges {
   @Input() public size: 'normal' | 'large' | 'xlarge' = 'large';
   @Input() public iconUrl?: string | null;
   @Output() public avatarClick = new EventEmitter<MouseEvent>();
-  @HostBinding('style.--app-avatar-color') defaultColor = '';
-  @HostBinding('style.--app-avatar-hover-color') hoverColor = '';
+  @HostBinding('style.--app-avatar-color')
+  protected defaultColor = '';
+  @HostBinding('style.--app-avatar-hover-color')
+  protected hoverColor = '';
   private colorService = inject(ColorService);
 
   public ngOnChanges(changes: SimpleChanges): void {

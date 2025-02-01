@@ -60,9 +60,12 @@ export class VideoViewComponent implements AfterViewInit {
   }
 
   @HostListener('document:fullscreenchange')
-  protected onFullScreenChange() {
-    setTimeout(() => {
-      this.updateDimensions();
-    });
+  protected handleFullScreenChange() {
+    setTimeout(() => this.updateDimensions());
+  }
+
+  @HostListener('window:resize')
+  protected handleResize() {
+    this.updateDimensions();
   }
 }

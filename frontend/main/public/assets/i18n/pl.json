@@ -1,4 +1,8 @@
 {
+  "primeng": {
+    "invalidSizeSummary": "Nieprawidłowa wielkość pliku.",
+    "invalidSizeDescription": "Maksymalna dozwolona wielkość pliku to {0}"
+  },
   "common": {
     "yes": "Tak",
     "no": "Nie",
@@ -42,7 +46,11 @@
     "chat": {
       "writeMessage": "Napisz wiadomość...",
       "stompMessageSubscribeError": "Nie udało się połączyć z kanałem {{name}}",
-      "messageSendError": "Wystąpił błąd podczas wysyłania wiadomości"
+      "messageSendError": "Wystąpił błąd podczas wysyłania wiadomości",
+      "maxImageSizeExceeded": "Maksymalna dozwolona wielkość obrazka to {{size}}",
+      "dropImage": "Upuść obrazek",
+      "uploadImages": "Wgraj obrazki",
+      "filesUploadError": "Wystąpił błąd podczas wgrywania plików"
     },
     "videoRoom": {
       "join": "Dołącz do rozmowy",

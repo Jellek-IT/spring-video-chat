@@ -1,0 +1,20 @@
+:host {
+  overflow: hidden;
+  min-height: calc(100vh - 15rem);
+  align-items: center;
+  position: relative;
+  display: block;
+}
+
+.content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}

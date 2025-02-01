@@ -1,3 +1,5 @@
+@use "mixin" as *;
+
 :host ::ng-deep {
   .p-avatar-text {
     position: relative;
@@ -23,17 +25,13 @@
     left: 0;
     top: 0;
     background-color: var(--app-avatar-hover-color);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--p-transition-duration),
-      visibility var(--p-transition-duration);
+    @include animated-hidden-hide;
   }
   &--interactive {
     cursor: pointer;
     &:hover {
       &::after {
-        opacity: 0.3;
-        visibility: visible;
+        @include animated-hidden-show(0.3);
       }
     }
   }

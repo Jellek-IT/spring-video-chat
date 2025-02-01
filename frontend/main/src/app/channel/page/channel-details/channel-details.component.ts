@@ -114,6 +114,7 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
       modal: true,
       header: this.translateService.instant('channel.addMember'),
       dismissableMask: true,
+      width: '30rem',
       data,
     });
   }
@@ -142,6 +143,7 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
       modal: true,
       header: this.translateService.instant('channel.settings'),
       dismissableMask: true,
+      width: '30rem',
       data,
     });
   }

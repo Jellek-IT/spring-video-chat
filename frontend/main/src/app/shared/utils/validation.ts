@@ -74,9 +74,6 @@ export default {
     Validators.minLength(3),
     Validators.maxLength(50),
   ],
-  channelMessageText: [
-    notBlank,
-    Validators.maxLength(channelMessageTextMaxCharacters),
-  ],
+  channelMessageText: [Validators.maxLength(channelMessageTextMaxCharacters)],
   uuidV4: [Validators.required, uuidV4Validator],
 };

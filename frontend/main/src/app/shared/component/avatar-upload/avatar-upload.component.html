@@ -3,6 +3,10 @@
   [maxFileSize]="maximumSize"
   [disabled]="loading"
   (onSelect)="handleFileSelected($event)"
+  [invalidFileSizeMessageSummary]="'primeng.invalidSizeSummary' | translate"
+  [invalidFileSizeMessageDetail]="
+    'avatarUpload.invalidSizeDescription' | translate
+  "
   #fileupload
 >
   <ng-template

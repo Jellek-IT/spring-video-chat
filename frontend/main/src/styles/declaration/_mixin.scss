@@ -44,3 +44,22 @@
     }
   }
 }
+
+@mixin animated-hidden-hide {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--p-transition-duration),
+    visibility var(--p-transition-duration);
+}
+
+@mixin animated-hidden-show($opacity: 1) {
+  opacity: $opacity;
+  visibility: visible;
+}
+
+@mixin absolute-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

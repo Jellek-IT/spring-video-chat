@@ -51,9 +51,8 @@ export class ChannelSettingsDialogComponent {
   private readonly toastService = inject(ToastService);
   private readonly memberChannelService = inject(MemberChannelService);
   private readonly endpointErrorService = inject(EndpointErrorService);
-  private readonly config: DynamicDialogConfig<ChannelSettingsConfig> = inject(
-    DynamicDialogConfig<ChannelSettingsConfig>
-  );
+  private readonly config: DynamicDialogConfig<ChannelSettingsConfig> =
+    inject(DynamicDialogConfig);
   protected readonly form: FormGroup<UpdateChannelForm> =
     this.formBuilder.group({
       name: [this.config.data!.channel.name, validation.channelName],

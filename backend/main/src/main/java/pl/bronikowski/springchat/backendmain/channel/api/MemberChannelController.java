@@ -24,6 +24,8 @@ import pl.bronikowski.springchat.backendmain.channel.api.dto.CreateChannelReques
 import pl.bronikowski.springchat.backendmain.channel.api.dto.MemberChannelQueryParams;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.UpdateChannelThumbnailRequest;
+import pl.bronikowski.springchat.backendmain.channel.api.dto.file.ChannelFileDto;
+import pl.bronikowski.springchat.backendmain.channel.api.dto.file.UploadChannelFileRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.AddChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.KickChannelMemberRequest;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.member.UpdateChannelMemberRequest;
@@ -118,6 +120,19 @@ public class MemberChannelController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void getThumbnail(@PathVariable @ExistingMemberChannelWithRights UUID id, HttpServletResponse response) {
         channelService.getThumbnail(id, response);
+    }
+
+    @PostMapping("/{id}/file")
+    public ChannelFileDto uploadFile(@PathVariable @ExistingMemberChannelWithRights(ChannelMemberRight.WRITE) UUID id,
+                                     @Valid UploadChannelFileRequest request) {
+        var authResourceId = UserContextProvider.getAuthResourceId();
+        return channelService.uploadFile(id, request, authResourceId);
+    }
+
+    @GetMapping("/{id}/file/{fileId}")
+    public void downloadFile(@PathVariable @ExistingMemberChannelWithRights(ChannelMemberRight.WRITE) UUID id,
+                             @PathVariable UUID fileId, HttpServletResponse response) {
+        channelService.downloadFile(id, fileId, response);
     }
 
     @DeleteMapping("/{id}")

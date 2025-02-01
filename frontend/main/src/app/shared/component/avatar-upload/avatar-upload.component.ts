@@ -24,6 +24,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../loader/loader.component';
 import mathUtils from '../../utils/math-utils';
+import { ProjectConstants } from '../../constants/project-constants';
 
 @Component({
   selector: 'app-avatar-upload',
@@ -41,8 +42,8 @@ import mathUtils from '../../utils/math-utils';
   styleUrl: './avatar-upload.component.scss',
 })
 export class AvatarUploadComponent {
-  protected readonly maximumSize = 25000000;
-  protected readonly accept = 'image/png, image/jpeg';
+  protected readonly maximumSize = ProjectConstants.MAXIMUM_BODY_SIZE;
+  protected readonly accept = ProjectConstants.ALLOWED_IMAGE_TYPES.join(', ');
   private readonly maxHeight = 400;
 
   @Output()

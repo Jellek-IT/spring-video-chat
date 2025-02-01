@@ -1,8 +1,16 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="editor" [ngClass]="focused ? 'editor--focused' : ''">
+  <div
+    class="editor"
+    [ngClass]="getEditorClass()"
+    (dragover)="handleTextAreaDragOver($event)"
+    (dragenter)="handleTextAreaDragEnter($event)"
+    (dragleave)="handleTextAreaDragLeave($event)"
+    (drop)="handleTextAreaDrop($event)"
+    #editor
+  >
     <div
       class="textarea"
-      contenteditable="true"
+      [attr.contenteditable]="!sending"
       (input)="handleChange()"
       (focus)="handleFocus()"
       (focusout)="handleFocusOut()"
@@ -12,17 +20,80 @@
     <div class="placeholder" *ngIf="isEmpty()">
       {{ "channel.chat.writeMessage" | translate }}
     </div>
+    <div
+      class="uploaded-images"
+      #uploadedImages
+      (pointerdown)="handleImagesDragStart($event)"
+    >
+      <div
+        class="uploaded-images__image"
+        *ngFor="let imageDetails of filesDetails; index as i"
+      >
+        <div
+          class="uploaded-images__image-container"
+          (click)="openImagePreview(i)"
+        >
+          <img *ngIf="imageDetails.src !== null" [src]="imageDetails.src" />
+        </div>
+        <button
+          *ngIf="imageDetails.status === fileSendingStatus.EDITABLE"
+          pButton
+          class="uploaded-images__image-delete"
+          severity="danger"
+          rounded="true"
+          size="small"
+          icon="pi pi-times"
+          type="button"
+          (click)="removeImage(i)"
+          [disabled]="sending"
+        ></button>
+        <i
+          *ngIf="imageDetails.status !== fileSendingStatus.EDITABLE"
+          class="uploaded-images__image-status pi"
+          [ngClass]="
+            imageDetails.status === fileSendingStatus.SENT
+              ? 'pi-check'
+              : 'pi-spin pi-spinner'
+          "
+        ></i>
+      </div>
+    </div>
     <div class="toolbar-bottom">
-      <div></div>
+      <div>
+        <input
+          type="file"
+          multiple="true"
+          [accept]="accept"
+          #imageUploadButton
+          (change)="handleImagesChosen($event)"
+          style="display: none"
+        />
+        <button
+          class="toolbar-bottom__action"
+          (click)="imageUploadButton.click()"
+          type="button"
+          pButton
+          text="true"
+          icon="pi pi-upload"
+          [pTooltip]="'channel.chat.uploadImages' | translate"
+          tooltipPosition="bottom"
+          [disabled]="sending"
+        ></button>
+      </div>
       <button
         class="toolbar-bottom__action"
         pButton
         pRipple
         [label]="'common.send' | translate"
-        icon="pi pi-send"
+        [icon]="'pi ' + (sending ? 'pi-spin pi-spinner' : 'pi-send')"
         iconPos="right"
-        [disabled]="!sendEnabled"
+        [disabled]="!sendEnabled || sending"
       ></button>
+    </div>
+    <div class="upload-area">
+      <app-typography type="subtitle2">{{
+        "channel.chat.dropImage" | translate
+      }}</app-typography>
     </div>
   </div>
 </form>

@@ -297,7 +297,7 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
 
   @HostListener('document:pointerup')
   @HostListener('document:pointercancel')
-  protected onBoxRelease(): void {
+  protected onPointerRelease(): void {
     this.dragBoxDetails = null;
   }
 

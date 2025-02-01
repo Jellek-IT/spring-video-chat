@@ -54,7 +54,7 @@ export class AddChannelMemberDialogComponent {
   private readonly toastService = inject(ToastService);
   private readonly memberChannelService = inject(MemberChannelService);
   private readonly config: DynamicDialogConfig<AddChannelMemberDialogConfig> =
-    inject(DynamicDialogConfig<AddChannelMemberDialogConfig>);
+    inject(DynamicDialogConfig);
   private readonly ref = inject(DynamicDialogRef);
   private readonly endpointErrorService = inject(EndpointErrorService);
 
