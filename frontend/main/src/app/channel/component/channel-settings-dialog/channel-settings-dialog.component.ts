@@ -9,7 +9,7 @@ import {
 import { ToastService } from '../../../shared/service/toast.service';
 import { MemberChannelService } from '../../service/api/member-channel.service';
 import { EndpointErrorService } from '../../../error/service/endpoint-error.service';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { AvatarUploadComponent } from '../../../shared/component/avatar-upload/avatar-upload.component';
 import { TypographyComponent } from '../../../shared/component/typography/typography.component';
 import { TranslateModule } from '@ngx-translate/core';

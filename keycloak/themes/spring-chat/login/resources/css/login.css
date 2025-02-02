@@ -1,0 +1,884 @@
+/* Patternfly CSS places a "bg-login.jpg" as the background on this ".login-pf" class.
+   This clashes with the "keycloak-bg.png' background defined on the body below.
+   Therefore the Patternfly background must be set to none. */
+.login-pf {
+  background: none;
+}
+
+.login-pf body {
+  background: url("../img/keycloak-bg.png") no-repeat center center fixed;
+  background-size: cover;
+  height: 100%;
+}
+
+textarea.pf-c-form-control {
+  height: auto;
+}
+
+.pf-c-alert__title {
+  font-size: var(--pf-global--FontSize--xs);
+}
+
+p.instruction {
+  margin: 5px 0;
+}
+
+.pf-c-button.pf-m-control {
+  border-color: rgba(230, 230, 230, 0.5);
+}
+
+h1#kc-page-title {
+  margin-top: 10px;
+}
+
+#kc-locale ul {
+  background-color: var(--pf-global--BackgroundColor--100);
+  display: none;
+  top: 20px;
+  min-width: 100px;
+  padding: 0;
+}
+
+#kc-locale-dropdown {
+  display: inline-block;
+}
+
+#kc-locale-dropdown:hover ul {
+  display: block;
+}
+
+#kc-locale-dropdown a {
+  color: var(--pf-global--Color--200);
+  text-align: right;
+  font-size: var(--pf-global--FontSize--sm);
+}
+
+#kc-locale-dropdown button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--pf-global--Color--200);
+  text-align: right;
+  font-size: var(--pf-global--FontSize--sm);
+}
+
+button#kc-current-locale-link::after {
+  content: "\2c5";
+  margin-left: var(--pf-global--spacer--xs);
+}
+
+.login-pf .container {
+  padding-top: 40px;
+}
+
+.login-pf a:hover {
+  color: #0099d3;
+}
+
+#kc-logo {
+  width: 100%;
+}
+
+div.kc-logo-text {
+  background-image: url(../img/keycloak-logo-text.png);
+  background-repeat: no-repeat;
+  height: 63px;
+  width: 300px;
+  margin: 0 auto;
+}
+
+div.kc-logo-text span {
+  display: none;
+}
+
+#kc-header {
+  color: #ededed;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+#kc-header-wrapper {
+  font-size: 29px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 1.2em;
+  padding: 62px 10px 20px;
+  white-space: normal;
+}
+
+#kc-content {
+  width: 100%;
+}
+
+#kc-attempted-username {
+  font-size: 20px;
+  font-family: inherit;
+  font-weight: normal;
+  padding-right: 10px;
+}
+
+#kc-username {
+  text-align: center;
+  margin-bottom: -10px;
+}
+
+#kc-webauthn-settings-form {
+  padding-top: 8px;
+}
+
+#kc-form-webauthn .select-auth-box-parent {
+  pointer-events: none;
+}
+
+#kc-form-webauthn .select-auth-box-desc {
+  color: var(--pf-global--palette--black-600);
+}
+
+#kc-form-webauthn .select-auth-box-headline {
+  color: var(--pf-global--Color--300);
+}
+
+#kc-form-webauthn .select-auth-box-icon {
+  flex: 0 0 3em;
+}
+
+#kc-form-webauthn .select-auth-box-icon-properties {
+  margin-top: 10px;
+  font-size: 1.8em;
+}
+
+#kc-form-webauthn .select-auth-box-icon-properties.unknown-transport-class {
+  margin-top: 3px;
+}
+
+#kc-form-webauthn .pf-l-stack__item {
+  margin: -1px 0;
+}
+
+#kc-content-wrapper {
+  margin-top: 20px;
+}
+
+#kc-form-wrapper {
+  margin-top: 10px;
+}
+
+#kc-info {
+  margin: 20px -40px -30px;
+}
+
+#kc-info-wrapper {
+  font-size: 13px;
+  padding: 15px 35px;
+  background-color: #f0f0f0;
+}
+
+#kc-form-options span {
+  display: block;
+}
+
+#kc-form-options .checkbox {
+  margin-top: 0;
+  color: #72767b;
+}
+
+#kc-terms-text {
+  margin-bottom: 20px;
+}
+
+#kc-registration-terms-text {
+  max-height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 5px;
+}
+
+#kc-registration {
+  margin-bottom: 0;
+}
+
+/* TOTP */
+
+.subtitle {
+  text-align: right;
+  margin-top: 30px;
+  color: #909090;
+}
+
+.required {
+  color: var(--pf-global--danger-color--200);
+}
+
+ol#kc-totp-settings {
+  margin: 0;
+  padding-left: 20px;
+}
+
+ul#kc-totp-supported-apps {
+  margin-bottom: 10px;
+}
+
+#kc-totp-secret-qr-code {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+#kc-totp-secret-key {
+  background-color: #fff;
+  color: #333333;
+  font-size: 16px;
+  padding: 10px 0;
+}
+
+/* OAuth */
+
+#kc-oauth h3 {
+  margin-top: 0;
+}
+
+#kc-oauth ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#kc-oauth ul li {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  padding: 10px 0;
+}
+
+#kc-oauth ul li:first-of-type {
+  border-top: 0;
+}
+
+#kc-oauth .kc-role {
+  display: inline-block;
+  width: 50%;
+}
+
+/* Code */
+#kc-code textarea {
+  width: 100%;
+  height: 8em;
+}
+
+/* Social */
+.kc-social-links {
+  margin-top: 20px;
+}
+
+.kc-social-links li {
+  width: 100%;
+}
+
+.kc-social-provider-logo {
+  font-size: 23px;
+  width: 30px;
+  height: 25px;
+  float: left;
+}
+
+.kc-social-gray {
+  color: var(--pf-global--Color--200);
+}
+
+.kc-social-gray h2 {
+  font-size: 1em;
+}
+
+.kc-social-item {
+  margin-bottom: var(--pf-global--spacer--sm);
+  font-size: 15px;
+  text-align: center;
+}
+
+.kc-social-provider-name {
+  position: relative;
+}
+
+.kc-social-icon-text {
+  left: -15px;
+}
+
+.kc-social-grid {
+  display: grid;
+  grid-column-gap: 10px;
+  grid-row-gap: 5px;
+  grid-column-end: span 6;
+  --pf-l-grid__item--GridColumnEnd: span 6;
+}
+
+.kc-social-grid .kc-social-icon-text {
+  left: -10px;
+}
+
+.kc-login-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.kc-social-section {
+  text-align: center;
+}
+
+.kc-social-section hr {
+  margin-bottom: 10px;
+}
+
+.kc-login-tooltip .kc-tooltip-text {
+  top: -3px;
+  left: 160%;
+  background-color: black;
+  visibility: hidden;
+  color: #fff;
+
+  min-width: 130px;
+  text-align: center;
+  border-radius: 2px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  padding: 5px;
+
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+/* Show tooltip */
+.kc-login-tooltip:hover .kc-tooltip-text {
+  visibility: visible;
+  opacity: 0.7;
+}
+
+/* Arrow for tooltip */
+.kc-login-tooltip .kc-tooltip-text::after {
+  content: " ";
+  position: absolute;
+  top: 15px;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+}
+
+@media (min-width: 768px) {
+  #kc-container-wrapper {
+    position: absolute;
+    width: 100%;
+  }
+
+  .login-pf .container {
+    padding-right: 80px;
+  }
+
+  #kc-locale {
+    position: relative;
+    text-align: right;
+    z-index: 9999;
+  }
+}
+
+@media (max-width: 767px) {
+  .login-pf body {
+    background: white;
+  }
+
+  #kc-header {
+    padding-left: 15px;
+    padding-right: 15px;
+    float: none;
+    text-align: left;
+  }
+
+  #kc-header-wrapper {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 20px 60px 0 0;
+    color: #72767b;
+    letter-spacing: 0;
+  }
+
+  div.kc-logo-text {
+    margin: 0;
+    width: 150px;
+    height: 32px;
+    background-size: 100%;
+  }
+
+  #kc-form {
+    float: none;
+  }
+
+  #kc-info-wrapper {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: transparent;
+  }
+
+  .login-pf .container {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  #kc-locale {
+    position: absolute;
+    width: 200px;
+    top: 20px;
+    right: 20px;
+    text-align: right;
+    z-index: 9999;
+  }
+}
+
+@media (min-height: 646px) {
+  #kc-container-wrapper {
+    bottom: 12%;
+  }
+}
+
+@media (max-height: 645px) {
+  #kc-container-wrapper {
+    padding-top: 50px;
+    top: 20%;
+  }
+}
+
+.card-pf form.form-actions .btn {
+  float: right;
+  margin-left: 10px;
+}
+
+#kc-form-buttons {
+  margin-top: 20px;
+}
+
+.login-pf-page .login-pf-brand {
+  margin-top: 20px;
+  max-width: 360px;
+  width: 40%;
+}
+
+.select-auth-box-arrow {
+  display: flex;
+  align-items: center;
+  margin-right: 2rem;
+}
+
+.select-auth-box-icon {
+  display: flex;
+  flex: 0 0 2em;
+  justify-content: center;
+  margin-right: 1rem;
+  margin-left: 3rem;
+}
+
+.select-auth-box-parent {
+  border-top: 1px solid var(--pf-global--palette--black-200);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  cursor: pointer;
+  text-align: left;
+  align-items: unset;
+  background-color: unset;
+  border-right: unset;
+  border-bottom: unset;
+  border-left: unset;
+}
+
+.select-auth-box-parent:hover {
+  background-color: #f7f8f8;
+}
+
+.select-auth-container {
+  padding-bottom: 0px !important;
+}
+
+.select-auth-box-headline {
+  font-size: var(--pf-global--FontSize--md);
+  color: var(--pf-global--primary-color--100);
+  font-weight: bold;
+}
+
+.select-auth-box-desc {
+  font-size: var(--pf-global--FontSize--sm);
+}
+
+.select-auth-box-paragraph {
+  text-align: center;
+  font-size: var(--pf-global--FontSize--md);
+  margin-bottom: 5px;
+}
+
+.card-pf {
+  margin: 0 auto;
+  box-shadow: var(--pf-global--BoxShadow--lg);
+  padding: 0 20px;
+  max-width: 500px;
+  border-top: 4px solid;
+  border-color: var(--pf-global--primary-color--100);
+}
+
+/*phone*/
+@media (max-width: 767px) {
+  .login-pf-page .card-pf {
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding-top: 0;
+    border-top: 0;
+    box-shadow: 0 0;
+  }
+
+  .kc-social-grid {
+    grid-column-end: 12;
+    --pf-l-grid__item--GridColumnEnd: span 12;
+  }
+
+  .kc-social-grid .kc-social-icon-text {
+    left: -15px;
+  }
+}
+
+.login-pf-page .login-pf-signup {
+  font-size: 15px;
+  color: #72767b;
+}
+#kc-content-wrapper .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.login-pf-page.login-pf-page-accounts {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login-pf-page .btn-primary {
+  margin-top: 0;
+}
+
+.login-pf-page .list-view-pf .list-group-item {
+  border-bottom: 1px solid #ededed;
+}
+
+.login-pf-page .list-view-pf-description {
+  width: 100%;
+}
+
+#kc-form-login div.form-group:last-of-type,
+#kc-register-form div.form-group:last-of-type,
+#kc-update-profile-form div.form-group:last-of-type,
+#kc-update-email-form div.form-group:last-of-type {
+  margin-bottom: 0px;
+}
+
+.no-bottom-margin {
+  margin-bottom: 0;
+}
+
+#kc-back {
+  margin-top: 5px;
+}
+
+/* Recovery codes */
+.kc-recovery-codes-warning {
+  margin-bottom: 32px;
+}
+.kc-recovery-codes-warning .pf-c-alert__description p {
+  font-size: 0.875rem;
+}
+.kc-recovery-codes-list {
+  list-style: none;
+  columns: 2;
+  margin: 16px 0;
+  padding: 16px 16px 8px 16px;
+  border: 1px solid #d2d2d2;
+}
+.kc-recovery-codes-list li {
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+.kc-recovery-codes-list li span {
+  color: #6a6e73;
+  width: 16px;
+  text-align: right;
+  display: inline-block;
+  margin-right: 1px;
+}
+
+.kc-recovery-codes-actions {
+  margin-bottom: 24px;
+}
+.kc-recovery-codes-actions button {
+  padding-left: 0;
+}
+.kc-recovery-codes-actions button i {
+  margin-right: 8px;
+}
+
+.kc-recovery-codes-confirmation {
+  align-items: baseline;
+  margin-bottom: 16px;
+}
+
+#certificate_subjectDN {
+  overflow-wrap: break-word;
+}
+/* End Recovery codes */
+
+/* Custom CSS start */
+:root {
+  --app-background-color: #0f172a;
+  --app-card-background-color: #18181b;
+  --app-font-color: #fafafa;
+  --app-error-color: #f43f5e;
+  --app-primary: #2dd4bf;
+  --app-primary-font-color: #18181b;
+  --app-primary-hover: #ccfbf1;
+  --app-primary-active: #99f6e4;
+  --app-transition-duration: 0.2s;
+  --app-input-background: #09090b;
+  --app-input-border-color: #52525b;
+  --app-input-text-color: #ffffff;
+  --app-inputtext-placeholder-color: #a1a1aa;
+  --app-inputtext-invalid-placeholder-color: #f87171;
+  --app-input-hover-border-color: #71717a;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/roboto/Roboto-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/roboto/Roboto-RegularItalic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/roboto/Roboto-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/roboto/Roboto-MediumItalic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/roboto/Roboto-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/roboto/Roboto-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+.login-pf body {
+  font-family: "Roboto";
+  background: var(--app-background-color);
+  font-size: 16px;
+  color: var(--app-font-color);
+}
+
+.login-pf-page {
+  padding-top: 5rem;
+}
+
+.login-pf-page .card-pf {
+  max-width: 500px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 0;
+  background: var(--app-card-background-color);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: none;
+  overflow: hidden;
+}
+
+.required {
+  color: var(--app-error-color);
+}
+
+.login-content {
+  padding: 1.25rem;
+}
+
+.login_tabs {
+  display: flex;
+}
+
+.login_tabs__tab {
+  width: 50%;
+  padding: 1rem;
+  font-weight: 700;
+  text-align: center;
+  font-size: 1rem;
+  background-color: #334155;
+  color: var(--app-font-color);
+  text-decoration: none;
+}
+.login-pf .login_tabs__tab:hover,
+.login-pf .login_tabs__tab:visited,
+.login-pf .login_tabs__tab:focus {
+  color: var(--app-font-color);
+  text-decoration: none;
+  transition: background var(--app-transition-duration),
+    color var(--app-transition-duration);
+}
+.login_tabs__tab--active {
+  background: var(--app-card-background-color);
+}
+
+.pf-c-button.pf-m-primary {
+  transition: background var(--app-transition-duration),
+    color var(--app-transition-duration);
+  background: var(--app-primary);
+  color: var(--app-primary-font-color);
+  font-size: 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.login-pf .login_tabs__tab--interactive:hover,
+.pf-c-button.pf-m-primary:hover {
+  background: var(--app-primary-hover);
+  color: var(--app-primary-font-color);
+}
+
+.login-pf .login_tabs__tab--interactive:active,
+.pf-c-button.pf-m-primary:active {
+  background: var(--app-primary-active);
+  color: var(--app-primary-font-color);
+}
+
+h1#kc-page-title {
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.login-pf-page .login-pf-header {
+  margin: 0;
+  padding-bottom: 1rem;
+}
+
+#kc-content-wrapper {
+  margin: 0;
+}
+#kc-form-wrapper {
+  margin: 0;
+}
+
+.pf-c-form__label-text {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  line-height: 1;
+}
+
+.pf-c-alert.pf-c-alert {
+  border-top: none;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.checkbox label {
+  padding-left: 1.5rem;
+}
+.checkbox input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  margin-left: -1.5rem;
+}
+
+.pf-c-form-control.pf-c-form-control {
+  border: 1px solid var(--app-input-border-color);
+  transition: background var(--app-transition-duration),
+    color var(--app-transition-duration),
+    border-color var(--app-transition-duration);
+  outline: none;
+  padding: 0.5rem 0.75rem;
+  height: auto;
+  font-size: 1rem;
+  background: var(--app-input-background);
+  border-radius: 0.5rem;
+  color: var(--app-input-text-color);
+  line-height: 1;
+  box-shadow: 0 0 20px 30px transparent inset !important;
+  position: relative;
+  z-index: 50;
+}
+.pf-c-form-control.pf-c-form-control::placeholder {
+  color: var(--app-inputtext-placeholder-color);
+}
+.pf-c-form-control.pf-c-form-control[aria-invalid="true"] {
+  border-color: var(--app-error-color);
+}
+.pf-c-form-control.pf-c-form-control:hover {
+  border-color: var(--app-input-hover-border-color);
+}
+.pf-c-form-control.pf-c-form-control:focus {
+  border-color: var(--app-primary);
+}
+.pf-c-form-control.pf-c-form-control[aria-invalid="true"]::placeholder {
+  color: var(--app-error-color);
+}
+.pf-c-form-control.pf-c-form-control:is(
+    :-webkit-autofill,
+    :autofill,
+    :-webkit-autofill:hover,
+    :autofill:hover,
+    :-webkit-autofill:focus,
+    :autofill:focus,
+    :-webkit-autofill:active,
+    :autofill:active,
+
+  ) {
+  -webkit-text-fill-color: var(--app-input-text-color) !important;
+  box-shadow: 0 0 20px 30px #2a3242 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.pf-c-input-group {
+  background-color: transparent;
+  position: relative;
+}
+
+.pf-c-input-group .pf-c-form-control {
+  padding-right: 2.25rem;
+}
+
+.pf-c-button.pf-m-control {
+  position: absolute;
+  background-color: transparent;
+  color: var(--app-inputtext-placeholder-color);
+  z-index: 100;
+  padding: 0;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  --pf-c-button--after--BorderColor: transparent;
+}
+
+#kc-info {
+  margin: 0;
+  padding: 0;
+}
+#kc-info-wrapper {
+  background: var(--app-card-background-color);
+  padding-top: 1rem;
+  padding-bottom: 0;
+}
+/* Custom CSS end */

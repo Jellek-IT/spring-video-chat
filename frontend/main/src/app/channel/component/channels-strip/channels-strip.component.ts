@@ -11,7 +11,6 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { CardModule } from 'primeng/card';
-import { AvatarComponent } from '../../../shared/component/avatar/avatar.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,11 +20,9 @@ import { TypographyComponent } from '../../../shared/component/typography/typogr
 import { ChannelBasicsDto } from '../../model/channel-basics-dto.model';
 import { MemberChannelQueryParamsPageable } from '../../model/member-channel-query-params-pageable.model';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 import { LoaderComponent } from '../../../shared/component/loader/loader.component';
 import { MemberChannelService } from '../../service/api/member-channel.service';
 import { ChannelThumbnailComponent } from '../channel-thumbnail/channel-thumbnail.component';
-import { ChannelChatComponent } from '../chat/channel-chat/channel-chat.component';
 
 interface ChannelData {
   data: ChannelBasicsDto | null;

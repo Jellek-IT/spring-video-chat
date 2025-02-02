@@ -8,7 +8,6 @@ import {
 } from '../../../core/stomp/service/stomp.service';
 import { ChannelMessageBasicsDto } from '../../model/message/channel-message-basics-dto.model';
 import { CreateChannelMessagePayload } from '../../model/message/create-channel-message-payload.model';
-import { VideoRoomSessionDetailsDto } from '../../../core/janus/model/video-room-session-details-dto.model';
 
 @Injectable({
   providedIn: 'root',

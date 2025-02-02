@@ -8,6 +8,7 @@
   />
   <button
     pButton
+    *ngIf="userProfile.hasProfilePicture"
     label="{{ 'user.removeProfilePicture' | translate }}"
     [disabled]="removeProfilePictureLoading"
     [icon]="removeProfilePictureLoading ? 'pi pi-spin pi-spinner' : ''"

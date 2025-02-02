@@ -7,7 +7,7 @@ import {
 import { environment } from '../../../environments/environment';
 import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
-import { catchError, EMPTY, from, map, mergeMap, of, throwError } from 'rxjs';
+import { catchError, from, mergeMap, of, throwError } from 'rxjs';
 import { addAuthorizationHeader } from 'keycloak-angular';
 
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {

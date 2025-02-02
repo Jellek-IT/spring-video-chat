@@ -5,7 +5,6 @@ import {
   ElementRef,
   HostListener,
   Input,
-  OnInit,
   ViewChild,
 } from '@angular/core';
 

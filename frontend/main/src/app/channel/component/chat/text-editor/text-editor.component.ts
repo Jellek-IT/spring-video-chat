@@ -528,4 +528,97 @@ export class TextEditorComponent implements OnInit, OnDestroy {
     );
     this.uploadedImagesComponent.nativeElement.scrollTo(result, 0);
   }
+
+  protected toggleBold(): void {
+    const selection: Selection | null = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    const range: Range = selection.getRangeAt(0);
+    if (range.collapsed) return; // nothing is selected
+
+    // Determine whether all text nodes intersecting the selection are already bold.
+    let allBold = true;
+    const treeWalker: TreeWalker = document.createTreeWalker(
+      range.commonAncestorContainer,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode(node: Node): number {
+          // For each text node, create a range covering its contents.
+          const textNode = node as Text;
+          const nodeRange: Range = document.createRange();
+          nodeRange.selectNodeContents(textNode);
+          // Accept the node if its range intersects with the selection range.
+          if (
+            range.compareBoundaryPoints(Range.END_TO_START, nodeRange) < 0 &&
+            range.compareBoundaryPoints(Range.START_TO_END, nodeRange) > 0
+          ) {
+            return NodeFilter.FILTER_ACCEPT;
+          }
+          return NodeFilter.FILTER_REJECT;
+        },
+      }
+    );
+
+    let textNode: Node | null;
+    while ((textNode = treeWalker.nextNode())) {
+      if (!this.isBoldNode(textNode)) {
+        allBold = false;
+        break;
+      }
+    }
+
+    if (allBold) {
+      this.unboldRange(range);
+    } else {
+      this.boldRange(range);
+    }
+
+    // Optionally clear the selection after the operation.
+    selection.removeAllRanges();
+  }
+
+  // Returns true if the given node is within a <b> tag.
+  private isBoldNode(node: Node): boolean {
+    let parent: HTMLElement | null = node.parentElement;
+    while (parent) {
+      if (parent.tagName.toLowerCase() === 'b') {
+        return true;
+      }
+      parent = parent.parentElement;
+    }
+    return false;
+  }
+
+  // Wrap the contents of the range in a <b> element.
+  private boldRange(range: Range): void {
+    const extracted: DocumentFragment = range.extractContents();
+    const boldElem: HTMLElement = document.createElement('b');
+    boldElem.appendChild(extracted);
+    range.insertNode(boldElem);
+  }
+
+  // Remove bold formatting from the contents of the range.
+  private unboldRange(range: Range): void {
+    const extracted: DocumentFragment = range.extractContents();
+    this.unboldFragment(extracted);
+    range.insertNode(extracted);
+  }
+
+  // Recursively unwrap any <b> elements in the given fragment.
+  private unboldFragment(fragment: DocumentFragment): void {
+    const boldElements: NodeListOf<HTMLElement> =
+      fragment.querySelectorAll('b');
+    boldElements.forEach((b: HTMLElement) => {
+      // Move all child nodes of the <b> element to its parent.
+      while (b.firstChild) {
+        if (b.parentNode) {
+          b.parentNode.insertBefore(b.firstChild, b);
+        }
+      }
+      // Remove the empty <b> element.
+      if (b.parentNode) {
+        b.parentNode.removeChild(b);
+      }
+    });
+  }
 }

@@ -21,7 +21,6 @@ import {
   AddChannelMemberDialogConfig,
 } from '../../component/add-channel-member-dialog/add-channel-member-dialog.component';
 import { DialogService } from 'primeng/dynamicdialog';
-import { AvatarComponent } from '../../../shared/component/avatar/avatar.component';
 import {
   ChannelSettingsConfig,
   ChannelSettingsDialogComponent,

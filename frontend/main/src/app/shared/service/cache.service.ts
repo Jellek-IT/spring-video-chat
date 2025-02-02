@@ -1,6 +1,6 @@
 import { HttpEvent, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { interval, Observable, Subject } from 'rxjs';
+import { interval, Subject } from 'rxjs';
 
 export interface CacheRequestDetails {
   response: HttpEvent<unknown> | null;

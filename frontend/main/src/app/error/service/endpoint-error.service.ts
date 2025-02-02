@@ -5,9 +5,7 @@ import { Observable, from, map, of } from 'rxjs';
 import ExceptionResponseProp, {
   ExceptionResponse,
 } from '../model/exception-response.model';
-import ErrorResponseTypeProp, {
-  ErrorResponseType,
-} from '../enum/error-response-type.enum';
+import ErrorResponseTypeProp from '../enum/error-response-type.enum';
 import { TranslateService } from '@ngx-translate/core';
 @Injectable({
   providedIn: 'root',

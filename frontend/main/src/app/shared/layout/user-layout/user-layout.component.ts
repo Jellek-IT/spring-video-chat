@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { RouterModule } from '@angular/router';
 import { MenuModule } from 'primeng/menu';

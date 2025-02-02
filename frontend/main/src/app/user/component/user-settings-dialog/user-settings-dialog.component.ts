@@ -9,6 +9,7 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { MemberProfileDto } from '../../model/member-profile-dto.model';
 import { Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
 
 export interface UserSettingsDialogConfig {
   onUpdateProfilePictureEnd?: (image: Blob | null) => void;
@@ -21,6 +22,7 @@ export interface UserSettingsDialogConfig {
     TypographyComponent,
     TranslateModule,
     ButtonModule,
+    CommonModule,
   ],
   templateUrl: './user-settings-dialog.component.html',
   styleUrl: './user-settings-dialog.component.scss',

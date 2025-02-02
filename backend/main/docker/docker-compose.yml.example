@@ -1,0 +1,116 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:17.2
+    command: [
+      'postgres',
+      '-c',
+      'log_statement=all'
+    ]
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: springchat
+      POSTGRES_DATABASE: springchat
+    volumes:
+      - "postgres_data:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+  postgres-keycloak:
+    image: postgres:17.2
+    command: [
+      'postgres',
+      '-c',
+      'log_statement=all'
+    ]
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: springchat
+      POSTGRES_DATABASE: springchat
+    volumes:
+      - "postgres_keycloak_data:/var/lib/postgresql/data"
+  keycloak:
+    build: ./../../../keycloak
+    command: [
+      'start-dev',
+      '-Dkeycloak.migration.action=import',
+      '-Dkeycloak.migration.provider=singleFile',
+      '-Dkeycloak.migration.file=/opt/keycloak/realm-local.json',
+      '-Dkeycloak.migration.strategy=IGNORE_EXISTING',
+      '-Djboss.socket.binding.port-offset=1000',
+      '-Dkeycloak.profile.feature.upload_scripts=enabled',
+      '--spi-theme-static-max-age=-1',
+      '--spi-theme-cache-themes=false',
+      '--spi-theme-cache-templates=false',
+    ]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_LOGLEVEL: DEBUG
+      APP_FRONTEND_MAIN_URL: localhost:4200
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-keycloak:5432/springchat
+      KC_DB_USERNAME: springchat
+      KC_DB_PASSWORD: password
+    volumes:
+      - ./../../../keycloak/themes/spring-chat:/opt/keycloak/themes/spring-chat
+      - ./../../../keycloak/realm-local.json:/opt/keycloak/realm-local.json
+    ports:
+      - "8090:8080"
+      - "8443:8443"
+  rabbitmq:
+    build: ./../../../rabbitmq
+    ports:
+      - '15672:15672'
+      - '61613:61613'
+    volumes:
+      - ./../../../rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+  minio:
+    image: quay.io/minio/minio:RELEASE.2024-11-07T00-52-20Z
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: springchat
+    command: server --console-address ":9001" /data
+  janus:
+    build:
+      context: ./../../../janus
+      args:
+        TOKEN_AUTH_SECRET: "secret"
+        ADMIN_SECRET: "secret"
+        VIDEOROOM_ADMIN_KEY: "secret"
+    environment:
+      NAT_1_1: <change-me>
+    ports:
+      - "8188:8188"
+      - "7088:7088"
+      - "10000-10200:10000-10200/udp"
+  redis:
+    image: redis:7.4.2-alpine
+    entrypoint: /bin/sh -c
+    command: redis-server --loglevel verbose --requirepass $$REDIS_PASSWORD
+    ports:
+      - '6379:6379'
+    environment:
+      - REDIS_PASSWORD=password
+    volumes:
+      - redis_data:/data
+  mailcatcher:
+    restart: on-failure
+    image: dockage/mailcatcher:0.9.0
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
+volumes:
+  postgres_data:
+    driver: local
+  postgres_keycloak_data:
+    driver: local
+  minio_data:
+    driver: local
+  redis_data:
+    driver: local

@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import {
-  MessageDomTagProcessorService,
   MessageNode,
   TagMessageNode,
   TextMessageNode,
