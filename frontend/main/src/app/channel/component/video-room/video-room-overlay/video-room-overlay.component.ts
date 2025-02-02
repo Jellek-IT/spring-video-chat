@@ -97,7 +97,7 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
   protected microphoneEnabled = true;
   protected cameraEnabled = false;
   protected userProfile!: MemberProfileDto;
-  protected idToMember: Map<string, MemberBasicsDto> = new Map();
+  protected idToMember: Map<string, ChannelMemberDto> = new Map();
   protected fullscreen = false;
   protected usersCarouselResponsiveOptions:
     | CarouselResponsiveOptions[]
@@ -136,12 +136,18 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
       });
     this.stompUserVideoRoomSubscription = this.stompVideoRoomService
       .subscribeToVideoRoomTokenUserQueue(this.channel.id)
-      .subscribe((response) => {
-        if (response instanceof StompSubscriptionAccepted) {
-          //do noting
-        } else {
-          this.janusVideoRoomService.updateSession(response.data);
-        }
+      .subscribe({
+        next: (response) => {
+          if (response instanceof StompSubscriptionAccepted) {
+            //do noting
+          } else {
+            this.janusVideoRoomService.updateSession(response.data);
+          }
+        },
+        error: () => {
+          this.toastService.displayErrorMessage('channel.videoRoom.joinError');
+          this.videoRoomClosed.emit();
+        },
       });
     this.stompErrorSubscription = this.stompService
       .getErrorAsObservable()
@@ -162,7 +168,7 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
       this.idToMember.clear();
       (changes['channel'].currentValue as ChannelDetailsDto).members.forEach(
         (member) => {
-          this.idToMember.set(member.member.id, member.member);
+          this.idToMember.set(member.member.id, member);
         }
       );
     }
@@ -240,7 +246,7 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
       if (aUser === undefined && bUser === undefined) {
         return 0;
       }
-      return aUser!.nickname.localeCompare(bUser!.nickname);
+      return aUser!.member.nickname.localeCompare(bUser!.member.nickname);
     });
   }
 
@@ -261,7 +267,7 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
 
   protected getVideoRoomUserMember(
     videoRoomUser: VideoRoomUser
-  ): MemberBasicsDto {
+  ): ChannelMemberDto {
     const member = this.idToMember.get(videoRoomUser.id);
     if (member === undefined) {
       this.videoRoomClosed.emit();

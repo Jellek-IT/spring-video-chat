@@ -81,7 +81,7 @@ public class ChannelService {
     public void updateMember(UUID id, UpdateChannelMemberRequest request) {
         var channel = channelRepository.findWithMembersById(id)
                 .orElseThrow(AppNotFoundException::new);
-        var updatedMember = channel.findMemberById(request.memberId())
+        var updatedMember = channel.findNotDeletedMemberById(request.memberId())
                 .orElseThrow(AppNotFoundException::new);
         updatedMember.update(request);
         /* todo: send info to all users about update */
@@ -93,9 +93,9 @@ public class ChannelService {
                 .orElseThrow(AppNotFoundException::new);
         channel.findMemberByUserAuthResourceId(authResourceId)
                 .ifPresent(channelMember -> channelMember.delete(clock));
-        /* todo: kill subscription and kick from video room - plugin was modified to include id of user in allowed value,
+        /* todo: kill subscription and kick from video room - plugin was modified to include id of the user in allowed value,
          * send info to all users about kicked user
-         * name of queue can be specified by x-queue-name native header
+         * name of the queue can be specified by x-queue-name native header
          */
     }
 
@@ -103,10 +103,10 @@ public class ChannelService {
     public void kickMember(UUID id, KickChannelMemberRequest request) {
         var channel = channelRepository.findWithMembersById(id)
                 .orElseThrow(AppNotFoundException::new);
-        var kickedMember = channel.findMemberById(request.memberId())
+        var kickedMember = channel.findNotDeletedMemberById(request.memberId())
                 .orElseThrow(AppNotFoundException::new);
         kickedMember.delete(clock);
-        /* todo: kill subscription and kick from video room - plugin was modified to include id of user in allowed value,
+        /* todo: kill subscription and kick from video room - plugin was modified to the include id of user in allowed value,
          * send info to all users about kicked user
          * how queue ids are build using destination and sub id
          * https://github.com/rabbitmq/rabbitmq-server/blob/main/deps/rabbitmq_stomp/src/rabbit_stomp_util.erl#L368-L382
@@ -146,6 +146,7 @@ public class ChannelService {
         var file = storageClient.uploadChannelImage(request.getFile(), channel, filename);
         var channelFile = new ChannelFile(member, channel, file, clock);
         channelFileRepository.save(channelFile);
+        /* todo: send info to all users about update */
         return channelFileMapper.mapToChannelFileDto(channelFile);
     }
 

@@ -4,7 +4,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.annotation.support.SimpAnnotationMethodMessageHandler;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.messaging.access.intercept.MessageMatcherDelegatingAuthorizationManager;
@@ -20,8 +19,8 @@ public class WebSocketSecurityConfig {
                 .simpSubscribeDestMatchers("user.queue.errors").permitAll()
                 .simpMessageDestMatchers("/app/channels.**").hasRole(Roles.MEMBER)
                 .simpMessageDestMatchers("/app/video-rooms.**").hasRole(Roles.MEMBER)
-                .simpSubscribeDestMatchers("/user/queue/errors").hasRole(Roles.MEMBER)
-                .simpSubscribeDestMatchers("/user/queue/channels.**").hasRole(Roles.MEMBER)
+                .simpSubscribeDestMatchers("/user/exchange/amq.direct/errors").hasRole(Roles.MEMBER)
+                .simpSubscribeDestMatchers("/user/exchange/amq.direct/channels.**").hasRole(Roles.MEMBER)
                 .simpSubscribeDestMatchers("/topic/channels.**").hasRole(Roles.MEMBER)
                 .anyMessage().denyAll();
         return messages.build();

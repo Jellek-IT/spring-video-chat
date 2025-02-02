@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,8 +15,6 @@ import pl.bronikowski.springchat.backendmain.authserver.api.UserContextProvider;
 import pl.bronikowski.springchat.backendmain.user.api.dto.UpdateUserProfilePictureRequest;
 import pl.bronikowski.springchat.backendmain.user.api.dto.UserProfileDto;
 import pl.bronikowski.springchat.backendmain.user.internal.UserService;
-
-import java.util.UUID;
 
 @Validated
 @RestController

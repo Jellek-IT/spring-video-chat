@@ -11,8 +11,6 @@ import pl.bronikowski.springchat.backendmain.storage.api.StorageClient;
 import pl.bronikowski.springchat.backendmain.user.api.dto.UpdateUserProfilePictureRequest;
 import pl.bronikowski.springchat.backendmain.user.api.dto.UserProfileDto;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -47,7 +45,7 @@ public class UserService {
     public void getProfilePicture(String authResourceId, HttpServletResponse response) {
         var user = userRepository.findWithProfilePictureByAuthResourceId(authResourceId)
                 .orElseThrow(EntityExistsException::new);
-        if(user.getProfilePicture() == null) {
+        if (user.getProfilePicture() == null) {
             throw new AppNotFoundException();
         }
         storageClient.download(user.getProfilePicture(), response);

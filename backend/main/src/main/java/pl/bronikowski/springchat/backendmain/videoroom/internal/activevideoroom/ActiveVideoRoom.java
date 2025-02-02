@@ -7,7 +7,6 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.time.Instant;
-import java.util.Objects;
 import java.util.UUID;
 
 @Data

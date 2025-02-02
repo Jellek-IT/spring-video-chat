@@ -97,7 +97,7 @@ public class MemberChannelController {
 
     @PostMapping("/{id}/leave")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void leave(@PathVariable @ExistingMemberChannelWithRights({}) UUID id) {
+    public void leave(@PathVariable @ExistingMemberChannelWithRights UUID id) {
         var authResourceId = UserContextProvider.getAuthResourceId();
         channelService.leave(id, authResourceId);
     }
@@ -105,7 +105,7 @@ public class MemberChannelController {
     @PostMapping("/{id}/kick-member")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void kickMember(@PathVariable @ExistingMemberChannelWithRights(ChannelMemberRight.KICK) UUID id,
-                           KickChannelMemberRequest request) {
+                           @Valid @RequestBody KickChannelMemberRequest request) {
         channelService.kickMember(id, request);
     }
 
@@ -130,7 +130,7 @@ public class MemberChannelController {
     }
 
     @GetMapping("/{id}/file/{fileId}")
-    public void downloadFile(@PathVariable @ExistingMemberChannelWithRights(ChannelMemberRight.WRITE) UUID id,
+    public void downloadFile(@PathVariable @ExistingMemberChannelWithRights(ChannelMemberRight.READ) UUID id,
                              @PathVariable UUID fileId, HttpServletResponse response) {
         channelService.downloadFile(id, fileId, response);
     }

@@ -46,6 +46,8 @@ export class ChannelChatComponent
   implements OnInit, OnDestroy, AfterViewChecked
 {
   @Input({ required: true }) public channel!: ChannelDetailsDto;
+  @Input({ required: true }) public displayChat!: boolean;
+  @Input({ required: true }) public displayEditor!: boolean;
 
   private readonly previousLoadBatchSize = 20;
   private readonly newMessageScrollBottomOffsetDelta = 20;
@@ -79,11 +81,13 @@ export class ChannelChatComponent
   protected restoreBottomOffset: number | null = 0;
 
   public ngOnInit(): void {
-    this.connectToChannelMessages();
     this.stompErrorSubscription = this.stompService
       .getErrorAsObservable()
       .subscribe((res) => this.handleMessageError(res));
-    this.loadPreviousMessages();
+    if (this.displayChat) {
+      this.loadPreviousMessages();
+      this.connectToChannelMessages();
+    }
   }
 
   public ngOnDestroy(): void {

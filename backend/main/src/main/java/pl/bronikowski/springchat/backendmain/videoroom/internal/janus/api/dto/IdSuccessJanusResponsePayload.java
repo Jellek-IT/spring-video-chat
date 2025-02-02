@@ -16,7 +16,7 @@ public class IdSuccessJanusResponsePayload extends JanusResponsePayload {
     private final IdSuccessJanusResponsePayload.IdSuccessJanusResponseDataPayload data;
 
     public IdSuccessJanusResponsePayload(String transaction,
-                                            IdSuccessJanusResponseDataPayload data) {
+                                         IdSuccessJanusResponseDataPayload data) {
         super(JanusResponseType.SUCCESS, transaction);
         this.data = data;
     }

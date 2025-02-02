@@ -32,17 +32,36 @@
     "createSuccess": "Pomyślnie utworzono nowy kanał \"{{name}}\"",
     "updateSuccess": "Pomyślnie zaktualizowano kanał",
     "updateThumbnailSuccess": "Pomyślnie zaktualizowano miniaturkę kanału",
-    "addMemberSuccess": "Pomyślnie dodano nowego użytkownika",
     "name": "Nazwa",
     "add": "Dodaj",
     "update": "Aktualizuj",
-    "addMember": "Zaproś użytkownika",
     "memberId": "Identyfikator użytkownika",
     "rights": "Prawa użytkownika",
     "settings": "Ustawienia kanału",
     "thumbnail": "Miniaturka",
     "otherSettings": "Pozostałe ustawienia",
     "removeThumbnail": "Usuń miniaturkę",
+    "leave": "Opuść kanał",
+    "leaveDialog": {
+      "header": "Opuść kanał",
+      "message": "Czy na pewno chcesz opuścić kanał \"{{channel}}\"? Zmiany nie będzie można cofnąć",
+      "success": "Pomyślnie opuszczono kanał \"{{channel}}\""
+    },
+    "member": {
+      "you": "Ty",
+      "deleted": "Usunięty",
+      "updateRightsSuccess": "Pomyślnie zmieniono prawa użytkownika {{nickname}}",
+      "addSuccess": "Pomyślnie dodano nowego użytkownika",
+      "add": "Zaproś użytkownika",
+      "editRights": "Pomyślnie zaktualizowano prawa użytkownika {{nickname}}",
+      "modify": "Aktualizuj",
+      "menu": {
+        "copyId": "Kopiuj identyfikator",
+        "kick": "Wyrzuć",
+        "kickSuccess": "Pomyślnie wyrzucono użytkownika {{nickname}}",
+        "modifyRights": "Edytuj prawa"
+      }
+    },
     "chat": {
       "writeMessage": "Napisz wiadomość...",
       "stompMessageSubscribeError": "Nie udało się połączyć z kanałem {{name}}",
@@ -90,8 +109,7 @@
     "register": "Zarejestruj",
     "registerButton": "Zarejestruj się",
     "loginButton": "Zaloguj się",
-    "success": "Dziękujemy za rejestrację <b>{{nickname}}</b>. Możesz się teraz zalogować.",
-    "error": {}
+    "success": "Dziękujemy za rejestrację <b>{{nickname}}</b>. Możesz się teraz zalogować."
   },
   "avatarUpload": {
     "chooseFile": "Wybierz plik",

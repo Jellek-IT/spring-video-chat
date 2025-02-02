@@ -92,6 +92,13 @@ public class Channel {
                 .findAny();
     }
 
+    public Optional<ChannelMember> findNotDeletedMemberById(UUID id) {
+        return members.stream()
+                .filter(channelMember -> id.equals(channelMember.getMember().getId()))
+                .filter(channelMember -> !channelMember.isDeleted())
+                .findAny();
+    }
+
     public void delete(Clock clock) {
         this.deletedAt = clock.instant();
     }

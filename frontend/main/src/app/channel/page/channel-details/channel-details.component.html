@@ -16,6 +16,14 @@
         >
         <div class="header__actions" *ngIf="channel !== null">
           <button
+            pButton
+            [icon]="leaveLoading ? 'pi pi-spin pi-spinner' : 'pi pi-sign-out'"
+            severity="danger"
+            [pTooltip]="'channel.leave' | translate"
+            tooltipPosition="bottom"
+            (click)="leave()"
+          ></button>
+          <button
             *ngIf="currentUserHasRight(channelMemberRights.INVITE)"
             pButton
             icon="pi pi-cog"
@@ -28,7 +36,7 @@
             *ngIf="currentUserHasRight(channelMemberRights.INVITE)"
             pButton
             icon="pi pi-user-plus"
-            [pTooltip]="'channel.addMember' | translate"
+            [pTooltip]="'channel.member.add' | translate"
             severity="success"
             tooltipPosition="bottom"
             (click)="openAddChannelMemberDialog()"
@@ -54,8 +62,8 @@
       </div>
       <div class="header__users" *ngIf="channel !== null">
         <app-channel-member-profile-picture
-          *ngFor="let member of channel.members"
-          [member]="member.member"
+          *ngFor="let member of getNotDeletedChannelMembers()"
+          [member]="member"
           [contextMenu]="true"
           [channel]="channel"
         />
@@ -66,7 +74,12 @@
 <section class="chat">
   <app-container>
     <p-card>
-      <app-channel-chat *ngIf="channel !== null" [channel]="channel" />
+      <app-channel-chat
+        *ngIf="channel !== null"
+        [channel]="channel"
+        [displayChat]="currentUserHasRight(channelMemberRights.READ)"
+        [displayEditor]="currentUserHasRight(channelMemberRights.WRITE)"
+      />
     </p-card>
   </app-container>
 </section>

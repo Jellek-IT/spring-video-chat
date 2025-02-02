@@ -1,3 +1,3 @@
 export interface KickCHannelMemberRequest {
-	memberId: string;
+  memberId: string;
 }

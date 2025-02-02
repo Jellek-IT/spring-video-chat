@@ -17,6 +17,7 @@ public class AllowedVideoRoomMessageJanusRequestBodyPayload extends VideoRoomMes
     private VideoRoomAllowedAction action;
     private UUID room;
     private List<String> allowed;
+
     public AllowedVideoRoomMessageJanusRequestBodyPayload() {
         super(VideoRoomJanusPayloadType.ALLOWED);
     }

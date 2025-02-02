@@ -3,7 +3,7 @@
   [ngClass]="message.member.id === userProfile.id ? 'message--right' : ''"
 >
   <app-channel-member-profile-picture
-    [member]="message.member"
+    [member]="getChannelMember()"
     [channel]="channel"
     [contextMenu]="true"
   />
@@ -25,7 +25,7 @@
           *ngFor="let node of message.textNodes"
           [node]="node"
         />
-        <div class="content-images">
+        <div class="content-images" *ngIf="imagesDetails.length > 0">
           <div
             class="content-images__image"
             *ngFor="let imageDetails of imagesDetails; index as i"

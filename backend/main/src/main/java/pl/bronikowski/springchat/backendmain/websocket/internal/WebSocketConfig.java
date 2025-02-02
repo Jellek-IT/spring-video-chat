@@ -46,7 +46,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setPathMatcher(new AntPathMatcher("."))
                 .setUserDestinationPrefix("/user")
                 .setApplicationDestinationPrefixes("/app")
-                .enableStompBrokerRelay("/topic", "/queue")
+                /* /exchange/amq.direct instead of /queue cause queue cannot be deleted without causing error
+                 *  when trying to subscribe again to the same (deleted before) destination - error NOT_FOUND */
+                .enableStompBrokerRelay("/topic", "/exchange/amq.direct")
                 .setUserDestinationBroadcast("/topic/server.main.unresolved-user")
                 .setUserRegistryBroadcast("/topic/server.main.user-registry")
                 .setRelayHost(stompBrokerProperties.relayHost())

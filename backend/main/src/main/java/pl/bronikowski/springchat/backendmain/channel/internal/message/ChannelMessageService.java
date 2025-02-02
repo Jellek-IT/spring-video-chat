@@ -10,7 +10,6 @@ import pl.bronikowski.springchat.backendmain.channel.internal.file.ChannelFileRe
 import pl.bronikowski.springchat.backendmain.exception.AppNotFoundException;
 import pl.bronikowski.springchat.backendmain.member.internal.MemberRepository;
 
-import java.time.Clock;
 import java.util.UUID;
 
 @Service

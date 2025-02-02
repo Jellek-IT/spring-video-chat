@@ -6,6 +6,7 @@ import pl.bronikowski.springchat.backendmain.exception.ErrorResponseType;
 
 public class ChannelOperationNotEnoughRightsException extends AppApplicationException {
     private static final HttpStatus HTTP_STATUS = HttpStatus.FORBIDDEN;
+
     public ChannelOperationNotEnoughRightsException() {
         super("User has not enough rights for this operation", HTTP_STATUS, ErrorResponseType.CHANNEL_OPERATION_NOT_ENOUGH_RIGHTS);
     }

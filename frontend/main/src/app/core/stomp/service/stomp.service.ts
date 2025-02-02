@@ -45,6 +45,7 @@ export class StompService {
   private readonly appTransactionHeader = 'X-Transaction-Id';
   private readonly reconnectDelay = 3000;
   private readonly subscribeTimeoutTime = 5000;
+  private readonly sessionIdLength = 32;
   private readonly connectionState$ = new BehaviorSubject<StompConnectionState>(
     StompConnectionState.DEACTIVATED
   );
@@ -85,7 +86,7 @@ export class StompService {
       discardWebsocketOnCommFailure: true,
       onConnect: () => {
         this.errorQueueSubscription = this.subscribeInternal<ExceptionResponse>(
-          '/user/queue/errors'
+          '/user/exchange/amq.direct/errors'
         ).subscribe({
           next: (res) => {
             if (res instanceof StompSubscriptionAccepted) {
@@ -106,7 +107,9 @@ export class StompService {
       },
       // will be upgraded automatically to ws when possible
       webSocketFactory: () => {
-        return new SockJS(environment.sockJsUrl) as IStompSocket;
+        return new SockJS(environment.sockJsUrl, null, {
+          sessionId: this.sessionIdLength,
+        }) as IStompSocket;
       },
       onStompError: (frame) => {
         const content = frame.body != null ? JSON.parse(frame.body) : null;

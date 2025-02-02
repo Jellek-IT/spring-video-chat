@@ -2,7 +2,6 @@ package pl.bronikowski.springchat.backendmain.channel.internal.file;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -14,8 +13,6 @@ import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pl.bronikowski.springchat.backendmain.channel.api.ChannelFileType;
 import pl.bronikowski.springchat.backendmain.channel.internal.Channel;
 import pl.bronikowski.springchat.backendmain.member.internal.Member;

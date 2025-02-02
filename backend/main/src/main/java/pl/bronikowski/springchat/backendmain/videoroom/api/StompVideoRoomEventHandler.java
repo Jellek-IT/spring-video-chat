@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
-import pl.bronikowski.springchat.backendmain.authserver.api.UserContextProvider;
 import pl.bronikowski.springchat.backendmain.videoroom.internal.VideoRoomService;
 import pl.bronikowski.springchat.backendmain.websocket.api.SessionDisconnectEventHandler;
 import pl.bronikowski.springchat.backendmain.websocket.api.UnsubscribeEventHandler;

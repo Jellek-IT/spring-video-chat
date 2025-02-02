@@ -1,0 +1,157 @@
+{
+  "primeng": {
+    "invalidSizeSummary": "Invalid file size.",
+    "invalidSizeDescription": "Maximum allowed file size is {0}"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "back": "Back",
+    "search": "Search",
+    "send": "Send",
+    "stompConnecting": "Connecting to the server...",
+    "unknown": "No translation available"
+  },
+  "menu": {
+    "logout": "Logout",
+    "addChannel": "Add channel",
+    "copyId": "Copy ID",
+    "copyIdSuccess": "User ID copied to clipboard",
+    "copyIdError": "Failed to copy user ID to clipboard",
+    "settings": "Settings"
+  },
+  "user": {
+    "settings": "User settings",
+    "updateProfilePictureSuccess": "Profile picture updated successfully",
+    "profilePicture": "Profile picture",
+    "removeProfilePicture": "Remove current profile picture"
+  },
+  "channel": {
+    "addTitle": "Add channel",
+    "createSuccess": "Successfully created new channel \"{{name}}\"",
+    "updateSuccess": "Channel updated successfully",
+    "updateThumbnailSuccess": "Channel thumbnail updated successfully",
+    "name": "Name",
+    "add": "Add",
+    "update": "Update",
+    "memberId": "User ID",
+    "rights": "User rights",
+    "settings": "Channel settings",
+    "thumbnail": "Thumbnail",
+    "otherSettings": "Other settings",
+    "removeThumbnail": "Remove thumbnail",
+    "leave": "Leave channel",
+    "leaveDialog": {
+      "header": "Leave channel",
+      "message": "Are you sure you want to leave the channel \"{{channel}}\"? This action cannot be undone",
+      "success": "Successfully left the channel \"{{channel}}\""
+    },
+    "member": {
+      "you": "You",
+      "deleted": "Deleted",
+      "updateRightsSuccess": "Successfully updated user {{nickname}}'s rights",
+      "addSuccess": "Successfully added a new user",
+      "add": "Invite user",
+      "editRights": "Successfully updated user {{nickname}}'s rights",
+      "modify": "Update",
+      "menu": {
+        "copyId": "Copy ID",
+        "kick": "Kick",
+        "kickSuccess": "Successfully kicked user {{nickname}}",
+        "modifyRights": "Edit rights"
+      }
+    },
+    "chat": {
+      "writeMessage": "Write a message...",
+      "stompMessageSubscribeError": "Failed to connect to channel {{name}}",
+      "messageSendError": "An error occurred while sending the message",
+      "maxImageSizeExceeded": "The maximum allowed image size is {{size}}",
+      "dropImage": "Drop image",
+      "uploadImages": "Upload images",
+      "filesUploadError": "An error occurred while uploading files"
+    },
+    "videoRoom": {
+      "join": "Join call",
+      "leave": "Leave call",
+      "maximize": "Maximize",
+      "minimize": "Minimize",
+      "joinError": "An error occurred while joining the call",
+      "enableCamera": "Enable camera",
+      "disableCamera": "Disable camera",
+      "enableMicrophone": "Enable microphone",
+      "disableMicrophone": "Disable microphone",
+      "alreadyJoined": "One account cannot participate in more than one call"
+    },
+    "enum": {
+      "right": {
+        "MANAGE": "Manage channel",
+        "INVITE": "Invite users",
+        "KICK": "Kick users",
+        "TALK": "Voice chat",
+        "WRITE": "Write in text chat",
+        "READ": "Read text chat messages"
+      }
+    }
+  },
+  "videoRoom": {
+    "destroyedError": "The call was unexpectedly terminated",
+    "detachError": "Your data is not being transmitted, so the call was ended",
+    "noSuchRoomError": "The selected call does not exist",
+    "publishFeedError": "An error occurred while trying to transmit call data",
+    "joinError": "Failed to join the call"
+  },
+  "register": {
+    "title": "Sign up",
+    "email": "Email address",
+    "password": "Password",
+    "nickname": "Username",
+    "register": "Register",
+    "registerButton": "Sign up",
+    "loginButton": "Log in",
+    "success": "Thank you for registering, <b>{{nickname}}</b>. You can now log in."
+  },
+  "avatarUpload": {
+    "chooseFile": "Choose file",
+    "upload": "Upload",
+    "cancel": "Cancel",
+    "uploadInstruction": "Drag and drop a photo"
+  },
+  "error": {
+    "formInvalid": "The form is incorrectly filled out",
+    "processingError": "An error occurred during processing. Please try again later",
+    "responseType": {
+      "UNIQUE_EMAIL": "An account with this email address already exists",
+      "UNIQUE_NICKNAME": "An account with this username already exists",
+      "CHANNEL_OPERATION_NOT_ENOUGH_RIGHTS": "You do not have enough permissions to perform this operation",
+      "CHANNEL_MEMBER_ALREADY_ADDED": "The selected user is already in the channel",
+      "EXISTING_MEMBER": "The selected user does not exist"
+    },
+    "page": {
+      "notFound": {
+        "title": "404: Not Found"
+      },
+      "badGateway": {
+        "title": "502: Bad Gateway"
+      },
+      "serviceUnavailable": {
+        "title": "503: Service Unavailable"
+      },
+      "timeout": {
+        "title": "408: Request Timeout"
+      }
+    },
+    "validation": {
+      "required": "This field is required",
+      "minLength": "The minimum allowed number of characters is {{ requiredLength }}",
+      "maxLength": "The maximum allowed number of characters is {{ requiredLength }}",
+      "email": "Invalid email address",
+      "notBlank": "This field cannot be blank",
+      "userPassword": "The password must contain at least one lowercase letter, one uppercase letter, one number, and one special character",
+      "userNickname": "The username may only contain the characters a-zA-Z0-9 _-",
+      "channelName": "The channel name may only contain the characters a-zA-Z0-9 _-",
+      "channelMessageText": "The message contains forbidden characters",
+      "uuidV4": "The provided identifier has an incorrect format"
+    }
+  }
+}

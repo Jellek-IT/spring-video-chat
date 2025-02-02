@@ -2,9 +2,6 @@ package pl.bronikowski.springchat.backendmain.user.internal;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
-
-import java.time.Duration;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserConstants {

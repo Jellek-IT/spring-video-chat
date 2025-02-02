@@ -20,7 +20,7 @@ export class StompVideoRoomService {
     StompResponse<VideoRoomSessionDetailsDto> | StompSubscriptionAccepted
   > {
     return this.stompService.subscribe(
-      `/user/queue/channels.${id}.video-room.token`
+      `/user/exchange/amq.direct/channels.${id}.video-room.token`
     );
   }
 

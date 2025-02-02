@@ -5,5 +5,5 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StompDestinations {
-    public static final String ERRORS_QUEUE_DESTINATION = "/queue/errors";
+    public static final String ERRORS_QUEUE_DESTINATION = "/exchange/amq.direct/errors";
 }

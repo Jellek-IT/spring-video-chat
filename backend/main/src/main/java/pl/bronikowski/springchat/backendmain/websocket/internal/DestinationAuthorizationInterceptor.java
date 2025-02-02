@@ -6,7 +6,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.ExecutorChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Component;
 import pl.bronikowski.springchat.backendmain.exception.AppInternalServerErrorException;
@@ -29,6 +28,7 @@ public class DestinationAuthorizationInterceptor implements ChannelInterceptor {
                 || !StompConstants.CLIENT_DESTINATION_COMMANDS.contains(accessor.getCommand())) {
             return message;
         }
+
         var haAccess = destinationMatchedAuthorizationInterceptors.stream()
                 .filter(interceptor -> interceptor.matches(message))
                 .findAny()

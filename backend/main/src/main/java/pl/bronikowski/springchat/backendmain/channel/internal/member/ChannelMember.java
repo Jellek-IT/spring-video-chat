@@ -79,6 +79,7 @@ public class ChannelMember extends AbstractIdEqualsEntity<ChannelMember.ChannelM
         if (!isDeleted()) {
             throw new ChannelMemberAlreadyAddedException();
         }
+        this.deletedAt = null;
         this.updateRights(rights);
     }
 

@@ -26,6 +26,7 @@ import {
 } from '../../../../shared/component/image-preview-dialog/image-preview-dialog.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { LoaderComponent } from '../../../../shared/component/loader/loader.component';
+import { ChannelMemberDto } from '../../../model/member/channel-member-dto.model';
 
 interface ImageDetails {
   src: SafeUrl | null;
@@ -87,6 +88,12 @@ export class ChatMessageComponent implements OnInit, OnDestroy {
     return (
       (this.message as UnprocessedChannelMessageBasicsDto).internalStatus ===
       InternalMessageStatus.SENDING
+    );
+  }
+
+  protected getChannelMember(): ChannelMemberDto | undefined {
+    return this.channel.members.find(
+      (channelMember) => channelMember.member.id === this.message.member.id
     );
   }
 

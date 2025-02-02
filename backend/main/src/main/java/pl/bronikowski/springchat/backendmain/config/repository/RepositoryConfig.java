@@ -7,7 +7,6 @@ import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import pl.bronikowski.springchat.backendmain.BackendmainApplication;
-import pl.bronikowski.springchat.backendmain.config.repository.JpaSpecificationWithEntityGraphImpl;
 
 import java.time.Clock;
 import java.util.Map;
@@ -18,7 +17,7 @@ import java.util.Optional;
         basePackageClasses = BackendmainApplication.class,
         repositoryBaseClass = JpaSpecificationWithEntityGraphImpl.class)
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
-public class RepositoryConfig  implements HibernatePropertiesCustomizer {
+public class RepositoryConfig implements HibernatePropertiesCustomizer {
     @Bean
     public DateTimeProvider dateTimeProvider(Clock clock) {
         return () -> Optional.of(clock.instant());

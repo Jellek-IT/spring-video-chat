@@ -12,11 +12,13 @@ public interface ChannelMemberRepository extends JpaRepository<ChannelMember, UU
 
     /**
      * Access rights related to MemberChannelQueryParamsPredicateProvider
+     *
      * @see pl.bronikowski.springchat.backendmain.channel.internal.specification.memberqueryparams.MemberChannelQueryParamsPredicateProvider
      * https://github.com/spring-projects/spring-data-jpa/issues/2551
      * Question marks does not work in jpa queries.
      * in other hand for functions like "jsonb_exists" indexing does not work.
-     * For existing to work custom operator can be created: https://stackoverflow.com/a/50488457/22808245 */
+     * For existing to work custom operator can be created: https://stackoverflow.com/a/50488457/22808245
+     */
     @Query("select count(*)>0 FROM #{#entityName} cm " +
             "join cm.member m " +
             "join cm.channel c " +
@@ -27,6 +29,7 @@ public interface ChannelMemberRepository extends JpaRepository<ChannelMember, UU
             "and jsonb_exists_all(cm.rights, :rightNames)")
     boolean memberHasAccessWithRightName(UUID channelId, String memberAuthResourceId,
                                          Set<String> rightNames);
+
     @Query("select count(*)>0 FROM #{#entityName} cm " +
             "join cm.member m " +
             "join cm.channel c " +

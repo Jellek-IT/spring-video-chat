@@ -10,6 +10,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class SecureUtils {
     private final SecureRandom secureRandom;
+
     public String generateToken(int length) {
         var pin = new byte[length];
         secureRandom.nextBytes(pin);

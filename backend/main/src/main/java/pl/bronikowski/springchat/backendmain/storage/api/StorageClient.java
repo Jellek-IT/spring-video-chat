@@ -8,6 +8,7 @@ import pl.bronikowski.springchat.backendmain.user.internal.User;
 
 public interface StorageClient {
     StorageFile uploadUserImage(MultipartFile multipartFile, User user, String name);
+
     StorageFile uploadChannelImage(MultipartFile multipartFile, Channel user, String name);
 
     void download(StorageFile storageFile, String range, HttpServletResponse httpResponse);

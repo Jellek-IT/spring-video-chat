@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 @Repeatable(JsonSubTypesWithTypePropertyAndExistingProperties.class)
 public @interface JsonSubTypeWithTypePropertyAndExistingProperties {
     String typeValue() default "";
+
     String[] existingProperties() default {};
+
     Class<?> value();
 }

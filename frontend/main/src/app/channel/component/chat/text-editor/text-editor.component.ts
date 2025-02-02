@@ -1,11 +1,8 @@
-import { AsyncPipe, CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
-  AfterViewChecked,
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
-  HostBinding,
   HostListener,
   inject,
   Input,
@@ -224,7 +221,9 @@ export class TextEditorComponent implements OnInit, OnDestroy {
           })
         );
       });
-    forkJoin(fileObservables).subscribe({
+    const filesObservable =
+      fileObservables.length > 0 ? forkJoin(fileObservables) : of([]);
+    filesObservable.subscribe({
       next: (responses) => {
         const filesIds = responses.map((response) => ({ id: response[1].id }));
         const files = responses.map((response) => ({ ...response[1] }));
@@ -259,7 +258,7 @@ export class TextEditorComponent implements OnInit, OnDestroy {
         this.clear();
         this.sending = false;
       },
-      error: () => {
+      error: (e) => {
         this.toastService.displayErrorMessage('channel.chat.filesUploadError');
         this.filesDetails.forEach(
           (fileDetails) => (fileDetails.status = FileSendingStatus.EDITABLE)

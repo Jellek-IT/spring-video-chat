@@ -6,64 +6,58 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ChannelMemberRights } from '../../enum/channel-member-rights.enum';
-import validation from '../../../shared/utils/validation';
-import formUtils from '../../../shared/utils/form-utils';
+import { ChannelMemberDto } from '../../model/member/channel-member-dto.model';
+import { ChannelDetailsDto } from '../../model/channel-detais-dto.model';
 import { ToastService } from '../../../shared/service/toast.service';
 import { MemberChannelService } from '../../service/api/member-channel.service';
-import { AddChannelMemberRequest } from '../../model/member/add-channel-member-request.model';
-import { ChannelDetailsDto } from '../../model/channel-detais-dto.model';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EndpointErrorService } from '../../../error/service/endpoint-error.service';
+import formUtils from '../../../shared/utils/form-utils';
+import { UpdateChannelMemberRequest } from '../../model/update-channel-member-request.model';
+import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { ValidationMessageComponent } from '../../../shared/component/validation-message/validation-message.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChannelMemberRightPipe } from '../../pipe/channel-member-right.pipe';
-import { CommonModule } from '@angular/common';
 
-interface AddChannelMemberForm {
-  memberId: FormControl<string | null>;
+interface ModifyChannelMemberRightsForm {
   rights: FormControl<ChannelMemberRights[] | null>;
 }
 
-export interface AddChannelMemberDialogConfig {
+export interface ModifyChannelMemberRightsDialogConfig {
   channel: ChannelDetailsDto;
-  manageRight: boolean;
-  onCreateEnd?: () => void;
+  channelMember: ChannelMemberDto;
 }
 
 @Component({
-  selector: 'app-add-channel-member-dialog',
+  selector: 'app-modify-channel-member-rights-dialog',
   imports: [
     CommonModule,
     ReactiveFormsModule,
     TranslateModule,
     ButtonModule,
-    InputTextModule,
-    ValidationMessageComponent,
     CheckboxModule,
     ChannelMemberRightPipe,
   ],
-  templateUrl: './add-channel-member-dialog.component.html',
-  styleUrl: './add-channel-member-dialog.component.scss',
+  templateUrl: './modify-channel-member-rights-dialog.component.html',
+  styleUrl: './modify-channel-member-rights-dialog.component.scss',
 })
-export class AddChannelMemberDialogComponent {
+export class ModifyChannelMemberRightsDialogComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly toastService = inject(ToastService);
   private readonly memberChannelService = inject(MemberChannelService);
-  private readonly config: DynamicDialogConfig<AddChannelMemberDialogConfig> =
+  private readonly config: DynamicDialogConfig<ModifyChannelMemberRightsDialogConfig> =
     inject(DynamicDialogConfig);
   private readonly ref = inject(DynamicDialogRef);
   private readonly endpointErrorService = inject(EndpointErrorService);
+  private readonly channelMember = this.config.data!.channelMember;
+  private readonly channel = this.config.data!.channel;
 
-  protected readonly manageRight = this.config.data!.manageRight;
   protected readonly channelMemberRights = Object.values(ChannelMemberRights);
   protected loading: boolean = false;
-  protected readonly form: FormGroup<AddChannelMemberForm> =
+  protected readonly form: FormGroup<ModifyChannelMemberRightsForm> =
     this.formBuilder.group({
-      memberId: ['', validation.uuidV4],
-      rights: [[] as ChannelMemberRights[]],
+      rights: [this.channelMember.rights as ChannelMemberRights[]],
     });
 
   protected onCreateSubmit() {
@@ -73,17 +67,19 @@ export class AddChannelMemberDialogComponent {
       return;
     }
     const value = this.form.value!;
-    const addChannelMemberRequest: AddChannelMemberRequest = {
-      member: { id: value.memberId! },
+    const updateChannelMemberRequest: UpdateChannelMemberRequest = {
       rights: value.rights!,
+      memberId: this.channelMember.member.id,
     };
     this.memberChannelService
-      .addMember(this.config.data!.channel.id, addChannelMemberRequest)
+      .updateMember(this.channel.id, updateChannelMemberRequest)
       .subscribe({
         next: (_) => {
-          this.toastService.displaySuccessMessage('channel.member.addSuccess');
+          this.toastService.displaySuccessMessage(
+            'channel.member.updateRightsSuccess',
+            { nickname: this.channelMember.member.nickname }
+          );
           this.loading = false;
-          this.config.data?.onCreateEnd?.();
           this.ref.close();
         },
         error: (e) => {

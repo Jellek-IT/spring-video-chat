@@ -1,6 +1,23 @@
+@if (contextMenu === true) {
 <app-avatar
-  [name]="member?.nickname"
-  [id]="member?.id"
+  [name]="getNickname()"
+  [id]="member?.member?.id"
   [size]="size"
   [iconUrl]="profilePictureUrl"
-></app-avatar>
+  (avatarClick)="menu.toggle($event)"
+/>
+<p-menu #menu [model]="menuItems" [popup]="true" appendTo="body">
+  <ng-template #start>
+    <div class="menu-header">
+      <app-typography type="subtitle2">{{ getNickname() }}</app-typography>
+    </div>
+  </ng-template>
+</p-menu>
+} @else {
+<app-avatar
+  [name]="member?.member?.nickname"
+  [id]="member?.member?.id"
+  [size]="size"
+  [iconUrl]="profilePictureUrl"
+/>
+}

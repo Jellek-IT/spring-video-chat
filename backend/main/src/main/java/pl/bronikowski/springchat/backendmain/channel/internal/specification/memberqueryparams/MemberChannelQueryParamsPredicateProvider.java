@@ -6,8 +6,8 @@ import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import pl.bronikowski.springchat.backendmain.channel.api.dto.MemberChannelQueryParams;
 import pl.bronikowski.springchat.backendmain.channel.internal.Channel;
-import pl.bronikowski.springchat.backendmain.channel.internal.member.ChannelMember;
 import pl.bronikowski.springchat.backendmain.channel.internal.Channel_;
+import pl.bronikowski.springchat.backendmain.channel.internal.member.ChannelMember;
 import pl.bronikowski.springchat.backendmain.channel.internal.member.ChannelMember_;
 import pl.bronikowski.springchat.backendmain.member.internal.Member_;
 import pl.bronikowski.springchat.backendmain.shared.utils.JpaUtils;
@@ -34,6 +34,7 @@ public class MemberChannelQueryParamsPredicateProvider {
 
     /**
      * access rights related to ChannelMemberRepository
+     *
      * @see pl.bronikowski.springchat.backendmain.channel.internal.member.ChannelMemberRepository
      */
     private Predicate isMemberAssignedToChannel(Root<Channel> root, CriteriaBuilder cb) {

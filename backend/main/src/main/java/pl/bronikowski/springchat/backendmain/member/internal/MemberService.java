@@ -37,7 +37,7 @@ public class MemberService {
     public void getProfilePicture(UUID id, HttpServletResponse response) {
         var member = memberRepository.findWithProfilePictureById(id)
                 .orElseThrow(AppNotFoundException::new);
-        if(member.getProfilePicture() == null) {
+        if (member.getProfilePicture() == null) {
             throw new AppNotFoundException();
         }
         storageClient.download(member.getProfilePicture(), response);

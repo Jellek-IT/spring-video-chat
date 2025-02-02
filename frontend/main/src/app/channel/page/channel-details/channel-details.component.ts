@@ -2,7 +2,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ContainerComponent } from '../../../shared/component/container/container.component';
 import { CardModule } from 'primeng/card';
 import { TypographyComponent } from '../../../shared/component/typography/typography.component';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ChannelDetailsDto } from '../../model/channel-detais-dto.model';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -27,6 +27,10 @@ import {
   ChannelSettingsDialogComponent,
 } from '../../component/channel-settings-dialog/channel-settings-dialog.component';
 import { ChannelMemberProfilePictureComponent } from '../../component/channel-member-profile-picture/channel-member-profile-picture.component';
+import { ConfirmationService } from 'primeng/api';
+import { ToastService } from '../../../shared/service/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { EndpointErrorService } from '../../../error/service/endpoint-error.service';
 
 @Component({
   selector: 'app-channel-details',
@@ -51,6 +55,10 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly dialogService = inject(DialogService);
   private readonly translateService = inject(TranslateService);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly toastService = inject(ToastService);
+  private readonly router = inject(Router);
+  private readonly endpointErrorHandlerService = inject(EndpointErrorService);
 
   private loadChannelSubscription: Subscription | null = null;
   private userProfileSubscription!: Subscription;
@@ -59,6 +67,7 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
   protected currentUserChannelMember?: ChannelMemberDto;
   protected showVideoRoom = false;
   protected channelMemberRights = ChannelMemberRights;
+  protected leaveLoading = false;
 
   public ngOnInit(): void {
     this.userProfileSubscription = this.currentUserService
@@ -106,17 +115,51 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
       return;
     }
     const data: AddChannelMemberDialogConfig = {
-      availableRights: this.currentUserChannelMember.rights,
+      manageRight: this.currentUserHasRight(ChannelMemberRights.MANAGE),
       channel: this.channel,
     };
     this.dialogService.open(AddChannelMemberDialogComponent, {
       closable: true,
       modal: true,
-      header: this.translateService.instant('channel.addMember'),
+      header: this.translateService.instant('channel.member.add'),
       dismissableMask: true,
       width: '30rem',
       data,
     });
+  }
+
+  protected leave() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant('channel.leaveDialog.header'),
+      message: this.translateService.instant('channel.leaveDialog.message', {
+        channel: this.channel?.name,
+      }),
+      accept: () => {
+        if (this.channel === null) {
+          return;
+        }
+        this.leaveLoading = true;
+        this.memberChannelService.leave(this.channel.id).subscribe({
+          next: () => {
+            this.router.navigate(['/']);
+            this.toastService.displaySuccessMessage(
+              'channel.leaveDialog..success'
+            );
+          },
+          error: (error: HttpErrorResponse) => {
+            this.endpointErrorHandlerService.handle(error),
+              (this.leaveLoading = false);
+          },
+        });
+      },
+    });
+  }
+
+  protected getNotDeletedChannelMembers(): ChannelMemberDto[] {
+    if (this.channel === null) {
+      return [];
+    }
+    return this.channel.members.filter((member) => !member.deleted);
   }
 
   protected openSettingsDialog(): void {

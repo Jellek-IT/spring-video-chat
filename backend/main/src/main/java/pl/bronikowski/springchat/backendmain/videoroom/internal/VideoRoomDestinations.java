@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class VideoRoomDestinations {
     public static String getTokenUserQueueDestination(String id) {
-        return "/queue/channels." + id + ".video-room.token";
+        return "/exchange/amq.direct/channels." + id + ".video-room.token";
     }
 }

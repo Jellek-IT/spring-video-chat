@@ -3,8 +3,6 @@ package pl.bronikowski.springchat.backendmain.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import java.time.Clock;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
