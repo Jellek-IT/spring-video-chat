@@ -1,0 +1,6 @@
+@use "mixin" as *;
+.container {
+  overflow-y: hidden;
+  overflow-x: auto;
+  @include scrollbar;
+}

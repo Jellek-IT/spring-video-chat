@@ -220,7 +220,7 @@ public class JanusWebSocketClient implements SmartLifecycle {
     }
 
     private String getAppAuthTokenValue(boolean reload) {
-        var expireBefore = clock.instant().minus(REFRESH_CLIENT_AUTH_TOKEN_THRESHOLD);
+        var expireBefore = clock.instant().plus(REFRESH_CLIENT_AUTH_TOKEN_THRESHOLD);
         synchronized (appAuthTokenMonitor) {
             if (reload || appAuthToken == null || appAuthToken.expireAt().isBefore(expireBefore)) {
                 var expireAt = clock.instant().plus(janusProperties.appAuthTokenLifetime());

@@ -40,7 +40,7 @@ export class JanusVideoRoomService {
   private readonly janusVideoRoomErrorNoSuchRoom = '426';
   private readonly deleteTrackInterval = 1000; // 1 seconds
   private readonly deletedTrackLifeTime = 2 * 1000; // 2 seconds
-  private readonly debug = true;
+  private readonly debug = false;
 
   private readonly toastService = inject(ToastService);
   private sessionDetails: VideoRoomSessionDetailsDto | null = null;

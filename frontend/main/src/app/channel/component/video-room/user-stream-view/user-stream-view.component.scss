@@ -1,0 +1,29 @@
+@use "mixin" as *;
+
+.view {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  .avatar {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+    z-index: 400;
+    @include animated-hidden-hide;
+  }
+  &--no-streams {
+    background-color: var(--p-surface-950);
+    .avatar {
+      right: auto;
+      opacity: 1;
+      visibility: visible;
+      @include absolute-center;
+    }
+  }
+  &--details {
+    .avatar {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}

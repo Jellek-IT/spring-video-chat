@@ -17,49 +17,54 @@
       (keydown)="handleKeydown($event)"
       #textarea
     ></div>
+    <div
+      class="data-transfer-cursor"
+      *ngIf="dataTransferCursorRange !== null"
+      [ngStyle]="getCursorPosition(dataTransferCursorRange)"
+    ></div>
     <div class="placeholder" *ngIf="isEmpty()">
       {{ "channel.chat.writeMessage" | translate }}
     </div>
-    <div
-      class="uploaded-images"
-      #uploadedImages
-      (pointerdown)="handleImagesDragStart($event)"
-    >
-      <div
-        class="uploaded-images__image"
-        *ngFor="let imageDetails of filesDetails; index as i"
-      >
-        <div
-          class="uploaded-images__image-container"
-          (click)="openImagePreview(i)"
-        >
-          <img *ngIf="imageDetails.src !== null" [src]="imageDetails.src" />
+    <div class="uploaded-images">
+      <app-draggable-scroll (drag)="handleImagesScrollDrag($event)">
+        <div class="uploaded-images__content">
+          <div
+            class="uploaded-images__image"
+            *ngFor="let imageDetails of filesDetails; index as i"
+          >
+            <div
+              class="uploaded-images__image-container"
+              (click)="openImagePreview(i)"
+            >
+              <img *ngIf="imageDetails.src !== null" [src]="imageDetails.src" />
+            </div>
+            <button
+              *ngIf="imageDetails.status === fileSendingStatus.EDITABLE"
+              pButton
+              class="uploaded-images__image-delete"
+              severity="danger"
+              rounded="true"
+              size="small"
+              icon="pi pi-times"
+              type="button"
+              (click)="removeImage(i)"
+              [disabled]="sending"
+            ></button>
+            <i
+              *ngIf="imageDetails.status !== fileSendingStatus.EDITABLE"
+              class="uploaded-images__image-status pi"
+              [ngClass]="
+                imageDetails.status === fileSendingStatus.SENT
+                  ? 'pi-check'
+                  : 'pi-spin pi-spinner'
+              "
+            ></i>
+          </div>
         </div>
-        <button
-          *ngIf="imageDetails.status === fileSendingStatus.EDITABLE"
-          pButton
-          class="uploaded-images__image-delete"
-          severity="danger"
-          rounded="true"
-          size="small"
-          icon="pi pi-times"
-          type="button"
-          (click)="removeImage(i)"
-          [disabled]="sending"
-        ></button>
-        <i
-          *ngIf="imageDetails.status !== fileSendingStatus.EDITABLE"
-          class="uploaded-images__image-status pi"
-          [ngClass]="
-            imageDetails.status === fileSendingStatus.SENT
-              ? 'pi-check'
-              : 'pi-spin pi-spinner'
-          "
-        ></i>
-      </div>
+      </app-draggable-scroll>
     </div>
     <div class="toolbar-bottom">
-      <div>
+      <div class="toolbar-bottom__left">
         <input
           type="file"
           multiple="true"
@@ -79,15 +84,50 @@
           tooltipPosition="bottom"
           [disabled]="sending"
         ></button>
-
-        <button
-          pButton
-          class="toolbar-bottom__action"
-          (click)="toggleBold()"
-          type="button"
-        >
-          test
-        </button>
+        <div class="text-commands">
+          <button
+            pButton
+            class="toolbar-bottom__action"
+            (mousedown)="$event.preventDefault()"
+            (click)="toggleBold($event)"
+            type="button"
+            text="true"
+            style="font-weight: 700"
+            [disabled]="!this.focused"
+            [pTooltip]="'channel.chat.bold' | translate"
+            tooltipPosition="bottom"
+          >
+            B
+          </button>
+          <button
+            pButton
+            class="toolbar-bottom__action"
+            (mousedown)="$event.preventDefault()"
+            (click)="toggleItalic($event)"
+            type="button"
+            text="true"
+            style="font-style: italic"
+            [disabled]="!this.focused"
+            [pTooltip]="'channel.chat.italic' | translate"
+            tooltipPosition="bottom"
+          >
+            I
+          </button>
+          <button
+            pButton
+            style="text-decoration: underline"
+            class="toolbar-bottom__action"
+            (mousedown)="$event.preventDefault()"
+            (click)="toggleUnderline($event)"
+            type="button"
+            text="true"
+            [disabled]="!this.focused"
+            [pTooltip]="'channel.chat.underline' | translate"
+            tooltipPosition="bottom"
+          >
+            U
+          </button>
+        </div>
       </div>
       <button
         class="toolbar-bottom__action"

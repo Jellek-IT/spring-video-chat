@@ -69,7 +69,10 @@
       "maxImageSizeExceeded": "Maksymalna dozwolona wielkość obrazka to {{size}}",
       "dropImage": "Upuść obrazek",
       "uploadImages": "Wgraj obrazki",
-      "filesUploadError": "Wystąpił błąd podczas wgrywania plików"
+      "filesUploadError": "Wystąpił błąd podczas wgrywania plików",
+      "bold": "Pogrubienie",
+      "italic": "Kursywa",
+      "underline": "Podkreślenie"
     },
     "videoRoom": {
       "join": "Dołącz do rozmowy",

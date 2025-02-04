@@ -1,5 +1,5 @@
 <div *ngIf="!skeleton" [ngClass]="'typography typography--' + type">
-  <ng-content></ng-content>
+  <ng-content />
 </div>
 <p-skeleton *ngIf="skeleton && type === 'title'" height="1.8rem" />
 <p-skeleton *ngIf="skeleton && type === 'subtitle'" height="1.5rem" />

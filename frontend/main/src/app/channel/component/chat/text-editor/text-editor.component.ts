@@ -39,7 +39,6 @@ import { WINDOW } from '../../../../core/token/window.token';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ProjectConstants } from '../../../../shared/constants/project-constants';
 import { TypographyComponent } from '../../../../shared/component/typography/typography.component';
-import mathUtils from '../../../../shared/utils/math-utils';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TooltipModule } from 'primeng/tooltip';
 import {
@@ -49,6 +48,10 @@ import {
 import { DialogService } from 'primeng/dynamicdialog';
 import { MemberChannelService } from '../../../service/api/member-channel.service';
 import { ChannelFileDto } from '../../../model/file/channel-file-dto.model';
+import {
+  DraggableScrollComponent,
+  DraggableScrollDragEvent,
+} from '../../../../shared/component/draggable-scroll/draggable-scroll.component';
 
 enum FileSendingStatus {
   EDITABLE = 'EDITABLE',
@@ -59,12 +62,6 @@ enum FileSendingStatus {
 interface MessageForm {
   text: FormControl<string | null>;
   files: FormControl<File[] | null>;
-}
-
-interface DragImagesDetails {
-  startX: number;
-  startScroll: number;
-  pastDelta: boolean;
 }
 
 interface ImageDetails {
@@ -83,13 +80,13 @@ interface ImageDetails {
     TypographyComponent,
     FileUploadModule,
     TooltipModule,
+    DraggableScrollComponent,
   ],
   templateUrl: './text-editor.component.html',
   styleUrl: './text-editor.component.scss',
 })
 export class TextEditorComponent implements OnInit, OnDestroy {
   protected readonly accept = ProjectConstants.ALLOWED_IMAGE_TYPES.join(', ');
-  protected readonly imagesDeltaDrag = 10;
 
   @Input({ required: true }) public channel!: ChannelDetailsDto;
   @Output()
@@ -100,10 +97,6 @@ export class TextEditorComponent implements OnInit, OnDestroy {
     this._textarea = element;
     this.previousHtmlValue = element?.nativeElement.innerHTML ?? '';
   }
-  @ViewChild('textarea')
-  protected editor?: ElementRef<HTMLElement>;
-  @ViewChild('uploadedImages')
-  protected uploadedImagesComponent?: ElementRef<HTMLElement>;
 
   private readonly window = inject(WINDOW);
   private readonly formBuilder = inject(FormBuilder);
@@ -133,10 +126,11 @@ export class TextEditorComponent implements OnInit, OnDestroy {
   protected uploadFocused = false;
   protected dragNodes: Set<EventTarget> = new Set();
   protected sending = false;
-  private imagesDragDetails: DragImagesDetails | null = null;
+  protected dataTransferCursorRange: Range | null = null;
   private userProfileSubscription!: Subscription;
   private textValueChangesSubscription!: Subscription;
   private imagesValueChangesSubscription!: Subscription;
+  private imagesScrollDragging = false;
 
   public ngOnInit(): void {
     this.userProfileSubscription = this.currentUserService
@@ -258,7 +252,7 @@ export class TextEditorComponent implements OnInit, OnDestroy {
         this.clear();
         this.sending = false;
       },
-      error: (e) => {
+      error: () => {
         this.toastService.displayErrorMessage('channel.chat.filesUploadError');
         this.filesDetails.forEach(
           (fileDetails) => (fileDetails.status = FileSendingStatus.EDITABLE)
@@ -305,7 +299,6 @@ export class TextEditorComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.dragNodes.size === 0) {
-      console.log(event.dataTransfer);
       if (event.dataTransfer !== null) {
         this.dragFocused = true;
         if (event.dataTransfer.types.includes('Files')) {
@@ -325,11 +318,36 @@ export class TextEditorComponent implements OnInit, OnDestroy {
     if (this.dragNodes.size === 0) {
       this.dragFocused = false;
       this.uploadFocused = false;
+      this.dataTransferCursorRange = null;
     }
   }
 
   protected handleTextAreaDragOver(event: DragEvent) {
     event.preventDefault();
+    if (event.dataTransfer === null) {
+      return;
+    }
+    this.dataTransferCursorRange = this.getDataTransferCursorRange(event);
+  }
+
+  private getDataTransferCursorRange(event: DragEvent): Range | null {
+    if (event.dataTransfer === null) {
+      return null;
+    }
+    const x = event.clientX;
+    const y = event.clientY;
+    let range: Range | null = null;
+    if (document.caretRangeFromPoint !== undefined) {
+      range = document.caretRangeFromPoint(x, y);
+    } else {
+      const position = (document as any).caretPositionFromPoint(x, y);
+      if (position !== null) {
+        range = document.createRange();
+        range.setStart(position.offsetNode, position.offset);
+        range.setEnd(position.offsetNode, position.offset);
+      }
+    }
+    return range;
   }
 
   protected handleTextAreaDrop(event: DragEvent) {
@@ -350,6 +368,7 @@ export class TextEditorComponent implements OnInit, OnDestroy {
         .map((file) => file.getAsFile()!);
       this.saveFormImages(images);
     }
+    this.dataTransferCursorRange = null;
   }
 
   private saveFormImages(images: File[]) {
@@ -396,10 +415,7 @@ export class TextEditorComponent implements OnInit, OnDestroy {
 
   protected removeImage(index: number) {
     const currentValue = this.form.value.files ?? [];
-    if (
-      index >= currentValue.length ||
-      this.imagesDragDetails?.pastDelta === true
-    ) {
+    if (index >= currentValue.length || this.imagesScrollDragging) {
       return;
     }
     this.filesDetails.splice(index, 1);
@@ -411,7 +427,7 @@ export class TextEditorComponent implements OnInit, OnDestroy {
     const images = this.form.value.files ?? [];
     if (
       index >= images.length ||
-      this.imagesDragDetails?.pastDelta === true ||
+      this.imagesScrollDragging ||
       images[index] === null
     ) {
       return;
@@ -435,38 +451,44 @@ export class TextEditorComponent implements OnInit, OnDestroy {
       return;
     }
     const selection = this.window.getSelection();
-    if (
-      selection === null ||
-      selection.rangeCount === 0 ||
-      !this.isTextAreaChild(selection.anchorNode)
-    ) {
+    const hasSelection =
+      selection !== null &&
+      selection.rangeCount > 0 &&
+      this.isChildren(this._textarea.nativeElement, selection.anchorNode);
+    if (!hasSelection && this.dataTransferCursorRange === null) {
       this._textarea.nativeElement.textContent += text;
       this.handleChange();
       return;
     }
-    selection.deleteFromDocument();
-
-    const range = selection.getRangeAt(0);
+    if (hasSelection) {
+      selection!.deleteFromDocument();
+    }
+    let range: Range;
+    if (hasSelection && this.dataTransferCursorRange === null) {
+      range = selection.getRangeAt(0);
+    } else if (!hasSelection && this.dataTransferCursorRange !== null) {
+      range = this.dataTransferCursorRange;
+    } else {
+      const selectionRange = selection?.getRangeAt(0) ?? null;
+      range =
+        this.dataTransferCursorRange!.compareBoundaryPoints(
+          Range.START_TO_START,
+          selectionRange!
+        ) >= 0 &&
+        this.dataTransferCursorRange!.compareBoundaryPoints(
+          Range.END_TO_END,
+          selectionRange!
+        ) <= 0
+          ? selectionRange!
+          : this.dataTransferCursorRange!;
+    }
     const textNode = document.createTextNode(text);
     range.insertNode(textNode);
     range.setStartAfter(textNode);
     range.setEndAfter(textNode);
-    selection.removeAllRanges();
-    selection.addRange(range);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
     this.handleChange();
-  }
-
-  private isTextAreaChild(node: Node | null | undefined): boolean {
-    if (this._textarea === undefined || node === null || node === undefined) {
-      return false;
-    }
-    while (node) {
-      if (node === this._textarea.nativeElement) {
-        return true;
-      }
-      node = node.parentNode;
-    }
-    return false;
   }
 
   protected getEditorClass(): string {
@@ -483,15 +505,61 @@ export class TextEditorComponent implements OnInit, OnDestroy {
     return classes.join(' ');
   }
 
-  protected handleImagesDragStart(event: PointerEvent) {
-    if (this.sending || this.uploadedImagesComponent === undefined) {
-      return;
+  protected getCursorPosition(range: Range): { [key: string]: any } {
+    if (this._textarea === undefined) {
+      return {};
     }
-    this.imagesDragDetails = {
-      startX: event.clientX,
-      startScroll: this.uploadedImagesComponent.nativeElement.scrollLeft,
-      pastDelta: false,
+    const rangeRect = range.getBoundingClientRect();
+    const textAreaRect = this._textarea.nativeElement.getBoundingClientRect();
+    return {
+      left: `${rangeRect.x - textAreaRect.x}px`,
+      top: `${rangeRect.y - textAreaRect.y}px`,
     };
+  }
+
+  protected toggleBold(event: MouseEvent) {
+    event.preventDefault();
+    //todo: implement with selection api
+    document.execCommand('bold');
+    this.handleChange();
+  }
+
+  protected toggleItalic(event: MouseEvent) {
+    event.preventDefault();
+    //todo: implement with selection api
+    document.execCommand('italic');
+    this.handleChange();
+  }
+
+  protected toggleUnderline(event: MouseEvent) {
+    event.preventDefault();
+    //todo: implement with selection api
+    document.execCommand('underline');
+    this.handleChange();
+  }
+
+  private isChildren(
+    editorElement: HTMLElement,
+    childNode: Node | null | undefined
+  ): boolean {
+    if (
+      editorElement === undefined ||
+      childNode === null ||
+      childNode === undefined
+    ) {
+      return false;
+    }
+    while (childNode) {
+      if (childNode === editorElement) {
+        return true;
+      }
+      childNode = childNode.parentNode;
+    }
+    return false;
+  }
+
+  protected handleImagesScrollDrag(event: DraggableScrollDragEvent) {
+    this.imagesScrollDragging = event.dragging;
   }
 
   @HostListener('document:pointerup')
@@ -499,126 +567,7 @@ export class TextEditorComponent implements OnInit, OnDestroy {
   protected onPointerRelease(): void {
     // next pass, so that click events can fire first
     setTimeout(() => {
-      this.imagesDragDetails = null;
-    });
-  }
-
-  @HostListener('document:pointermove', ['$event'])
-  protected onContentDrag(event: PointerEvent): void {
-    if (
-      this.sending ||
-      this.uploadedImagesComponent === undefined ||
-      this.imagesDragDetails === null
-    ) {
-      return;
-    }
-    const element = this.uploadedImagesComponent.nativeElement;
-    const delta = this.imagesDragDetails.startX - event.clientX;
-    if (
-      !this.imagesDragDetails.pastDelta &&
-      Math.abs(delta) > this.imagesDeltaDrag
-    ) {
-      this.imagesDragDetails.pastDelta = true;
-    }
-
-    const result = mathUtils.clamp(
-      delta + this.imagesDragDetails.startScroll,
-      0,
-      element.scrollWidth
-    );
-    this.uploadedImagesComponent.nativeElement.scrollTo(result, 0);
-  }
-
-  protected toggleBold(): void {
-    const selection: Selection | null = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
-
-    const range: Range = selection.getRangeAt(0);
-    if (range.collapsed) return; // nothing is selected
-
-    // Determine whether all text nodes intersecting the selection are already bold.
-    let allBold = true;
-    const treeWalker: TreeWalker = document.createTreeWalker(
-      range.commonAncestorContainer,
-      NodeFilter.SHOW_TEXT,
-      {
-        acceptNode(node: Node): number {
-          // For each text node, create a range covering its contents.
-          const textNode = node as Text;
-          const nodeRange: Range = document.createRange();
-          nodeRange.selectNodeContents(textNode);
-          // Accept the node if its range intersects with the selection range.
-          if (
-            range.compareBoundaryPoints(Range.END_TO_START, nodeRange) < 0 &&
-            range.compareBoundaryPoints(Range.START_TO_END, nodeRange) > 0
-          ) {
-            return NodeFilter.FILTER_ACCEPT;
-          }
-          return NodeFilter.FILTER_REJECT;
-        },
-      }
-    );
-
-    let textNode: Node | null;
-    while ((textNode = treeWalker.nextNode())) {
-      if (!this.isBoldNode(textNode)) {
-        allBold = false;
-        break;
-      }
-    }
-
-    if (allBold) {
-      this.unboldRange(range);
-    } else {
-      this.boldRange(range);
-    }
-
-    // Optionally clear the selection after the operation.
-    selection.removeAllRanges();
-  }
-
-  // Returns true if the given node is within a <b> tag.
-  private isBoldNode(node: Node): boolean {
-    let parent: HTMLElement | null = node.parentElement;
-    while (parent) {
-      if (parent.tagName.toLowerCase() === 'b') {
-        return true;
-      }
-      parent = parent.parentElement;
-    }
-    return false;
-  }
-
-  // Wrap the contents of the range in a <b> element.
-  private boldRange(range: Range): void {
-    const extracted: DocumentFragment = range.extractContents();
-    const boldElem: HTMLElement = document.createElement('b');
-    boldElem.appendChild(extracted);
-    range.insertNode(boldElem);
-  }
-
-  // Remove bold formatting from the contents of the range.
-  private unboldRange(range: Range): void {
-    const extracted: DocumentFragment = range.extractContents();
-    this.unboldFragment(extracted);
-    range.insertNode(extracted);
-  }
-
-  // Recursively unwrap any <b> elements in the given fragment.
-  private unboldFragment(fragment: DocumentFragment): void {
-    const boldElements: NodeListOf<HTMLElement> =
-      fragment.querySelectorAll('b');
-    boldElements.forEach((b: HTMLElement) => {
-      // Move all child nodes of the <b> element to its parent.
-      while (b.firstChild) {
-        if (b.parentNode) {
-          b.parentNode.insertBefore(b.firstChild, b);
-        }
-      }
-      // Remove the empty <b> element.
-      if (b.parentNode) {
-        b.parentNode.removeChild(b);
-      }
+      this.dataTransferCursorRange = null;
     });
   }
 }

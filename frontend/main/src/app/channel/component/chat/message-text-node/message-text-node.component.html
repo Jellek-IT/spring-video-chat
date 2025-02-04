@@ -5,8 +5,34 @@
   >]</ng-container
 >
 <ng-container *ngIf="isTagNode(nodeTagTypes.LINE)">
-  <app-message-text-node
-    *ngFor="let node of nodeAsTagNode().children"
-    [node]="node"
-  />
+  <div>
+    <app-message-text-node
+      *ngFor="let node of nodeAsTagNode().children"
+      [node]="node"
+    />
+  </div>
+</ng-container>
+<ng-container *ngIf="isTagNode(nodeTagTypes.BOLD)">
+  <b>
+    <app-message-text-node
+      *ngFor="let node of nodeAsTagNode().children"
+      [node]="node"
+    />
+  </b>
+</ng-container>
+<ng-container *ngIf="isTagNode(nodeTagTypes.ITALIC)">
+  <i>
+    <app-message-text-node
+      *ngFor="let node of nodeAsTagNode().children"
+      [node]="node"
+    />
+  </i>
+</ng-container>
+<ng-container *ngIf="isTagNode(nodeTagTypes.UNDERLINE)">
+  <u>
+    <app-message-text-node
+      *ngFor="let node of nodeAsTagNode().children"
+      [node]="node"
+    />
+  </u>
 </ng-container>

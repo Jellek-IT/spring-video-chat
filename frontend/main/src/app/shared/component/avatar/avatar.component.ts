@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
   inject,
@@ -14,7 +15,7 @@ import { RippleModule } from 'primeng/ripple';
 import { ColorService } from '../../service/color.service';
 import { SkeletonModule } from 'primeng/skeleton';
 import { RouterModule, UrlTree } from '@angular/router';
-import { TooltipModule } from 'primeng/tooltip';
+import { TooltipModule } from '../../directive/primeng/tooltip.primeng.spec';
 
 @Component({
   selector: 'app-avatar',
@@ -35,6 +36,9 @@ export class AvatarComponent implements OnChanges {
   @Input() public routerLink?: string | any[] | UrlTree;
   @Input() public size: 'normal' | 'large' | 'xlarge' = 'large';
   @Input() public iconUrl?: string | null;
+  @Input() public appendToBody: boolean = true;
+  @Input() public tooltipPosition: 'right' | 'left' | 'top' | 'bottom' =
+    'bottom';
   @Output() public avatarClick = new EventEmitter<MouseEvent>();
   @HostBinding('style.--app-avatar-color')
   protected defaultColor = '';

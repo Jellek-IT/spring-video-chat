@@ -69,7 +69,10 @@
       "maxImageSizeExceeded": "The maximum allowed image size is {{size}}",
       "dropImage": "Drop image",
       "uploadImages": "Upload images",
-      "filesUploadError": "An error occurred while uploading files"
+      "filesUploadError": "An error occurred while uploading files",
+      "bold": "Bold",
+      "italic": "Italic",
+      "underline": "Underline"
     },
     "videoRoom": {
       "join": "Join call",

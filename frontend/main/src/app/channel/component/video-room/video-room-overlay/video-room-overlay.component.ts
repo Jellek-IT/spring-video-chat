@@ -31,15 +31,19 @@ import { StompVideoRoomService } from '../../../service/api/stomp-video-room.ser
 import { JanusStatus } from '../../../../core/janus/enum/jansu-status.enum';
 import { JanusVideoRoomStreamType } from '../../../../core/janus/enum/janus-video-room-stream-type.enum';
 import { VideoRoomUser } from '../../../../core/janus/model/video-room-user.model';
-import { VideoViewComponent } from '../video-view/video-view.component';
-import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
+import {
+  Carousel,
+  CarouselModule,
+  CarouselPageEvent,
+  CarouselResponsiveOptions,
+} from 'primeng/carousel';
 import { VideoRoomStream } from '../../../../core/janus/model/internal/video-room-stream.model';
 import { CurrentUserService } from '../../../../user/service/current-user.service';
 import { MemberProfileDto } from '../../../../user/model/member-profile-dto.model';
 import { ChannelMemberDto } from '../../../model/member/channel-member-dto.model';
 import { ErrorResponseType } from '../../../../error/enum/error-response-type.enum';
-import { LetDirective } from '../../../../shared/directive/let.directive';
-import { ChannelMemberProfilePictureComponent } from '../../channel-member-profile-picture/channel-member-profile-picture.component';
+import { UserStreamViewComponent } from '../user-stream-view/user-stream-view.component';
+import { DraggableScrollComponent } from '../../../../shared/component/draggable-scroll/draggable-scroll.component';
 
 interface DragBoxDetails {
   deltaX: number;
@@ -55,16 +59,16 @@ interface DragBoxDetails {
     TranslateModule,
     TooltipModule,
     LoaderComponent,
-    VideoViewComponent,
     CarouselModule,
-    LetDirective,
-    ChannelMemberProfilePictureComponent,
+    UserStreamViewComponent,
+    DraggableScrollComponent,
   ],
   templateUrl: './video-room-overlay.component.html',
   styleUrl: './video-room-overlay.component.scss',
 })
 export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
   private readonly tokenRefreshTime = 5 * 60 * 1000; // 5 minutes (token has life of 10 minutes)
+  private readonly boxGuiVisibilityTime = 3 * 1000; // 3 seconds
   private readonly dragDisabledSelector = '.drag-disabled';
   private readonly stompVideoRoomService = inject(StompVideoRoomService);
   private readonly toastService = inject(ToastService);
@@ -79,6 +83,8 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
   protected overlayRef?: ElementRef<HTMLElement>;
   @ViewChild('box')
   protected boxRef?: ElementRef<HTMLElement>;
+  @ViewChild('userCarousel')
+  protected userCarousel?: Carousel;
 
   private stompUserVideoRoomSubscription?: Subscription;
   private janusStatusSubscription?: Subscription;
@@ -100,6 +106,10 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
   protected usersCarouselResponsiveOptions:
     | CarouselResponsiveOptions[]
     | undefined;
+  protected boxGuiVisibilityTimeout: ReturnType<typeof setTimeout> | null =
+    null;
+  protected boxGuiVisible = false;
+  protected usersCarouselPage = 0;
 
   public ngOnInit(): void {
     this.userProfileSubscription = this.currentUserService
@@ -150,9 +160,11 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
     this.stompErrorSubscription = this.stompService
       .getErrorAsObservable()
       .subscribe((res) => {
-        const alreadyJoined = res.data.types.some(
-          (type) => type.type === ErrorResponseType.VIDEO_ROOM_ALREADY_JOINED
-        );
+        console.log(res);
+        const alreadyJoined =
+          res.data.types?.some(
+            (type) => type.type === ErrorResponseType.VIDEO_ROOM_ALREADY_JOINED
+          ) ?? false;
         if (alreadyJoined) {
           this.toastService.displayErrorMessage(
             'channel.videoRoom.alreadyJoined'
@@ -179,6 +191,7 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
     this.userProfileSubscription.unsubscribe();
     this.stompErrorSubscription.unsubscribe();
     this.janusVideoRoomService.detach();
+    this.boxGuiVisibilityTimeout && clearTimeout(this.boxGuiVisibilityTimeout);
   }
 
   public toggleCamera() {
@@ -209,6 +222,9 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
     }
     if (this.fullscreen) {
       classes.push('box--fullscreen');
+    }
+    if (this.boxGuiVisible) {
+      classes.push('box--gui-visible');
     }
     return classes.join(' ');
   }
@@ -330,5 +346,24 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
       left: `${x}px`,
       top: `${y}px`,
     };
+  }
+
+  protected handleBoxMouseMove() {
+    this.boxGuiVisible = true;
+    this.boxGuiVisibilityTimeout && clearTimeout(this.boxGuiVisibilityTimeout);
+    this.boxGuiVisibilityTimeout = setTimeout(() => {
+      this.boxGuiVisible = false;
+    }, this.boxGuiVisibilityTime);
+  }
+
+  protected handleUsersNavUserClick(event: MouseEvent, index: number) {
+    if (this.userCarousel === undefined) {
+      return;
+    }
+    this.userCarousel.onDotClick(event, index);
+  }
+
+  protected handleUsersCarouselPageChange(event: CarouselPageEvent) {
+    this.usersCarouselPage = event.page ?? 0;
   }
 }

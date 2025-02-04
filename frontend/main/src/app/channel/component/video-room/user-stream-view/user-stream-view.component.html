@@ -1,0 +1,14 @@
+<div class="view" [ngClass]="getViewClasses()">
+  <app-channel-member-profile-picture
+    class="avatar"
+    [member]="member"
+    [channel]="channel"
+    [size]="streams.length === 0 ? 'xlarge' : 'normal'"
+    [appendToBody]="false"
+    [tooltipPosition]="streams.length === 0 ? 'top' : 'left'"
+  />
+  <!--if there will be more then one stream (eg. screen sharing) it could become tabs-->
+  <ng-container *ngFor="let stream of streams">
+    <app-video-view [mediaStream]="stream.media!.media" />
+  </ng-container>
+</div>

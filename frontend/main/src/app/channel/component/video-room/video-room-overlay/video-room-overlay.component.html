@@ -12,9 +12,11 @@
     #box
     (pointerdown)="onBoxGrab($event)"
     [ngStyle]="boxStyle"
+    (mousemove)="handleBoxMouseMove()"
   >
     <app-loader *ngIf="connecting" />
     <p-carousel
+      #userCarousel
       class="users"
       *ngIf="!connecting"
       [value]="videRoomUsers"
@@ -25,30 +27,36 @@
       [prevButtonProps]="{ styleClass: 'drag-disabled' }"
       [nextButtonProps]="{ styleClass: 'drag-disabled' }"
       [verticalViewPortHeight]="'100%'"
+      (onPage)="handleUsersCarouselPageChange($event)"
     >
       <ng-template let-user #item>
-        <ng-container
-          *appLet="getVideoRoomUserVideoStreams(user) as videoStreams"
-        >
-          <div
-            class="user"
-            [ngClass]="videoStreams.length === 0 ? 'user--no-streams' : ''"
-            *appLet="getVideoRoomUserMember(user) as member"
-          >
-            <app-channel-member-profile-picture
-              class="user__avatar"
-              [member]="member"
-              [channel]="channel"
-              [size]="videoStreams.length === 0 ? 'xlarge' : 'normal'"
-            />
-            <!--if there will be more then one stream (eg. screen sharing) it could become tabs-->
-            <ng-container *ngFor="let stream of videoStreams">
-              <app-video-view [mediaStream]="stream.media!.media" />
-            </ng-container>
-          </div>
-        </ng-container>
+        <app-user-stream-view
+          [streams]="getVideoRoomUserVideoStreams(user)"
+          [member]="getVideoRoomUserMember(user)"
+          [channel]="channel"
+          [showDetails]="boxGuiVisible"
+        />
       </ng-template>
     </p-carousel>
+    <div class="users-nav" *ngIf="!connecting && fullscreen">
+      <app-draggable-scroll>
+        <div class="users-nav__container">
+          <div
+            class="users-nav__user"
+            *ngFor="let user of videRoomUsers; index as i"
+            (click)="handleUsersNavUserClick($event, i)"
+            [ngClass]="usersCarouselPage === i ? 'users-nav__user--active' : ''"
+          >
+            <app-user-stream-view
+              [streams]="getVideoRoomUserVideoStreams(user)"
+              [member]="getVideoRoomUserMember(user)"
+              [channel]="channel"
+              [showDetails]="true"
+            />
+          </div>
+        </div>
+      </app-draggable-scroll>
+    </div>
     <div class="actions" *ngIf="!connecting">
       <button
         pButton

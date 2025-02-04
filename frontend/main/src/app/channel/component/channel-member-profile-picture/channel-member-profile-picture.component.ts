@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   inject,
   Input,
   OnChanges,
@@ -47,10 +48,12 @@ export class ChannelMemberProfilePictureComponent
   implements OnChanges, OnDestroy, OnInit
 {
   @Input() public size: 'normal' | 'large' | 'xlarge' = 'large';
-  @Input()
-  public member?: ChannelMemberDto;
+  @Input() public member?: ChannelMemberDto;
   @Input() public contextMenu: boolean = false;
   @Input({ required: true }) public channel!: ChannelDetailsDto | null;
+  @Input() public appendToBody: boolean = true;
+  @Input() public tooltipPosition: 'right' | 'left' | 'top' | 'bottom' =
+    'bottom';
 
   private readonly memberService = inject(MemberService);
   private readonly memberChannelService = inject(MemberChannelService);

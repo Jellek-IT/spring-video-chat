@@ -7,7 +7,8 @@
   [routerLinkActive]="'avatar--active'"
   [image]="iconUrl ?? undefined"
   [pTooltip]="name ?? undefined"
-  tooltipPosition="bottom"
+  [tooltipPosition]="tooltipPosition"
+  [appendTo]="appendToBody ? 'body' : tooltipContainer"
 />
 <p-avatar
   *ngIf="!isSkeleton() && isInteractive()"
@@ -21,6 +22,8 @@
   [image]="iconUrl ?? undefined"
   [routerLinkActive]="'avatar--active'"
   [pTooltip]="name ?? undefined"
-  tooltipPosition="bottom"
+  [tooltipPosition]="tooltipPosition"
+  [appendTo]="appendToBody ? 'body' : tooltipContainer"
 />
+<div class="tooltip-container" #tooltipContainer></div>
 <p-skeleton shape="circle" [size]="getSkeletonSize()" *ngIf="isSkeleton()" />

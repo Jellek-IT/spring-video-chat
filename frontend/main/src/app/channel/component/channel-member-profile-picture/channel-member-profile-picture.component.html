@@ -5,6 +5,8 @@
   [size]="size"
   [iconUrl]="profilePictureUrl"
   (avatarClick)="menu.toggle($event)"
+  [appendToBody]="appendToBody"
+  [tooltipPosition]="tooltipPosition"
 />
 <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body">
   <ng-template #start>
@@ -19,5 +21,7 @@
   [id]="member?.member?.id"
   [size]="size"
   [iconUrl]="profilePictureUrl"
+  [appendToBody]="appendToBody"
+  [tooltipPosition]="tooltipPosition"
 />
 }
