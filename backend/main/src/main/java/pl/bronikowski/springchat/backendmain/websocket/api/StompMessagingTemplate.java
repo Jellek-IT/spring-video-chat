@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Component;
+import pl.bronikowski.springchat.backendmain.exception.AppBadRequestException;
 import pl.bronikowski.springchat.backendmain.exception.AppInternalServerErrorException;
 import pl.bronikowski.springchat.backendmain.exception.ExceptionMapper;
 
@@ -31,13 +32,16 @@ public class StompMessagingTemplate {
     public void convertAndSendToCurrentUser(@Nullable String authResourceId, String destination, Object payload,
                                             Message<?> incommingMessage)
             throws MessagingException {
-        var messageHeaders = MessageHeaderAccessor.getAccessor(incommingMessage, StompHeaderAccessor.class);
-        var sessionId = messageHeaders.getSessionId();
+        var accessor = MessageHeaderAccessor.getAccessor(incommingMessage, StompHeaderAccessor.class);
+        if(accessor == null) {
+            throw new AppBadRequestException("message header was null");
+        }
+        var sessionId = accessor.getSessionId();
         var receiver = authResourceId != null ? authResourceId : sessionId;
         if (receiver == null) {
             throw new AppInternalServerErrorException("Could not guess user destination");
         }
-        var headers = createHeaders(messageHeaders.getSessionId());
+        var headers = createHeaders(accessor.getSessionId());
         template.convertAndSendToUser(receiver, destination, payload, headers);
     }
 

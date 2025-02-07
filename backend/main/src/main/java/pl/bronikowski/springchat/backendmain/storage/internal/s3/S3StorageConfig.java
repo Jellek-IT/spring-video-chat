@@ -3,6 +3,8 @@ package pl.bronikowski.springchat.backendmain.storage.internal.s3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import pl.bronikowski.springchat.backendmain.config.Profiles;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -17,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Configuration
+@Profile("!" + Profiles.TEST)
 public class S3StorageConfig {
     private final S3StorageProperties s3StorageProperties;
 

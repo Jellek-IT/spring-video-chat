@@ -44,7 +44,7 @@ public class S3StorageClient implements StorageClient {
 
     @Override
     public StorageFile uploadChannelImage(MultipartFile multipartFile, Channel channel, String name) {
-        var folder = String.format(USER_FOLDER, channel.getId());
+        var folder = String.format(CHANNEL_FOLDER, channel.getId());
         return uploadFile(multipartFile, folder, name);
     }
 
@@ -91,7 +91,7 @@ public class S3StorageClient implements StorageClient {
                 .contentType(contentType)
                 .build();
         try {
-            var result = s3Client.putObject(request, RequestBody.fromInputStream(multipartFile.getInputStream(),
+            s3Client.putObject(request, RequestBody.fromInputStream(multipartFile.getInputStream(),
                     multipartFile.getSize()));
             var storageFile = new StorageFile(id, folder, name);
             return storageFileRepository.save(storageFile);

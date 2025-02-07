@@ -1,11 +1,11 @@
-import { ErrorResponseType } from '../enum/error-response-type.enum';
+import { ExceptionResponseType } from '../enum/exception-response-type.enum';
 
 export interface ExceptionResponse {
   message: string;
   date: Date;
   types:
     | {
-        type: ErrorResponseType;
+        type: ExceptionResponseType;
         values: string[];
       }[]
     | null;
@@ -13,12 +13,12 @@ export interface ExceptionResponse {
 
 export const getExistingTypes = (
   exceptionResponse: ExceptionResponse | null
-): ErrorResponseType[] => {
+): ExceptionResponseType[] => {
   return (
     exceptionResponse?.types
       ?.map((type) => type.type)
       .filter((errorType) =>
-        Object.keys(ErrorResponseType).includes(errorType)
+        Object.keys(ExceptionResponseType).includes(errorType)
       ) ?? []
   );
 };

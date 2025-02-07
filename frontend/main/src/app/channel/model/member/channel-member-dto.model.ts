@@ -1,8 +1,8 @@
 import { MemberBasicsDto } from '../../../user/model/member-basics-dto.model';
-import { ChannelMemberRights } from '../../enum/channel-member-rights.enum';
+import { ChannelMemberRight } from '../../enum/channel-member-right.enum';
 
 export interface ChannelMemberDto {
   member: MemberBasicsDto;
-  rights: ChannelMemberRights[];
+  rights: ChannelMemberRight[];
   deleted: boolean;
 }

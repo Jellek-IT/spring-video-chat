@@ -8,6 +8,7 @@ import pl.bronikowski.springchat.backendmain.channel.api.ChannelMemberRight;
 import pl.bronikowski.springchat.backendmain.channel.internal.member.ChannelMemberRepository;
 import pl.bronikowski.springchat.backendmain.videoroom.internal.VideoRoomDestinations;
 import pl.bronikowski.springchat.backendmain.websocket.api.DestinationMatchedAuthorizationInterceptor;
+import pl.bronikowski.springchat.backendmain.websocket.api.StompDestinations;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class ChannelVideoRoomUserQueueDestinationMatchedAuthorizationInterceptor
 
     @Override
     protected String getTemplate() {
-        return "/user" + VideoRoomDestinations.getTokenUserQueueDestination("{id}");
+        return StompDestinations.USER_PREFIX + VideoRoomDestinations.getTokenUserQueueDestination("{id}");
     }
 
     @Override

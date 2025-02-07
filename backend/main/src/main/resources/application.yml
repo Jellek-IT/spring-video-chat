@@ -30,21 +30,6 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${KEYCLOAK_ISSUER_URI}
-  mail:
-    sender: ${MAIL_SENDER}
-    host: ${MAIL_HOST}
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
-    port: ${MAIL_PORT}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: ${MAIL_TLS}
-          ssl:
-            enable: ${MAIL_SSL}
-            trust: ${MAIL_HOST}
   servlet:
     multipart:
       max-file-size: 50MB
@@ -56,6 +41,7 @@ spring:
       time: iso
 
 server:
+  port: ${SERVER_PORT}
   servlet:
     context-path: /api
 
@@ -68,6 +54,7 @@ app:
       server-url: ${KEYCLOAK_SERVER_URL}
       realm: ${KEYCLOAK_REALM}
     stomp-broker:
+      enabled: ${STOMP_BROKER_ENABLED}
       relay-host: ${STOMP_BROKER_RELAY_HOST}
       relay-port: ${STOMP_BROKER_RELAY_PORT}
       client-login: ${STOMP_BROKER_CLIENT_LOGIN}

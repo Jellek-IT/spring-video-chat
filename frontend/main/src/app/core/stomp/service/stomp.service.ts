@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { StompResponse } from '../model/stomp-response.model';
 import { ExceptionResponse } from '../../../error/model/exception-response.model';
 import { StompResponseType } from '../enum/stomp-response-type.enum';
+import { StompClientFactory } from './stomp-client.factory';
 
 export interface PublishArgs {
   transactionId?: string;
@@ -46,6 +47,7 @@ export class StompService {
   private readonly reconnectDelay = 3000;
   private readonly subscribeTimeoutTime = 5000;
   private readonly sessionIdLength = 32;
+  private readonly stompClientFactory = inject(StompClientFactory);
   private readonly connectionState$ = new BehaviorSubject<StompConnectionState>(
     StompConnectionState.DEACTIVATED
   );
@@ -72,7 +74,7 @@ export class StompService {
     if (!this.isActivated()) {
       return;
     }
-    this.client = new Client({
+    this.client = this.stompClientFactory.create({
       connectHeaders: {
         [this.bearerTokenHeaderName]: `${this.bearerTokenPrefix} ${this.keycloak
           .token!}`,
@@ -205,12 +207,19 @@ export class StompService {
       const headers = {
         receipt,
       };
+      let client: Client;
+      try {
+        client = this.getClient();
+      } catch (error) {
+        observer.error(error);
+        return;
+      }
       errorSubscription = this.errors$.subscribe((error) => {
         if (error?.receiptId === receipt) {
           observer.error(error);
         }
       });
-      this.getClient().watchForReceipt(receipt, () => {
+      client.watchForReceipt(receipt, () => {
         hasReceipt = true;
         clearTimeout(subscribeTimeout);
         observer.next(new StompSubscriptionAccepted());
@@ -222,7 +231,7 @@ export class StompService {
           ),
         this.subscribeTimeoutTime
       );
-      subscribeStompSubscription = this.getClient().subscribe(
+      subscribeStompSubscription = client.subscribe(
         destination,
         (message: IMessage) => {
           const result = {
@@ -233,13 +242,14 @@ export class StompService {
         },
         headers
       );
-
       return () => {
         if (this.isActivated() && hasReceipt) {
           subscribeStompSubscription?.unsubscribe();
         }
         errorSubscription.unsubscribe();
         clearTimeout(subscribeTimeout);
+        //clear if no receipt (eg. error) - it's not automatically cleared and there is no method to remove it
+        delete this.client?.['_stompHandler']?.['_receiptWatchers']?.[receipt];
       };
     }).pipe(share());
   }

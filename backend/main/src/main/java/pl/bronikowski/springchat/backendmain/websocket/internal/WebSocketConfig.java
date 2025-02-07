@@ -16,6 +16,10 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
+import pl.bronikowski.springchat.backendmain.websocket.api.StompDestinations;
+import pl.bronikowski.springchat.backendmain.websocket.internal.authentication.AuthenticationChannelInterceptor;
+import pl.bronikowski.springchat.backendmain.websocket.internal.errorhandling.StompErrorHandler;
 
 import java.util.List;
 
@@ -44,17 +48,28 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setPathMatcher(new AntPathMatcher("."))
-                .setUserDestinationPrefix("/user")
-                .setApplicationDestinationPrefixes("/app")
-                /* /exchange/amq.direct instead of /queue cause queue cannot be deleted without causing error
-                 *  when trying to subscribe again to the same (deleted before) destination - error NOT_FOUND */
-                .enableStompBrokerRelay("/topic", "/exchange/amq.direct")
-                .setUserDestinationBroadcast("/topic/server.main.unresolved-user")
-                .setUserRegistryBroadcast("/topic/server.main.user-registry")
-                .setRelayHost(stompBrokerProperties.relayHost())
-                .setRelayPort(stompBrokerProperties.relayPort())
-                .setClientLogin(stompBrokerProperties.clientLogin())
-                .setClientPasscode(stompBrokerProperties.clientPasscode());
+                .setUserDestinationPrefix(StompDestinations.USER_PREFIX)
+                .setApplicationDestinationPrefixes("/app");
+        if (stompBrokerProperties.enabled()) {
+            registry.enableStompBrokerRelay("/topic", "/exchange/amq.direct")
+                    .setUserDestinationBroadcast("/topic/server.main.unresolved-user")
+                    .setUserRegistryBroadcast("/topic/server.main.user-registry")
+                    .setRelayHost(stompBrokerProperties.relayHost())
+                    .setRelayPort(stompBrokerProperties.relayPort())
+                    .setClientLogin(stompBrokerProperties.clientLogin())
+                    .setClientPasscode(stompBrokerProperties.clientPasscode())
+                    .setSystemLogin(stompBrokerProperties.clientLogin())
+                    .setSystemPasscode(stompBrokerProperties.clientPasscode());
+        } else {
+            registry.enableSimpleBroker("/topic", "/exchange/amq.direct");
+        }
+    }
+
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+        registry.setMessageSizeLimit(1024 * 1024);
+        registry.setSendTimeLimit(1000 * 1000);
+        registry.setSendBufferSizeLimit(4 * 1024 * 1024);
     }
 
     @Override

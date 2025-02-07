@@ -12,7 +12,6 @@ public record RegisterMemberRequest(
         @Email
         @UniqueEmail
         String email,
-        @NotEmpty
         @ValidNickname
         @UniqueNickname
         String nickname,

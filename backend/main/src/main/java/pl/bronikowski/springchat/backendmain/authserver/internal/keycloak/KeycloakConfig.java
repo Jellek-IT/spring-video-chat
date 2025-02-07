@@ -6,18 +6,21 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import pl.bronikowski.springchat.backendmain.authserver.internal.Roles;
+import pl.bronikowski.springchat.backendmain.config.Profiles;
 
 import java.util.Collection;
 import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
+@Profile("!" + Profiles.TEST)
 public class KeycloakConfig {
     private static final String REALM_ACCESS_CLAIM_KEY = "realm_access";
     private static final String REALM_ACCESS_CLAIM_ROLES_KEY = "roles";

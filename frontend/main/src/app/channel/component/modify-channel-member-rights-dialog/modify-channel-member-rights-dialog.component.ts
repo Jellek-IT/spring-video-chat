@@ -5,7 +5,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ChannelMemberRights } from '../../enum/channel-member-rights.enum';
+import { ChannelMemberRight } from '../../enum/channel-member-right.enum';
 import { ChannelMemberDto } from '../../model/member/channel-member-dto.model';
 import { ChannelDetailsDto } from '../../model/channel-detais-dto.model';
 import { ToastService } from '../../../shared/service/toast.service';
@@ -21,7 +21,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ChannelMemberRightPipe } from '../../pipe/channel-member-right.pipe';
 
 interface ModifyChannelMemberRightsForm {
-  rights: FormControl<ChannelMemberRights[] | null>;
+  rights: FormControl<ChannelMemberRight[] | null>;
 }
 
 export interface ModifyChannelMemberRightsDialogConfig {
@@ -53,11 +53,11 @@ export class ModifyChannelMemberRightsDialogComponent {
   private readonly channelMember = this.config.data!.channelMember;
   private readonly channel = this.config.data!.channel;
 
-  protected readonly channelMemberRights = Object.values(ChannelMemberRights);
+  protected readonly channelMemberRights = Object.values(ChannelMemberRight);
   protected loading: boolean = false;
   protected readonly form: FormGroup<ModifyChannelMemberRightsForm> =
     this.formBuilder.group({
-      rights: [this.channelMember.rights as ChannelMemberRights[]],
+      rights: [this.channelMember.rights as ChannelMemberRight[]],
     });
 
   protected onCreateSubmit() {

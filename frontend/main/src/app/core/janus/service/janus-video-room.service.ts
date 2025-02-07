@@ -3,7 +3,6 @@ import { VideoRoomSessionDetailsDto } from '../model/video-room-session-details-
 import Janus, { JanusJS } from '../../../packages/janus';
 import { environment } from '../../../../environments/environment';
 import { JanusVideoRoomMessageType } from '../enum/janus-video-room-message-type.enum';
-import adapter from 'webrtc-adapter';
 import { JanusVideoRoomEvent } from '../enum/janus-video-room-event.enum';
 import { JanusVideoRoomPublisher } from '../model/janus/janus-video-room-publisher.model';
 import { ToastService } from '../../../shared/service/toast.service';
@@ -31,6 +30,7 @@ import { JanusStatus } from '../enum/jansu-status.enum';
 import { VideoRoomUser } from '../model/video-room-user.model';
 import { LocalTrackType } from '../enum/local-track-type.enum';
 import { VideoRoomDeletedTrack } from '../model/internal/video-room-deleted-track.model';
+import { JanusClientFactory } from './janus-client.factory';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +43,8 @@ export class JanusVideoRoomService {
   private readonly debug = false;
 
   private readonly toastService = inject(ToastService);
+  private readonly janusClientFactoryService = inject(JanusClientFactory);
+
   private sessionDetails: VideoRoomSessionDetailsDto | null = null;
   private janus: Janus | null = null;
   private videoRoomPublisherHandle: JanusJS.PluginHandle | null = null;
@@ -123,24 +125,20 @@ export class JanusVideoRoomService {
     this.janus = null;
     this.firstFeedPublished = false;
     this.status$.next(JanusStatus.CONNECTING);
-    // initialized library will call callback immediately
-    Janus.init({
-      debug: this.debug ? 'all' : false,
-      dependencies: Janus.useDefaultDependencies({ adapter: adapter }),
-      callback: () => {
-        this.janus = new Janus({
-          server: environment.janusWsUrl,
-          token: () => this.sessionDetails!.authToken.value,
-          success: () => this.attachVideoRoom(),
-          error: (error) => {
-            this.logError(error);
-          },
-          destroyed: () => {
-            this.status$.next(JanusStatus.DISCONNECTED);
-          },
-        });
+    this.janus = await this.janusClientFactoryService.create(
+      {
+        server: environment.janusWsUrl,
+        token: () => this.sessionDetails!.authToken.value,
+        success: () => this.attachVideoRoom(),
+        error: (error) => {
+          this.logError(error);
+        },
+        destroyed: () => {
+          this.status$.next(JanusStatus.DISCONNECTED);
+        },
       },
-    });
+      { debug: this.debug }
+    );
   }
 
   private async waitForDisconnected(): Promise<void> {

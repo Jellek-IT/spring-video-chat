@@ -121,9 +121,9 @@ ARG VIDEOROOM_ADMIN_KEY
 
 COPY ./config /opt/app/config
 
-RUN bash -c 'sed -i "s/\${TOKEN_AUTH_SECRET}/${TOKEN_AUTH_SECRET}/g" /opt/app/config/janus.jcfg'
-RUN bash -c 'sed -i "s/\${ADMIN_SECRET}/${ADMIN_SECRET}/g" /opt/app/config/janus.jcfg'
-RUN bash -c 'sed -i "s/\${VIDEOROOM_ADMIN_KEY}/${VIDEOROOM_ADMIN_KEY}/g" /opt/app/config/janus.plugin.videoroom.jcfg'
+RUN bash -c 'sed -i "s~\${TOKEN_AUTH_SECRET}~${TOKEN_AUTH_SECRET}~g" /opt/app/config/janus.jcfg'
+RUN bash -c 'sed -i "s~\${ADMIN_SECRET}~${ADMIN_SECRET}~g" /opt/app/config/janus.jcfg'
+RUN bash -c 'sed -i "s~\${VIDEOROOM_ADMIN_KEY}~${VIDEOROOM_ADMIN_KEY}~g" /opt/app/config/janus.plugin.videoroom.jcfg'
 
 CMD /usr/local/bin/janus -F /opt/app/config --nat-1-1=$NAT_1_1
 # End

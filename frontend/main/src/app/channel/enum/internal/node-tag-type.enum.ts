@@ -9,7 +9,11 @@ export enum NodeTagType {
 }
 
 export const isSelfClosing = (type: NodeTagType) => {
-  return [NodeTagType.NEW_LINE].includes(type);
+  return [
+    NodeTagType.NEW_LINE,
+    NodeTagType.SQUARE_BRACKET,
+    NodeTagType.SQUARE_BRACKET_END,
+  ].includes(type);
 };
 export default {
   isSelfClosing,

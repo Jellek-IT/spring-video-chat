@@ -17,7 +17,7 @@ public class StompVideoRoomEventHandler implements UnsubscribeEventHandler, Sess
 
     @Override
     public void handleEvent(SessionDisconnectEvent event) {
-        var userConnectionDetails = UserConnectionDetails.fromSubProtocolEvent(event);
+        var userConnectionDetails = UserConnectionDetails.fromSessionDisconnectEvent(event);
         videoRoomService.leave(userConnectionDetails);
     }
 

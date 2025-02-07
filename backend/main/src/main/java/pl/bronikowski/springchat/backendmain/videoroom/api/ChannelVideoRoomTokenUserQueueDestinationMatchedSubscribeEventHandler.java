@@ -7,6 +7,7 @@ import pl.bronikowski.springchat.backendmain.exception.ExceptionMapper;
 import pl.bronikowski.springchat.backendmain.videoroom.internal.VideoRoomDestinations;
 import pl.bronikowski.springchat.backendmain.videoroom.internal.VideoRoomService;
 import pl.bronikowski.springchat.backendmain.websocket.api.DestinationMatchedSubscribeEventHandler;
+import pl.bronikowski.springchat.backendmain.websocket.api.StompDestinations;
 import pl.bronikowski.springchat.backendmain.websocket.api.StompMessagingTemplate;
 import pl.bronikowski.springchat.backendmain.websocket.api.StompResponse;
 import pl.bronikowski.springchat.backendmain.websocket.api.UserSubscriptionDetails;
@@ -24,7 +25,7 @@ public class ChannelVideoRoomTokenUserQueueDestinationMatchedSubscribeEventHandl
 
     @Override
     protected String getTemplate() {
-        return "/user" + VideoRoomDestinations.getTokenUserQueueDestination("{id}");
+        return StompDestinations.USER_PREFIX + VideoRoomDestinations.getTokenUserQueueDestination("{id}");
     }
 
     @Override

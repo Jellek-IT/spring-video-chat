@@ -5,7 +5,7 @@ import { Observable, from, map, of } from 'rxjs';
 import ExceptionResponseProp, {
   ExceptionResponse,
 } from '../model/exception-response.model';
-import ErrorResponseTypeProp from '../enum/error-response-type.enum';
+import exceptionResponseType from '../enum/exception-response-type.enum';
 import { TranslateService } from '@ngx-translate/core';
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class EndpointErrorService {
       if (customErrors.length > 0) {
         customErrors.forEach((errorType) =>
           this.toastService.displayErrorMessage(
-            ErrorResponseTypeProp.getTranslationKey(errorType)
+            exceptionResponseType.getTranslationKey(errorType)
           )
         );
       } else {
@@ -38,7 +38,7 @@ export class EndpointErrorService {
           : types
               .map((errorType) =>
                 this.translateService.instant(
-                  ErrorResponseTypeProp.getTranslationKey(errorType)
+                  exceptionResponseType.getTranslationKey(errorType)
                 )
               )
               .join('<br/>');

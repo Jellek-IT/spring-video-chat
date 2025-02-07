@@ -1,7 +1,7 @@
 import { MemberIdDto } from '../../../user/model/member-id-dto.model';
-import { ChannelMemberRights } from '../../enum/channel-member-rights.enum';
+import { ChannelMemberRight } from '../../enum/channel-member-right.enum';
 
 export interface AddChannelMemberRequest {
   member: MemberIdDto;
-  rights: ChannelMemberRights[];
+  rights: ChannelMemberRight[];
 }

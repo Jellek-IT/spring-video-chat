@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 public abstract class AppApplicationException extends RuntimeException {
     private final HttpStatus statusCode;
-    private final ErrorResponseType type;
+    private final ExceptionResponseType type;
     private final List<String> values;
 
     protected AppApplicationException(HttpStatus statusCode) {
@@ -25,7 +25,7 @@ public abstract class AppApplicationException extends RuntimeException {
         this.values = null;
     }
 
-    protected AppApplicationException(String message, HttpStatus statusCode, ErrorResponseType type) {
+    protected AppApplicationException(String message, HttpStatus statusCode, ExceptionResponseType type) {
         super(message);
         this.statusCode = statusCode;
         this.type = type;
@@ -40,14 +40,14 @@ public abstract class AppApplicationException extends RuntimeException {
     }
 
     protected AppApplicationException(String message, Throwable cause, HttpStatus statusCode,
-                                      ErrorResponseType type) {
+                                      ExceptionResponseType type) {
         super(message, cause);
         this.statusCode = statusCode;
         this.type = type;
         this.values = null;
     }
 
-    protected AppApplicationException(String message, HttpStatus statusCode, ErrorResponseType type,
+    protected AppApplicationException(String message, HttpStatus statusCode, ExceptionResponseType type,
                                       List<String> values) {
         super(message);
         this.statusCode = statusCode;

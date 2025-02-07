@@ -5,7 +5,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ChannelMemberRights } from '../../enum/channel-member-rights.enum';
+import { ChannelMemberRight } from '../../enum/channel-member-right.enum';
 import validation from '../../../shared/utils/validation';
 import formUtils from '../../../shared/utils/form-utils';
 import { ToastService } from '../../../shared/service/toast.service';
@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
 
 interface AddChannelMemberForm {
   memberId: FormControl<string | null>;
-  rights: FormControl<ChannelMemberRights[] | null>;
+  rights: FormControl<ChannelMemberRight[] | null>;
 }
 
 export interface AddChannelMemberDialogConfig {
@@ -58,12 +58,12 @@ export class AddChannelMemberDialogComponent {
   private readonly endpointErrorService = inject(EndpointErrorService);
 
   protected readonly manageRight = this.config.data!.manageRight;
-  protected readonly channelMemberRights = Object.values(ChannelMemberRights);
+  protected readonly channelMemberRights = Object.values(ChannelMemberRight);
   protected loading: boolean = false;
   protected readonly form: FormGroup<AddChannelMemberForm> =
     this.formBuilder.group({
       memberId: ['', validation.uuidV4],
-      rights: [[] as ChannelMemberRights[]],
+      rights: [[] as ChannelMemberRight[]],
     });
 
   protected onCreateSubmit() {

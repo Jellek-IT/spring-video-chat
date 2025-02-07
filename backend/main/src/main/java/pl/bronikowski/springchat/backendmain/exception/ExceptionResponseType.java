@@ -1,6 +1,7 @@
 package pl.bronikowski.springchat.backendmain.exception;
 
-public enum ErrorResponseType {
+public enum ExceptionResponseType {
+    NOT_FOUND,
     CHANNEL_OPERATION_NOT_ENOUGH_RIGHTS,
     CHANNEL_MEMBER_ALREADY_ADDED,
     STOMP_DESTINATION_FORBIDDEN,

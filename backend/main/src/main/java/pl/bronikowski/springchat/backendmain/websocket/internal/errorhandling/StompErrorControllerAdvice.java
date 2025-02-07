@@ -1,4 +1,4 @@
-package pl.bronikowski.springchat.backendmain.websocket.internal;
+package pl.bronikowski.springchat.backendmain.websocket.internal.errorhandling;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;

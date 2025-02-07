@@ -9,6 +9,7 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.messaging.access.intercept.MessageMatcherDelegatingAuthorizationManager;
 import org.springframework.util.AntPathMatcher;
 import pl.bronikowski.springchat.backendmain.authserver.internal.Roles;
+import pl.bronikowski.springchat.backendmain.websocket.api.StompDestinations;
 
 @Configuration
 public class WebSocketSecurityConfig {
@@ -19,8 +20,8 @@ public class WebSocketSecurityConfig {
                 .simpSubscribeDestMatchers("user.queue.errors").permitAll()
                 .simpMessageDestMatchers("/app/channels.**").hasRole(Roles.MEMBER)
                 .simpMessageDestMatchers("/app/video-rooms.**").hasRole(Roles.MEMBER)
-                .simpSubscribeDestMatchers("/user/exchange/amq.direct/errors").hasRole(Roles.MEMBER)
-                .simpSubscribeDestMatchers("/user/exchange/amq.direct/channels.**").hasRole(Roles.MEMBER)
+                .simpSubscribeDestMatchers(StompDestinations.USER_PREFIX + StompDestinations.ERRORS_QUEUE_DESTINATION).hasRole(Roles.MEMBER)
+                .simpSubscribeDestMatchers(StompDestinations.USER_PREFIX + "/exchange/amq.direct/channels.**").hasRole(Roles.MEMBER)
                 .simpSubscribeDestMatchers("/topic/channels.**").hasRole(Roles.MEMBER)
                 .anyMessage().denyAll();
         return messages.build();

@@ -15,7 +15,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MemberProfileDto } from '../../../user/model/member-profile-dto.model';
 import { CurrentUserService } from '../../../user/service/current-user.service';
 import { ChannelMemberDto } from '../../model/member/channel-member-dto.model';
-import { ChannelMemberRights } from '../../enum/channel-member-rights.enum';
+import { ChannelMemberRight } from '../../enum/channel-member-right.enum';
 import {
   AddChannelMemberDialogComponent,
   AddChannelMemberDialogConfig,
@@ -65,7 +65,7 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
   protected userProfile!: MemberProfileDto;
   protected currentUserChannelMember?: ChannelMemberDto;
   protected showVideoRoom = false;
-  protected channelMemberRights = ChannelMemberRights;
+  protected channelMemberRights = ChannelMemberRight;
   protected leaveLoading = false;
 
   public ngOnInit(): void {
@@ -102,7 +102,7 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
     this.showVideoRoom = false;
   }
 
-  protected currentUserHasRight(right: ChannelMemberRights) {
+  protected currentUserHasRight(right: ChannelMemberRight) {
     return (
       this.currentUserChannelMember !== undefined &&
       this.currentUserChannelMember.rights.includes(right)
@@ -114,7 +114,7 @@ export class ChannelDetailsComponent implements OnInit, OnDestroy {
       return;
     }
     const data: AddChannelMemberDialogConfig = {
-      manageRight: this.currentUserHasRight(ChannelMemberRights.MANAGE),
+      manageRight: this.currentUserHasRight(ChannelMemberRight.MANAGE),
       channel: this.channel,
     };
     this.dialogService.open(AddChannelMemberDialogComponent, {

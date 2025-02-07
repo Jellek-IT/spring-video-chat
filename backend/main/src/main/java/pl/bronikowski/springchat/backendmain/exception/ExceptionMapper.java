@@ -36,6 +36,16 @@ public class ExceptionMapper {
         return new ExceptionResponse(e.getMessage(), clock.instant(), types);
     }
 
+    public ExceptionResponse mapToExceptionResponse(org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException e) {
+        var types = e.getBindingResult().getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getCode)
+                .filter(Objects::nonNull)
+                .map(StringUtils::camelCaseToEnum)
+                .map(ExceptionTypeDto::new)
+                .toList();
+        return new ExceptionResponse(e.getMessage(), clock.instant(), types);
+    }
+
     public ExceptionResponse mapToExceptionResponse(ConstraintViolationException e) {
         var types = e.getConstraintViolations().stream()
                 .map(StringUtils::toString)
@@ -49,17 +59,20 @@ public class ExceptionMapper {
         return new ExceptionResponse(message, clock.instant());
     }
 
-    public ExceptionResponse getExceptionResponse(Throwable e) {
-        return switch (e) {
+    public ExceptionResponse getExceptionResponse(Throwable t) {
+        return switch (t) {
             case AppApplicationException appApplicationException -> mapToExceptionResponse(appApplicationException);
 
             case MethodArgumentNotValidException methodArgumentNotValidException ->
                     mapToExceptionResponse(methodArgumentNotValidException);
 
+            case org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException methodArgumentNotValidException ->
+                    mapToExceptionResponse(methodArgumentNotValidException);
+
             case ConstraintViolationException constraintViolationException ->
                     mapToExceptionResponse(constraintViolationException);
 
-            case null, default -> mapToGenericExceptionResponse(e);
+            case null, default -> mapToGenericExceptionResponse(t);
         };
     }
 }

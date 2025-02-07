@@ -41,7 +41,7 @@ import { VideoRoomStream } from '../../../../core/janus/model/internal/video-roo
 import { CurrentUserService } from '../../../../user/service/current-user.service';
 import { MemberProfileDto } from '../../../../user/model/member-profile-dto.model';
 import { ChannelMemberDto } from '../../../model/member/channel-member-dto.model';
-import { ErrorResponseType } from '../../../../error/enum/error-response-type.enum';
+import { ExceptionResponseType } from '../../../../error/enum/exception-response-type.enum';
 import { UserStreamViewComponent } from '../user-stream-view/user-stream-view.component';
 import { DraggableScrollComponent } from '../../../../shared/component/draggable-scroll/draggable-scroll.component';
 
@@ -163,7 +163,8 @@ export class VideoRoomOverlayComponent implements OnInit, OnDestroy, OnChanges {
         console.log(res);
         const alreadyJoined =
           res.data.types?.some(
-            (type) => type.type === ErrorResponseType.VIDEO_ROOM_ALREADY_JOINED
+            (type) =>
+              type.type === ExceptionResponseType.VIDEO_ROOM_ALREADY_JOINED
           ) ?? false;
         if (alreadyJoined) {
           this.toastService.displayErrorMessage(

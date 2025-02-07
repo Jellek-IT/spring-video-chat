@@ -15,7 +15,7 @@ import { ChannelDetailsDto } from '../../model/channel-detais-dto.model';
 import { Subscription } from 'rxjs';
 import { MemberProfileDto } from '../../../user/model/member-profile-dto.model';
 import { CurrentUserService } from '../../../user/service/current-user.service';
-import { ChannelMemberRights } from '../../enum/channel-member-rights.enum';
+import { ChannelMemberRight } from '../../enum/channel-member-right.enum';
 import { MenuModule } from 'primeng/menu';
 import { TypographyComponent } from '../../../shared/component/typography/typography.component';
 import { MenuItem } from 'primeng/api';
@@ -68,7 +68,7 @@ export class ChannelMemberProfilePictureComponent
   protected getProfilePictureSubscription?: Subscription;
   protected userProfile!: MemberProfileDto;
   private userProfileSubscription!: Subscription;
-  protected channelMemberRights = ChannelMemberRights;
+  protected channelMemberRights = ChannelMemberRight;
   protected currentUserChannelMember?: ChannelMemberDto;
   protected menuItems: MenuItem[] | undefined;
   protected kickLoading = false;
@@ -116,7 +116,7 @@ export class ChannelMemberProfilePictureComponent
     );
   }
 
-  protected currentUserHasRight(right: ChannelMemberRights) {
+  protected currentUserHasRight(right: ChannelMemberRight) {
     return (
       this.currentUserChannelMember !== undefined &&
       this.currentUserChannelMember.rights.includes(right)
@@ -140,7 +140,7 @@ export class ChannelMemberProfilePictureComponent
     ) {
       return;
     }
-    if (this.currentUserHasRight(ChannelMemberRights.MANAGE)) {
+    if (this.currentUserHasRight(ChannelMemberRight.MANAGE)) {
       this.menuItems.push({
         label: this.translateService.instant(
           'channel.member.menu.modifyRights'
@@ -148,7 +148,7 @@ export class ChannelMemberProfilePictureComponent
         command: () => this.openUpdateRightsDialog(),
       });
     }
-    if (this.currentUserHasRight(ChannelMemberRights.KICK)) {
+    if (this.currentUserHasRight(ChannelMemberRight.KICK)) {
       this.menuItems.push({
         label: this.translateService.instant('channel.member.menu.kick'),
         icon: this.kickLoading ? 'pi pi-spinner pi-spin' : undefined,

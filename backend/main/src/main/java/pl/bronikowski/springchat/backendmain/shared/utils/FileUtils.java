@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLConnection;
 
 @Slf4j
@@ -16,22 +17,31 @@ import java.net.URLConnection;
 public final class FileUtils {
     public static MediaType getMediaType(MultipartFile file) {
         try {
-            return MediaType.parseMediaType(guessMediaType(file));
+            return MediaType.parseMediaType(guessMediaType(file.getInputStream(), file.getOriginalFilename()));
         } catch (Exception e) {
             log.debug("Could not guess media type: {}", e.getMessage());
             return MediaType.APPLICATION_OCTET_STREAM;
         }
     }
 
-    public static String replaceFilename(MultipartFile file, String name) {
-        var ext = FilenameUtils.getExtension(file.getName());
-        return name + "." + ext;
+    public static MediaType getMediaType(InputStream is, String filename) {
+        try {
+            return MediaType.parseMediaType(guessMediaType(is, filename));
+        } catch (Exception e) {
+            log.debug("Could not guess media type: {}", e.getMessage());
+            return MediaType.APPLICATION_OCTET_STREAM;
+        }
     }
 
-    private static String guessMediaType(MultipartFile file) throws IOException {
-        var mediaType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(file.getInputStream()));
+    private static String guessMediaType(InputStream is, String filename) throws IOException {
+        var mediaType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(is));
         return mediaType == null
-                ? URLConnection.guessContentTypeFromName(file.getOriginalFilename())
+                ? URLConnection.guessContentTypeFromName(filename)
                 : mediaType;
+    }
+
+    public static String replaceFilename(MultipartFile file, String name) {
+        var ext = FilenameUtils.getExtension(file.getOriginalFilename());
+        return name + "." + ext;
     }
 }

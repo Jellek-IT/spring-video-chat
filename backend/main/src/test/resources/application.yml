@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    url: ${test.containers.postgres.url}
+    username: ${test.containers.postgres.username}
+    password: ${test.containers.postgres.password}
+  data:
+    redis:
+      host: ${test.containers.redis.host}
+      port: ${test.containers.redis.port}
+      password: ${test.containers.redis.password}
+  application:
+    name: backendmain
+  jpa:
+    database: postgresql
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        temp.use_jdbc_metadata_defaults: false
+        globally_quoted_identifiers: true
+  liquibase:
+    change-log: db/main-changelog.xml
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8090/realms/local
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  mvc:
+    format:
+      date: iso
+      date-time: iso
+      time: iso
+app:
+  id: test
+  client:
+    stomp-broker:
+      enabled: false

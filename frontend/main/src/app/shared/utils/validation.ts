@@ -5,7 +5,7 @@ const nicknameRegex: RegExp = /^[a-zA-Z0-9 _-]*$/;
 const channelNameRegex: RegExp = /^[a-zA-Z0-9 _-]*$/;
 const uuidV4Regex: RegExp =
   /^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-4[A-Za-z0-9]{3}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$/;
-export const channelMessageTextMaxCharacters = 50000;
+export const channelMessageTextMaxCharacters = 10000;
 
 export const userPasswordRegExValidator = (
   formControl: AbstractControl

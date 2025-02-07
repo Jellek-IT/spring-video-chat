@@ -1,1 +1,0 @@
-package pl.bronikowski.springchat.backendmain;

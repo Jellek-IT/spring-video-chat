@@ -6,6 +6,6 @@ public class AppNotFoundException extends AppApplicationException {
     private static final HttpStatus HTTP_STATUS = HttpStatus.NOT_FOUND;
 
     public AppNotFoundException() {
-        super(HTTP_STATUS);
+        super("Not found", HTTP_STATUS, ExceptionResponseType.NOT_FOUND);
     }
 }

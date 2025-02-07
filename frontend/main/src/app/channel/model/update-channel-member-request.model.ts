@@ -1,6 +1,6 @@
-import { ChannelMemberRights } from '../enum/channel-member-rights.enum';
+import { ChannelMemberRight } from '../enum/channel-member-right.enum';
 
 export interface UpdateChannelMemberRequest {
-	memberId: string;
-	rights: ChannelMemberRights[];
+  memberId: string;
+  rights: ChannelMemberRight[];
 }

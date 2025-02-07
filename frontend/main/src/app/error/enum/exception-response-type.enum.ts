@@ -1,4 +1,4 @@
-export enum ErrorResponseType {
+export enum ExceptionResponseType {
   CHANNEL_OPERATION_NOT_ENOUGH_RIGHTS = 'CHANNEL_OPERATION_NOT_ENOUGH_RIGHTS',
   CHANNEL_MEMBER_ALREADY_ADDED = 'CHANNEL_MEMBER_ALREADY_ADDED',
   UNIQUE_EMAIL = 'UNIQUE_EMAIL',
@@ -9,8 +9,10 @@ export enum ErrorResponseType {
   EXISTING_MEMBER = 'EXISTING_MEMBER',
 }
 
-export const getTranslationKey = (errorResponseType: ErrorResponseType) => {
-  return `error.responseType.${errorResponseType}`;
+export const getTranslationKey = (
+  exceptionResponseType: ExceptionResponseType
+) => {
+  return `error.responseType.${exceptionResponseType}`;
 };
 export default {
   getTranslationKey,

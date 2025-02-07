@@ -1,4 +1,4 @@
-package pl.bronikowski.springchat.backendmain.websocket.internal;
+package pl.bronikowski.springchat.backendmain.websocket.internal.errorhandling;
 
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class ErrorQueueDestinationMatchedAuthorizationInterceptor extends Destin
 
     @Override
     protected String getTemplate() {
-        return "/user" + StompDestinations.ERRORS_QUEUE_DESTINATION;
+        return StompDestinations.USER_PREFIX + StompDestinations.ERRORS_QUEUE_DESTINATION;
     }
 
     @Override
