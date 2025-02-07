@@ -2,6 +2,15 @@
 
 Screenshots of the app are included in the [**Screenshots**](#screenshots) section.
 
+## Table of Contents
+
+1. [**Notice**](#notice)
+2. [**About the Project**](#about-the-project)
+3. [**Used Technologies**](#used-technologies)
+4. [**Tests**](#tests)
+5. [**Screenshots**](#screenshots)
+6. [**To-Do**](#to-do)
+
 ## Notice
 
 This project is intended solely for local development and testing purposes. It has not been optimized or secured for deployment in a production environment. Using this project outside a controlled local setting may lead to unexpected issues or security risks.
