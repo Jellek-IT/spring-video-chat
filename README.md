@@ -1,4 +1,4 @@
-# Spring Chat
+# Spring Video Chat
 
 Screenshots of the app are included in the [**Screenshots**](#screenshots) section.
 
