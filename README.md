@@ -17,7 +17,7 @@ This project is intended solely for local development and testing purposes. It h
 
 ## About the Project
 
-Spring Chat is a real-time messaging and communication platform designed for interactive chat rooms. It enables users to send text messages, participate in video conferences, and manage chat channels efficiently.
+Spring Video Chat is a real-time messaging and communication platform designed for interactive chat rooms. It enables users to send text messages, participate in video conferences, and manage chat channels efficiently.
 
 The application is developed using Java Spring Boot for the backend and Angular for the frontend. For real-time text messaging, it leverages the WebSocket STOMP protocol, ensuring seamless and instantaneous communication. Video conferencing capabilities are powered by Janus WebRTC SFU, allowing high-quality and scalable media streaming.
 
