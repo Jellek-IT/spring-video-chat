@@ -7,9 +7,10 @@ Screenshots of the app are included in the [**Screenshots**](#screenshots) secti
 1. [**Notice**](#notice)
 2. [**About the Project**](#about-the-project)
 3. [**Used Technologies**](#used-technologies)
-4. [**Tests**](#tests)
-5. [**Screenshots**](#screenshots)
-6. [**To-Do**](#to-do)
+4. [**Project structure**](#project-structure)
+5. [**Tests**](#tests)
+6. [**Screenshots**](#screenshots)
+7. [**To-Do**](#to-do)
 
 ## Notice
 
@@ -25,13 +26,17 @@ Users have the ability to create their own chat channels, invite others, and def
 
 ## Used Technologies
 
-- [**Spring Boot**](https://spring.io/projects/spring-boot): The backend is built with Spring Boot, using Java 21. It handles the HTTP API and WebSocket communication via the STOMP protocol. Communication with Janus is done through a WebSocket client. The backend also interacts with MinIO for object storage via an S3 client, and Keycloak for user management through the Admin API.
+- [**Spring Boot**](https://spring.io/projects/spring-boot): The backend is built with Spring Boot, using Java 21. It handles the HTTP API and WebSocket communication via the STOMP protocol. Communication with Janus is done through a WebSocket client. The backend also interacts with MinIO for object storage via an S3 client, and Keycloak for user management through the Admin API. The system features loose coupling with Apache Kafka, facilitating communication between the `backend/main` service and the `backend/notification` service. The `backend/notification` service utilizes Thymeleaf for message templating and Spring Mail for sending emails.
 
 - [**Angular**](https://angular.dev/): The frontend is developed using Angular. Custom services are used to interact with the Janus WebRTC library for video conferencing and the STOMP.js library for real-time messaging. These services are wrapped in RxJS primitives, providing a reactive approach for managing asynchronous events.
 
+- [**Apache Kafka**](https://kafka.apache.org/): Apache Kafka is used for loose-coupled communication between the `backend/notification` and `backend/main` services.
+
 - [**RabbitMQ with STOMP plugin**](https://www.rabbitmq.com/docs/stomp): RabbitMQ is used as a messaging broker with the STOMP plugin, enabling message acknowledgments and the possibility of clustering, which is not yet implemented but could be used for scalability.
 
-- [**Redis**](https://redis.io/): Redis is used to store information about active video room sessions and manage sorted sets for searching expired sessions. It provides quick access to session data for live video and chat functionality.
+- [**Redis**](https://redis.io/): Redis is used to store information about active video room sessions and manage sorted sets for searching expired sessions, providing quick access to session data for live video and chat functionality. It is also employed for token storage with TTL (Time-To-Live) for automatic expiration, ensuring that tokens are discarded after a specified duration.
+
+- [**MongoDB**](https://www.mongodb.com/): MongoDB is used to store the state of notifications being processed by the notification service.
 
 - [**Janus Gateway**](https://janus.conf.meetecho.com/): Janus Gateway is a WebRTC SFU used for video conferencing. It handles the routing of audio and video streams between users in the chat rooms.
 
@@ -44,6 +49,8 @@ Users have the ability to create their own chat channels, invite others, and def
 ## Project structure
 
 **backend/main**: This directory contains the Spring Boot backend application. For local development, a `docker` folder is included with a `docker-compose` file that sets up all the necessary services required to run and test the application. For example, the `mailcatcher` service is included to catch SMTP messages from Keycloak. The `.env.example` file shows an example of the required Docker environment file, which includes the NAT address for Janus Gateway. This address should be set to the local IP address of the machine running the service. The `application-localsecrets.example.yml` file provides a template for secrets configuration, where all `\<change-me\>` placeholders need to be replaced with the corresponding service secrets. The local server should be run with the local profile.
+
+**backend/notification**: This directory contains the Spring Boot backend application for the notification service. It acts as a consumer for the `queuing.springchat.notification.json` Kafka topic. The service processes messages by sending notifications to the specified channels. Currently, only the email channel is configured. The same requirements for local development apply as for the `backend/main service`.
 
 **frontend/main**: This directory contains the Angular frontend application. For local development, the only requirement is to run `npm start` to launch the application.
 
