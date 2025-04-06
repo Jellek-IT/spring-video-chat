@@ -84,6 +84,58 @@ services:
       REDIS_PASSWORD: password
     volumes:
       - redis_data:/data
+  mongodb:
+    image: mongo:6.0.21-jammy
+    hostname: mongodb
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: springchat_notification
+      SPRINGCHAT_NOTIFICATION_DB_USER: springchat
+      SPRINGCHAT_NOTIFICATION_DB_PASSWORD: ${SPRINGCHAT_NOTIFICATION_DB_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  kafka1:
+    hostname: kafka1
+    environment:
+      KAFKA_LISTENERS: BROKER://kafka1:19092,CONTROLLER://kafka1:9093
+      KAFKA_ADVERTISED_LISTENERS: BROKER://kafka1:19092
+      KAFKA_NODE_ID: 1
+    volumes:
+      - kafka1_data:/var/lib/kafka/data
+    extends:
+      file: common-config.yml
+      service: kafka
+  kafka2:
+    hostname: kafka2
+    environment:
+      KAFKA_LISTENERS: BROKER://kafka2:19093,CONTROLLER://kafka2:9093
+      KAFKA_ADVERTISED_LISTENERS: BROKER://kafka2:19093
+      KAFKA_NODE_ID: 2
+    volumes:
+      - kafka2_data:/var/lib/kafka/data
+    extends:
+      file: common-config.yml
+      service: kafka
+  kafka3:
+    hostname: kafka3
+    environment:
+      KAFKA_LISTENERS: BROKER://kafka3:19094,CONTROLLER://kafka3:9093
+      KAFKA_ADVERTISED_LISTENERS: BROKER://kafka3:19094
+      KAFKA_NODE_ID: 3
+    volumes:
+      - kafka3_data:/var/lib/kafka/data
+    extends:
+      file: common-config.yml
+      service: kafka
   backend-main:
     build: ./backend/main
     depends_on:
@@ -93,6 +145,9 @@ services:
       - rabbitmq
       - minio
       - janus
+      - kafka1
+      - kafka2
+      - kafka3
     environment:
       ACTIVE_PROFILES: async,request-logging
       PG_HOST: postgres
@@ -123,7 +178,39 @@ services:
       JANUS_WS_HOST: ws://janus:8188
       JANUS_TOKEN_AUTH_SECRET: ${JANUS_TOKEN_AUTH_SECRET}
       JANUS_VIDEO_ROOM_ADMIN_KEY: ${JANUS_VIDEO_ROOM_ADMIN_KEY}
+      KAFKA_BOOTSTRAP_SERVERS: kafka1:19092,kafka2:19093,kafka3:19094
+      KAFKA_SECURITY_PROTOCOL: PLAINTEXT
+      KAFKA_SASL_MECHANISM:
+      KAFKA_JAAS_CONFIG:
     network_mode: "service:localhost"
+  backend-notification:
+    build: ./backend/notification
+    depends_on:
+      - postgres
+      - mongodb
+      - kafka1
+      - kafka2
+      - kafka3
+    environment:
+      ACTIVE_PROFILES: async
+      KAFKA_BOOTSTRAP_SERVERS: kafka1:19092,kafka2:19093,kafka3:19094
+      KAFKA_SECURITY_PROTOCOL: PLAINTEXT
+      KAFKA_SASL_MECHANISM:
+      KAFKA_JAAS_CONFIG:
+      MONGODB_HOST: mongodb
+      MONGODB_PORT: 27017
+      MONGODB_DATABASE: springchat_notification
+      MONGODB_USERNAME: springchat_notification
+      MONGODB_PASSWORD: ${SPRINGCHAT_NOTIFICATION_DB_PASSWORD}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_SENDER: ${MAIL_SENDER}
+      MAIL_AUTH: ${MAIL_AUTH}
+      MAIL_TLS: ${MAIL_TLS}
+      MAIL_SSL: ${MAIL_SSL}
+      PLATFORM_URL: ${FRONTEND_APP_URL}
   frontend-main:
     build:
       context: ./frontend/main
@@ -151,4 +238,12 @@ volumes:
   minio_data:
     driver: local
   redis_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  kafka1_data:
+    driver: local
+  kafka2_data:
+    driver: local
+  kafka3_data:
     driver: local

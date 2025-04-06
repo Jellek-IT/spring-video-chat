@@ -49,8 +49,6 @@ import java.time.Clock
 class BaseSpecification extends Specification {
     private static final String POSTGRES_IMAGE_NAME = "postgres:17.2"
     private static final String REDIS_IMAGE_NAME = "redis:7.4.2-alpine"
-    private static final String RABBITMQ_IMAGE_NAME = 'rabbitmq:4.0.4-management-alpine'
-    private static final Integer RABBITMQ_STOMP_PORT = 61613
 
     @Shared
     static PostgreSQLContainer postgresContainer = new PostgreSQLContainer(POSTGRES_IMAGE_NAME)

@@ -1,0 +1,10 @@
+kafka:
+  clusters:
+    - name: kafka-docker-cluster
+      bootstrapServers: kafka:19092
+      schemaRegistryAuth:
+        username: username
+        password: password
+      metrics:
+        port: 9997
+        type: JMX

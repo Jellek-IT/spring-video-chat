@@ -8,12 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bronikowski.springchat.backendmain.authserver.api.UserContextProvider;
 import pl.bronikowski.springchat.backendmain.user.api.dto.UpdateUserProfilePictureRequest;
 import pl.bronikowski.springchat.backendmain.user.api.dto.UserProfileDto;
+import pl.bronikowski.springchat.backendmain.user.api.dto.VerifyEmailRequest;
 import pl.bronikowski.springchat.backendmain.user.internal.UserService;
 
 @Validated
@@ -28,6 +30,13 @@ public class UserProfileController {
     public UserProfileDto getUserProfile() {
         var authResourceId = UserContextProvider.getAuthResourceId();
         return userService.getUserProfile(authResourceId);
+    }
+
+    @PostMapping("/verify-email")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
+        var authResourceId = UserContextProvider.getAuthResourceId();
+        userService.verifyEmail(request, authResourceId);
     }
 
     @PostMapping("/profile-picture")

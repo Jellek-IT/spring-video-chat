@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.bronikowski.springchat.backendmain.exception.AppNotFoundException;
 import pl.bronikowski.springchat.backendmain.shared.utils.FileUtils;
 import pl.bronikowski.springchat.backendmain.storage.api.StorageClient;
+import pl.bronikowski.springchat.backendmain.token.internal.TokenService;
 import pl.bronikowski.springchat.backendmain.user.api.dto.UpdateUserProfilePictureRequest;
 import pl.bronikowski.springchat.backendmain.user.api.dto.UserProfileDto;
+import pl.bronikowski.springchat.backendmain.user.api.dto.VerifyEmailRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -17,12 +19,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserProfileMapperFactory userProfileMapperFactory;
     private final StorageClient storageClient;
+    private final TokenService tokenService;
 
     @Transactional(readOnly = true)
     public UserProfileDto getUserProfile(String authResourceId) {
         var user = userRepository.findByAuthResourceId(authResourceId)
                 .orElseThrow(EntityExistsException::new);
         return userProfileMapperFactory.mapToDto(user);
+    }
+
+    @Transactional
+    public void verifyEmail(VerifyEmailRequest request, String authResourceId) {
+        var user = userRepository.findByAuthResourceId(authResourceId)
+                .orElseThrow(EntityExistsException::new);
+        tokenService.checkAndInvalidateUserRegistrationConfirmationToken(user, request.token());
+        user.setEmailVerified(true);
     }
 
     @Transactional

@@ -1,0 +1,4 @@
+Thanks for signing up! To complete your registration, please click the button below:
+<a style="display: block; padding: 10px 0;" href="[[${platformProperties.url}]]/user/confirm-email?token=[[${content.token}]]">Confirm Your Email</a>
+If you didn’t sign up for this account, you can safely ignore this email.
+Welcome aboard!

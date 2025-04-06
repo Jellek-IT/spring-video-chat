@@ -21,7 +21,7 @@ public class Member extends User {
     private String nickname;
 
     public Member(RegisterMemberRequest request) {
-        super(UserType.MEMBER, request.email(), true);
+        super(UserType.MEMBER, request.email(), false);
         this.nickname = request.nickname();
     }
 

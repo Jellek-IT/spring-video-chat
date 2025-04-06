@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: backendmain
   profiles:
     group:
       "local": "localsecrets,openapi,request-logging"
@@ -12,8 +14,6 @@ spring:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
-  application:
-    name: backendmain
   jpa:
     database: postgresql
     open-in-view: false
@@ -39,6 +39,13 @@ spring:
       date: iso
       date-time: iso
       time: iso
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    properties:
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL}
+      sasl.mechanism: ${KAFKA_SASL_MECHANISM}
+      sasl.jaas.config: ${KAFKA_JAAS_CONFIG}
+      spring.json.add.type.headers: false
 
 server:
   port: ${SERVER_PORT}
@@ -73,6 +80,10 @@ app:
       app-auth-token-lifetime: 1d
       client-auth-token-lifetime: 10m
       video-room-life-time: 1h
+  kafka:
+    topic:
+      notification:
+        name: queuing.springchat.notification.json
   scheduling:
     enabled: true
     thread-pool-size: 12
@@ -80,6 +91,8 @@ app:
       video-room-clear-expired: "0 */30 * * * *"
   async:
     core-pool-size: 12
+  token:
+    user-registered-confirmation-ttl: 3600 # 1 hour
 springdoc:
   api-docs:
     enabled: false

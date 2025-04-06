@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: backendnotifications
+  profiles:
+    group:
+      "local": "localsecrets"
+    active: ${ACTIVE_PROFILES}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    properties:
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL}
+      sasl.mechanism: ${KAFKA_SASL_MECHANISM}
+      sasl.jaas.config: ${KAFKA_JAAS_CONFIG}
+    consumer:
+      group-id: consumer-backendnotifications
+      properties:
+        offsets.topic.replication.factor: 1
+        max.poll.records: 100
+    admin:
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+  data:
+    mongodb:
+      host: ${MONGODB_HOST}
+      port: ${MONGODB_PORT}
+      database: ${MONGODB_DATABASE}
+      username: ${MONGODB_USERNAME}
+      password: ${MONGODB_PASSWORD}
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    sender: ${MAIL_SENDER}
+    properties:
+      mail:
+        smtp:
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+          auth: ${MAIL_AUTH}
+          starttls:
+            enable: ${MAIL_TLS}
+          ssl:
+            enable: ${MAIL_SSL}
+            trust: ${MAIL_HOST}
+app:
+  kafka:
+    topic:
+      notification:
+        name: queuing.springchat.notification.json
+        partitions: 3
+        replicas: 2
+  platform:
+    url: ${PLATFORM_URL}
+    email: ${MAIL_SENDER}
+    prefix: '[Spring Video Chat]'
+  async:
+    core-pool-size: 12
+
+logging:
+  level:
+    pl.bronikowski.springchat.backendnotifications: DEBUG

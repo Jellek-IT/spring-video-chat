@@ -12,8 +12,8 @@ public class SecureUtils {
     private final SecureRandom secureRandom;
 
     public String generateToken(int length) {
-        var pin = new byte[length];
-        secureRandom.nextBytes(pin);
-        return Base64.getEncoder().withoutPadding().encodeToString(pin);
+        var token = new byte[length];
+        secureRandom.nextBytes(token);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(token);
     }
 }

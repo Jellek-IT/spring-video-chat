@@ -8,8 +8,9 @@ import pl.bronikowski.springchat.backendmain.authserver.api.AuthResourceClient;
 import pl.bronikowski.springchat.backendmain.exception.AppNotFoundException;
 import pl.bronikowski.springchat.backendmain.member.api.dto.MemberBasicsDto;
 import pl.bronikowski.springchat.backendmain.member.api.dto.RegisterMemberRequest;
+import pl.bronikowski.springchat.backendmain.notification.api.NotificationClient;
 import pl.bronikowski.springchat.backendmain.storage.api.StorageClient;
-import pl.bronikowski.springchat.backendmain.user.internal.UserRepository;
+import pl.bronikowski.springchat.backendmain.token.internal.TokenService;
 
 import java.util.UUID;
 
@@ -17,19 +18,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final UserRepository userRepository;
     private final AuthResourceClient authResourceClient;
     private final MemberMapper memberMapper;
     private final StorageClient storageClient;
+    private final NotificationClient notificationClient;
+    private final TokenService tokenService;
 
     @Transactional
     public MemberBasicsDto register(RegisterMemberRequest request) {
         var member = new Member(request);
         memberRepository.save(member);
-
+        var token = tokenService.createUserRegistrationConfirmationToken(member);
         var authResourceId = authResourceClient.createUser(member, request.password());
         member.setAuthResourceId(authResourceId);
-
+        notificationClient.sendUserRegisteredNotification(member, token);
         return memberMapper.mapToMemberBasicsDto(member);
     }
 
