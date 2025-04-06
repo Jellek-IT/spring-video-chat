@@ -183,34 +183,18 @@ services:
       KAFKA_SASL_MECHANISM:
       KAFKA_JAAS_CONFIG:
     network_mode: "service:localhost"
-  backend-notification:
-    build: ./backend/notification
-    depends_on:
-      - postgres
-      - mongodb
-      - kafka1
-      - kafka2
-      - kafka3
-    environment:
-      ACTIVE_PROFILES: async
-      KAFKA_BOOTSTRAP_SERVERS: kafka1:19092,kafka2:19093,kafka3:19094
-      KAFKA_SECURITY_PROTOCOL: PLAINTEXT
-      KAFKA_SASL_MECHANISM:
-      KAFKA_JAAS_CONFIG:
-      MONGODB_HOST: mongodb
-      MONGODB_PORT: 27017
-      MONGODB_DATABASE: springchat_notification
-      MONGODB_USERNAME: springchat_notification
-      MONGODB_PASSWORD: ${SPRINGCHAT_NOTIFICATION_DB_PASSWORD}
-      MAIL_HOST: ${MAIL_HOST}
-      MAIL_PORT: ${MAIL_PORT}
-      MAIL_USERNAME: ${MAIL_USERNAME}
-      MAIL_PASSWORD: ${MAIL_PASSWORD}
-      MAIL_SENDER: ${MAIL_SENDER}
-      MAIL_AUTH: ${MAIL_AUTH}
-      MAIL_TLS: ${MAIL_TLS}
-      MAIL_SSL: ${MAIL_SSL}
-      PLATFORM_URL: ${FRONTEND_APP_URL}
+  backend-notification1:
+    extends:
+      file: common-config.yml
+      service: backend-notification
+  backend-notification2:
+    extends:
+      file: common-config.yml
+      service: backend-notification
+  backend-notification3:
+    extends:
+      file: common-config.yml
+      service: backend-notification
   frontend-main:
     build:
       context: ./frontend/main
